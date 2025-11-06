@@ -1,45 +1,231 @@
 ---
-title: "Building Once UI, a Customizable Design System"
-publishedAt: "2024-04-08"
-summary: "Development of a flexible and highly customizable design system using Next.js for front-end and Figma for design collaboration."
+title: "AI Image Generation"
+publishedAt: "2025-11-06"
+summary: "Using Generative AI alogrithms including VAEs, GANs and Diffusion models."
 images:
   - "/images/projects/project-01/cover-01.jpg"
   - "/images/projects/project-01/cover-02.jpg"
   - "/images/projects/project-01/cover-03.jpg"
   - "/images/projects/project-01/cover-04.jpg"
 team:
-  - name: "Selene Yu"
-    role: "Software Engineer"
+  - name: "Ketu Patel"
+    role: "AI/ML Engineer"
     avatar: "/images/avatar.jpg"
-    linkedIn: "https://www.linkedin.com/company/once-ui/"
-  - name: "Lorant One"
-    role: "Design Engineer"
-    avatar: "/images/projects/project-01/avatar-01.jpg"
-    linkedIn: "https://www.linkedin.com/company/once-ui/"
+    linkedIn: "https://www.linkedin.com/in/ketu-patel/"
 ---
 
 ## Overview
 
-Development of a flexible and highly customizable design system using Next.js for front-end and Figma for design collaboration.
+This project explored modern generative modeling techniques—Variational Autoencoders (VAEs), Generative Adversarial Networks (GANs), and Denoising Diffusion Probabilistic Models (DDPMs)—to learn and synthesize image distributions from MNIST and Fashion-MNIST datasets.
+
+The study implemented and analyzed each model’s architecture, training dynamics, and output quality, benchmarking them using the Frechet Inception Distance (FID) metric to quantify realism and diversity.
+A research review of Latent Diffusion Models (LDMs) complemented the practical component, connecting theoretical insights with experimental performance.
 
 ## Key Features
 
-- **Component Library**: Built a set of modular, reusable UI components using React and styled-components in Next.js, focusing on accessibility and responsiveness.
-- **Theming and Customization**: Integrated a theming system that allows easy switching and customization of color palettes, typography, and layout styles using CSS variables and Figma tokens.
-- **Figma Integration**: Collaborated closely with designers by setting up a shared design library in Figma. This library was synchronized with the codebase, ensuring design handoffs were seamless and that design tokens remained consistent across both platforms.
-- **Documentation and Usage Guidelines**: Developed comprehensive documentation with Storybook to showcase components, usage patterns, and best practices, ensuring the design system is easy to adopt by other teams.
+### 1. Variational Autoencoder (VAE)
 
-## Technologies Used
+- Implemented the full probabilistic encoder–decoder pipeline:
+  - **Reparameterization trick**:  
+    `z = μ + σ * ε` to enable backpropagation through stochastic sampling.
+  - **VAE loss** combining **reconstruction loss (L1/L2)** and **KL-divergence regularization**:
 
-- **Next.js**: For fast, server-rendered React applications.
-- **Figma**: For creating and managing design assets and prototypes.
-- **Styled-Components**: For styling React components with a modular, themable approach.
-- **Storybook**: For building an interactive, documented component library.
+    ```text
+    L_total = L_recon + β * D_KL(qφ(z|x) || p(z))
+    ```
 
-## Challenges and Learnings
+  - Tuned **β** values to balance latent regularization and reconstruction fidelity.
 
-One key challenge was balancing the need for flexibility with the desire to maintain design consistency. The solution involved creating well-defined design tokens and establishing clear guidelines for when and how components could be customized. Additionally, setting up effective collaboration workflows between designers and developers using Figma and Git was a learning experience that greatly improved the process.
+- **Loss Function Comparison (L1 vs L2):**
+  - L2 yielded smoother, blurrier digits (Gaussian-assumed error).
+  - L1 preserved sharper edges and higher contrast (Laplace-assumed error).
+
+- **Few-Shot Evaluation:**
+  - Used encoder embeddings to train a **KNN classifier** on limited MNIST samples, testing latent generalization.
+
+---
+
+### 2. Generative Adversarial Network (GAN)
+
+- Built a full adversarial pipeline:
+  - **Generator:** Maps random latent vectors → 28×28 images.
+  - **Discriminator:** Outputs probability of real vs fake samples.
+  - **Objective Function:**
+
+    ```text
+    min_G max_D [ E_x[log D(x)] + E_z[log(1 - D(G(z)))] ]
+    ```
+
+- Implemented individual loss functions for real, fake, and generator batches.
+
+- Investigated **mode collapse** behavior:
+  - Varying learning rate, latent dimension, and activation (LeakyReLU).
+  - Observed generator convergence on limited modes with high discriminator capacity.
+
+---
+
+### 3. Diffusion Models (DDPM)
+
+- Developed an end-to-end **Denoising Diffusion Probabilistic Model** following *Ho et al., 2020*.
+  - **Forward Process:** Gradually corrupt images with Gaussian noise:
+
+    ```text
+    x_t = √(ᾱ_t) * x_0 + √(1 - ᾱ_t) * ε
+    ```
+
+  - **Reverse Process:** Train a neural network `ε_θ(x_t, t)` (UNet) to predict noise at each timestep and iteratively denoise to reconstruct `x_0`.
+  - Implemented a **linear noise schedule** and cached α_t and ᾱ_t for training efficiency.
+
+- Visualized both **forward diffusion** (progressive noising) and **reverse diffusion** (iterative denoising) to interpret model behavior.
+
+---
+
+## Technologies / Algorithms Used
+
+| Category | Details |
+| --- | --- |
+| **Frameworks** | PyTorch 2.x, TorchVision, NumPy, Matplotlib, PyYAML |
+| **Datasets** | MNIST and Fashion-MNIST (28×28 grayscale, 10 classes) |
+| **Architectures** | VAE (Encoder–Decoder MLP), GAN (Generator + Discriminator), DDPM (UNet) |
+| **Optimization** | AdamW optimizer, weight decay tuning, learning-rate scheduling |
+| **Loss Functions** | L1, L2, KL-Divergence, Binary Cross-Entropy |
+| **Noise Scheduling (Diffusion)** | Linear variance schedule βₜ ∈ [0.0001, 0.02] |
+| **Evaluation Metric** | Frechet Inception Distance (FID) for realism and diversity |
+| **Config System** | YAML-driven experiment configs with tracked outputs |
+| **Environment** | Python 3.11, GPU-accelerated PyTorch, Dockerized setup |
+
+---
+
+## Challenges & Learning
+
+### 1. Balancing Reconstruction vs Regularization (VAEs)
+- High β values improved disentanglement but caused **posterior collapse**.
+- Low β favored reconstruction detail but weakened latent structure.
+- Learned to **tune β adaptively** by dataset complexity.
+
+### 2. Loss Dynamics (L1 vs L2)
+- L2 minimized squared error → smoother but blurrier outputs.
+- L1 applied linear penalty → sharper contrast with small artifacts.
+- Demonstrated implicit likelihood assumptions (Gaussian vs Laplace).
+
+### 3. GAN Instability and Mode Collapse
+- Rapid discriminator convergence led to **vanishing gradients**.
+- Used **LeakyReLU**, reduced discriminator LR, and higher latent dimension to mitigate collapse.
+- Found that **grayscale, low-texture datasets** like Fashion-MNIST reduce GAN feedback quality.
+
+### 4. Diffusion Model Trade-offs
+- Achieved best **FID and visual fidelity**, but required significantly more compute.
+- Learned that **diffusion models unify VAEs’ coverage and GANs’ sharpness** at the cost of speed.
+
+### 5. Metric Bias (FID Limitations)
+- FID relies on Inception-V3 features → biased toward ImageNet textures.
+- Assumes Gaussian feature distributions, simplifying true data manifolds.
+- Despite bias, remains a reliable **ranking metric** for generative comparisons.
+
+---
 
 ## Outcome
 
-The design system is now actively used across multiple projects, leading to faster development cycles, fewer design inconsistencies, and improved collaboration between design and development teams. It has become a foundation for scaling our products efficiently while ensuring a cohesive user experience.
+| Model | Dataset | FID ↓ | Observations |
+|--------|----------|-------|---------------|
+| **VAE** | Fashion-MNIST | **59.1** | Stable and diverse latent representations; edges soft and slightly blurred. |
+| **GAN** | Fashion-MNIST | **131.3** | High contrast but repetitive samples due to partial mode collapse. |
+| **Diffusion (DDPM)** | Fashion-MNIST | **35.2** | Crisp, detailed generations; excellent trade-off between fidelity and diversity. |
+
+**Key Takeaway:**  
+Diffusion models outperformed both VAEs and GANs, achieving **state-of-the-art realism and robustness** through iterative denoising.  
+VAEs provided **semantic stability** but limited sharpness; GANs produced **fine details** but suffered instability.  
+Diffusion achieved **best-in-class balance**, albeit with higher computational cost.
+
+---
+
+### 💡 Conceptual Insights
+
+#### Variational Autoencoders (VAEs)
+
+VAEs learn a **smooth latent space** that tries to capture the global structure of the data distribution by optimizing a variational lower bound. They explicitly model \( p(x|z) \) and regularize \( q(z|x) \) toward a chosen prior (usually Gaussian).
+
+**Strengths**
+
+- Learn **continuous, structured latent spaces** that are great for interpolation, clustering, and downstream tasks (few-shot KNN, simple classifiers, etc.).
+- Training is **stable and predictable**: no adversarial game, just a single likelihood-style objective.
+- Easy to extend with **conditional VAEs**, β-VAEs (disentanglement), or hierarchical latents.
+
+**Weaknesses**
+
+- Tend to produce **blurry samples**, especially with simple decoders and L2 reconstruction loss, because they effectively average over uncertainty.
+- The KL term can cause **posterior collapse** when the model ignores the latent code and relies on the decoder.
+- Limited in capturing very sharp, fine-grained details compared to GANs or diffusion.
+
+**Datasets where VAEs work best**
+
+- **Low- to medium-complexity, structured datasets** where global shape matters more than texture:  
+  MNIST, Fashion-MNIST, simple grayscale symbols, medical scans with smooth intensity fields.
+- Scenarios where the **latent space is as important as sample quality**: representation learning, anomaly detection, dimensionality reduction.
+
+**Datasets where VAEs struggle**
+
+- **High-resolution natural images** with rich textures and sharp edges (e.g., ImageNet-level complexity) unless paired with very strong decoders.
+- Domains where **tiny visual details** are critical (fine textures, crisp edges, photorealistic faces), as reconstructions tend to be over-smoothed.
+
+
+#### Generative Adversarial Networks (GANs)
+
+GANs learn to generate samples by playing a **minimax game** between a generator and a discriminator. They implicitly learn the data distribution by trying to fool the discriminator without ever computing an explicit likelihood.
+
+**Strengths**
+
+- Can produce **extremely sharp, high-fidelity images** when training is successful.
+- Good at capturing **fine local structure** and textures (edges, patterns, lighting).
+- Sampling is very **fast at inference**: a single forward pass through the generator.
+
+**Weaknesses**
+
+- Training is **unstable**: mode collapse, vanishing gradients, and sensitivity to architecture and hyperparameters.
+- Do not give a true likelihood or an easy-to-use latent space; interpolation is possible but less principled than with VAEs.
+- The discriminator can **overpower the generator** on simple or low-entropy datasets, leading to repeated patterns and low diversity.
+
+**Datasets where GANs work best**
+
+- **Visually rich, high-variation datasets** where texture and sharpness matter: natural images, faces (CelebA), landscapes, art styles.
+- Situations where **perceptual realism** is more important than strict coverage of all modes.
+
+**Datasets where GANs struggle**
+
+- **Low-entropy or low-diversity datasets** (like grayscale digits/clothing) where the discriminator can quickly saturate and give poor gradient feedback, encouraging mode collapse (as seen on Fashion-MNIST in this project).
+- Domains where **good mode coverage** and calibrated probabilities are important, not just visual realism.
+
+
+#### Diffusion Models (DDPMs)
+
+Diffusion models learn to reverse a **gradual noising process**: starting from pure Gaussian noise and iteratively denoising back to data space. They optimize a noise-prediction objective at many timesteps.
+
+**Strengths**
+
+- Extremely **stable training**: the objective is supervised noise prediction, not adversarial.
+- Achieve **state-of-the-art trade-off** between sample fidelity and diversity; they cover modes well while still producing crisp images.
+- Naturally support **conditioning** (e.g., class labels, text, segmentation maps) by injecting information into the denoising network.
+
+**Weaknesses**
+
+- **Slow sampling**: require many denoising steps at inference, although improved samplers (DDIM, distillation) can mitigate this.
+- Computationally expensive during training due to repeated noise levels and large UNet backbones.
+- More complex to implement and tune (noise schedules, timestep sampling, guidance, etc.) than basic VAE or GAN baselines.
+
+**Datasets where Diffusion works best**
+
+- **Medium to high complexity image datasets** where both global structure and fine details matter: faces, objects, clothing, natural scenes.
+- Tasks that benefit from **strong mode coverage and controllability**: conditional generation, text-to-image, inpainting, style transfer.
+- Datasets with **consistent structure but varied details** (like Fashion-MNIST) where iterative refinement can sharpen silhouettes and textures.
+
+**Datasets where Diffusion is less ideal**
+
+- Real-time or low-latency applications where **sampling cost is critical** (e.g., on-device generation with tight compute limits).
+- Very simple datasets where the overhead of a full diffusion pipeline is overkill compared to a VAE or even a small GAN.
+
+
+### Project Highlight
+
+> “Implemented and benchmarked three major generative architectures—VAE, GAN, and Diffusion—on Fashion-MNIST, achieving an FID of 35.2 with diffusion models. Explored the theoretical–practical trade-offs between reconstruction smoothness, adversarial sharpness, and iterative denoising stability, connecting them to modern Latent Diffusion Model research.”
+
+---

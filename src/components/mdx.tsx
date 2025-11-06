@@ -170,6 +170,80 @@ function createHR() {
   );
 }
 
+interface TableElement extends React.ReactElement {
+  props: {
+    children?: React.ReactNode;
+  };
+  type: string;
+}
+
+function createTable({ children }: { children: ReactNode }) {
+  const childArray = React.Children.toArray(children);
+  
+  // Find thead and tbody elements
+  const thead = childArray.find((child): child is TableElement => 
+    typeof child === 'object' && 'type' in child && child.type === 'thead'
+  );
+  const tbody = childArray.find((child): child is TableElement => 
+    typeof child === 'object' && 'type' in child && child.type === 'tbody'
+  );
+
+  if (!thead || !tbody) {
+    console.error('Table structure is incomplete');
+    return null;
+  }
+
+  // Process headers
+  const headerRows = React.Children.toArray(thead.props.children);
+  const headerRow = headerRows[0] as TableElement;
+  
+  if (!headerRow) {
+    console.error('No header row found');
+    return null;
+  }
+
+  const headers = React.Children.toArray(headerRow.props.children).map((th, index) => {
+    const header = th as TableElement;
+    return {
+      content: header.props.children,
+      key: `col-${index}`,
+      sortable: false
+    };
+  });
+
+  // Process body rows
+  const rows = React.Children.toArray(tbody.props.children).map((tr) => {
+    const row = tr as TableElement;
+    return React.Children.toArray(row.props.children).map((td) => {
+      const cell = td as TableElement;
+      return cell.props.children;
+    });
+  });
+
+  return (
+    <div style={{ overflowX: 'auto', marginTop: '1rem', marginBottom: '1rem' }}>
+      <Table
+        data={{
+          headers,
+          rows
+        }}
+      />
+    </div>
+  );
+}
+
+function createTableRow({ children }: { children: ReactNode }) {
+  return <tr>{children}</tr>;
+}
+
+function createTableCell({ children }: { children: ReactNode }) {
+  return <td style={{ padding: '0.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>{children}</td>;
+}
+
+function createTableHeader({ children }: { children: ReactNode }) {
+  return <th style={{ padding: '0.5rem', borderBottom: '1px solid rgba(255, 255, 255, 0.2)', fontWeight: 'bold' }}>{children}</th>;
+}
+
 const components = {
   p: createParagraph as any,
   h1: createHeading("h1") as any,
@@ -186,6 +260,12 @@ const components = {
   ul: createList as any,
   li: createListItem as any,
   hr: createHR as any,
+  table: createTable as any,
+  thead: ({ children }: { children: ReactNode }) => <thead>{children}</thead>,
+  tbody: ({ children }: { children: ReactNode }) => <tbody>{children}</tbody>,
+  tr: createTableRow as any,
+  th: createTableHeader as any,
+  td: createTableCell as any,
   Heading,
   Text,
   CodeBlock,

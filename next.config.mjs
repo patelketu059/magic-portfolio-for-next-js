@@ -1,8 +1,14 @@
 import mdx from "@next/mdx";
 
+import remarkGfm from 'remark-gfm';
+
 const withMDX = mdx({
   extension: /\.mdx?$/,
-  options: {},
+  options: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [],
+    format: 'mdx',
+  },
 });
 
 /** @type {import('next').NextConfig} */

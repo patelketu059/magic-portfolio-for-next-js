@@ -2,14 +2,14 @@ import { About, Blog, Gallery, Home, Newsletter, Person, Social, Work } from "@/
 import { Line, Logo, Row, Text } from "@once-ui-system/core";
 
 const person: Person = {
-  firstName: "Selene",
-  lastName: "Yu",
-  name: `Selene Yu`,
-  role: "Design Engineer",
+  firstName: "Ketu",
+  lastName: "Patel",
+  name: `Ketu Patel`,
+  role: "AI/ML Engineer",
   avatar: "/images/avatar.jpg",
-  email: "example@gmail.com",
-  location: "Asia/Jakarta", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-  languages: ["English", "Bahasa"], // optional: Leave the array empty if you don't want to display languages
+  email: "patel.ketu.059@gmail.com",
+  location: "America/New_York", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+  languages: ["English", "Hindi", "Gujarati"], // optional: Leave the array empty if you don't want to display languages
 };
 
 const newsletter: Newsletter = {
@@ -24,18 +24,18 @@ const social: Social = [
   {
     name: "GitHub",
     icon: "github",
-    link: "https://github.com/once-ui-system",
+    link: "http://github.com/patelketu059",
   },
   {
     name: "LinkedIn",
     icon: "linkedin",
-    link: "https://www.linkedin.com/company/once-ui/",
+    link: "https://www.linkedin.com/in/ketu-patel/",
   },
-  {
-    name: "Threads",
-    icon: "threads",
-    link: "https://www.threads.com/@once_ui",
-  },
+  // {
+  //   name: "Threads",
+  //   icon: "threads",
+  //   link: "https://www.threads.com/@once_ui",
+  // },
   {
     name: "Email",
     icon: "email",
@@ -49,7 +49,7 @@ const home: Home = {
   label: "Home",
   title: `${person.name}'s Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Building bridges between design and code</>,
+  headline: <>Building bridges between curiosity and learning</>,
   featured: {
     display: true,
     title: (
@@ -65,14 +65,7 @@ const home: Home = {
   },
   subline: (
     <>
-      I'm Selene, a design engineer at{" "}
-      <Logo
-        dark
-        icon="/trademarks/wordmark-dark.svg"
-        style={{ display: "inline-flex", top: "0.25em", marginLeft: "-0.25em" }}
-      />
-      , where I craft intuitive
-      <br /> user experiences. After hours, I build my own projects.
+      I'm Ketu, an AI/ML Engineer who builds AI projects to explore and exploit the newest cutting edge learning models. 
     </>
   ),
 };
@@ -98,9 +91,9 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        Selene is a Jakarta-based design engineer with a passion for transforming complex challenges
-        into simple, elegant design solutions. Her work spans digital interfaces, interactive
-        experiences, and the convergence of design and technology.
+      I’m a Software & Machine Learning Engineer with 4+ years of experience designing, building, and deploying data-driven systems end-to-end.
+      I sit at the intersection of ML research and production engineering: I love taking messy real-world problems, turning them into well-posed 
+      modeling tasks, and shipping reliable solutions that users actually touch.
       </>
     ),
   },
@@ -109,41 +102,71 @@ const about: About = {
     title: "Work Experience",
     experiences: [
       {
-        company: "FLY",
-        timeframe: "2022 - Present",
-        role: "Senior Design Engineer",
+        company: "General Motors",
+        timeframe: "####  - April 2025",
+        role: "Software Engineer ",
         achievements: [
           <>
-            Redesigned the UI/UX for the FLY platform, resulting in a 20% increase in user
-            engagement and 30% faster load times.
+            Led cross-functional teams encompassing software developers, system architects, and quality engineers to define,
+document, and release software requirements and specifications.
           </>,
           <>
-            Spearheaded the integration of AI tools into design workflows, enabling designers to
-            iterate 50% faster.
+            Orchestrated regular meetings with internal stakeholders and external suppliers to monitor project progress, mitigate
+risks, and address issues, ensuring adherence to project timelines and objectives.
           </>,
+          <>
+          Oversaw the end-to-end software release process, from initial design to validation and verification, ensuring strict
+compliance with automotive industry standards and regulations.
+          </>,
+          <>
+          Conducted comprehensive reviews of software deliverables, swiftly identifying and rectifying defects and inconsistencies
+to uphold superior standards of quality and reliability.
+          </>,
+          <>
+          Developed and meticulously maintained documentation, including release notes, change logs, and technical
+specifications, furnishing stakeholders and end-users with clear and exhaustive guidance.
+          </>
         ],
-        images: [
-          // optional: leave the array empty if you don't want to display images
-          {
-            src: "/images/projects/project-01/cover-01.jpg",
-            alt: "Once UI Project",
-            width: 16,
-            height: 9,
-          },
-        ],
+        images: [],
       },
       {
-        company: "Creativ3",
+        company: "General Motors",
         timeframe: "2018 - 2022",
-        role: "Lead Designer",
+        role: "AI/ML Scientist",
         achievements: [
           <>
-            Developed a design system that unified the brand across multiple platforms, improving
-            design consistency by 40%.
+            Implemented large-scale High-Speed Vehicle Telemetry (HSVT) embeddings generation from raw HSVT data fetched
+using PySpark based on different levels of geohashes over the entire country. Optimized fetching data to increase time
+efficiency resulting to 95%-time reduction, significantly improving the pace of image generation downstream. 
           </>,
           <>
-            Led a cross-functional team to launch a new product line, contributing to a 15% increase
-            in overall company revenue.
+            Extracted features at Intersections by mapping inference points to road edges from Aerial Imagery to improve the
+transition between road and lane edges at Intersections. 
+          </>,
+          <>
+           Created a Network graph connecting all edges along level-4 geohashes to filter adjoining edges for feature extraction
+and optimize map matching for sporadic and overlapping HSVT and Aerial images.
+          </>,
+          <>
+          Generated lane center, lane and road edges by correcting Road Network Topology (RNT) and finding number of lanes
+based on HSVT. Improved map accuracy by supporting map fusion between all 3 data sources. 
+          </>
+        ],
+        images: [],
+      },
+            {
+        company: "General Motors",
+        timeframe: "2018 - 2022",
+        role: "Global Product Development Data Analyst",
+        achievements: [
+          <>
+            Implemented an AutoML pipeline to predict the Head Impact Score to transition testing to a virtual environment and avoid
+running physical test for a 99% decrease in cost and time. Performed validation and hyperparameter tuning which provided
+the model with ~0.97 R2 score.
+          </>,
+          <>
+            Created a forecasting model for Speak Up for Safety predictions for the upcoming year adjusting impact from
+seasonality and growth and accounting for work conditions under covid and back to office in the more recent months. 
           </>,
         ],
         images: [],
@@ -155,12 +178,19 @@ const about: About = {
     title: "Studies",
     institutions: [
       {
-        name: "University of Jakarta",
-        description: <>Studied software engineering.</>,
+        name: "Georgia Institute of Technology",
+        description: 
+        [
+          <>Degree: Masters of Science</>,
+          <>Specialization: Artificial Intelligence</>
+        ]
       },
       {
         name: "Build the Future",
-        description: <>Studied online marketing and personal branding.</>,
+        description: [
+        <>Degree: Bachelors of Science</>,
+        <>Specialization: Electrical and Computer Engineering</>
+        ]
       },
     ],
   },

@@ -271,7 +271,17 @@ export default function About() {
                       {institution.name}
                     </Text>
                     <Text variant="heading-default-xs" onBackground="neutral-weak">
-                      {institution.description}
+                      {institution.description.map(
+                        (description: React.ReactNode, index: number) => (
+                          <Text
+                            as="li"
+                            variant="body-default-m"
+                            key={`${institution.name}-${index}`}
+                          >
+                            {description}
+                          </Text>
+                        ),
+                      )}
                     </Text>
                   </Column>
                 ))}
