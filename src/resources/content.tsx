@@ -103,8 +103,8 @@ const about: About = {
     experiences: [
       {
         company: "General Motors",
-        timeframe: "####  - April 2025",
-        role: "Software Engineer ",
+        timeframe: "October 2023  - April 2025",
+        role: "Software Engineer",
         achievements: [
           <>
             Led cross-functional teams encompassing software developers, system architects, and quality engineers to define,
@@ -131,43 +131,78 @@ specifications, furnishing stakeholders and end-users with clear and exhaustive 
       },
       {
         company: "General Motors",
-        timeframe: "2018 - 2022",
+        timeframe: "February 2023 - October 2023",
+        role: "Global Product Development Data Analyst",
+        achievements: [
+          <>
+            Implemented an AutoML pipeline using PyTorch and Scikit-learn to predict the Head Impact Score, transitioning testing to a virtual
+environment and reducing costs and time by 99%. Performed extensive validation and hyperparameter tuning, achieving an R2 score of over
+0.97, significantly enhancing predictive accuracy and reducing the need for costly physical testing.
+
+          </>,
+          <>
+            Developed a forecasting model using Python and time-series analysis to predict Speak Up for Safety trends for the upcoming year. The model
+accounted for seasonality, growth, and shifts due to COVID-19 and the return to office, achieving over 95% predictive accuracy. This facilitated
+proactive safety planning and resource allocation, significantly improving workplace safety initiatives.
+          </>,
+
+        ],
+        images: [],
+      },
+      {
+        company: "General Motors",
+        timeframe: "July 2022 - February 2023",
         role: "AI/ML Scientist",
         achievements: [
           <>
-            Implemented large-scale High-Speed Vehicle Telemetry (HSVT) embeddings generation from raw HSVT data fetched
-using PySpark based on different levels of geohashes over the entire country. Optimized fetching data to increase time
+            Implemented large-scale High-Speed Vehicle Telemetry (HSVT) embeddings generation from raw HSVT data fetched using PySpark based on different levels of geohashes over the entire country. Optimized fetching data to increase time
 efficiency resulting to 95%-time reduction, significantly improving the pace of image generation downstream. 
           </>,
           <>
-            Extracted features at Intersections by mapping inference points to road edges from Aerial Imagery to improve the
-transition between road and lane edges at Intersections. 
+            Extracted features at Intersections by mapping inference points to road edges from Aerial Imagery to improve the transition between road and lane edges at Intersections. 
           </>,
           <>
-           Created a Network graph connecting all edges along level-4 geohashes to filter adjoining edges for feature extraction
-and optimize map matching for sporadic and overlapping HSVT and Aerial images.
+           Created a Network graph connecting all edges along level-4 geohashes to filter adjoining edges for feature extraction and optimize map matching for sporadic and overlapping HSVT and Aerial images.
           </>,
           <>
-          Generated lane center, lane and road edges by correcting Road Network Topology (RNT) and finding number of lanes
-based on HSVT. Improved map accuracy by supporting map fusion between all 3 data sources. 
+          Generated lane center, lane and road edges by correcting Road Network Topology (RNT) and finding number of lanes based on HSVT. Improved map accuracy by supporting map fusion between all 3 data sources. 
           </>
         ],
         images: [],
       },
-            {
+      {
         company: "General Motors",
-        timeframe: "2018 - 2022",
-        role: "Global Product Development Data Analyst",
+        timeframe: "January 2022 - July 2022",
+        role: "EV Battery Data Analytics Engineer",
         achievements: [
           <>
-            Implemented an AutoML pipeline to predict the Head Impact Score to transition testing to a virtual environment and avoid
-running physical test for a 99% decrease in cost and time. Performed validation and hyperparameter tuning which provided
-the model with ~0.97 R2 score.
+            Created Machine Learning models to develop new driver profiles based on the latest field data and constantly evolve the life model algorithm to extrapolate battery life based on different models and packs. 
           </>,
           <>
-            Created a forecasting model for Speak Up for Safety predictions for the upcoming year adjusting impact from
-seasonality and growth and accounting for work conditions under covid and back to office in the more recent months. 
+            Conducted in-depth analysis of temperature profiles and developed predictive models in Python for Electric Vehicle range and battery capacity, leading to a reduction in warranty claims and a decrease in production costs through actionable insights for all downstream impacted teams.
           </>,
+          <>
+          Created insightful reports for Customers and Manufacturers to reduce warranty and production costs.
+          </>
+        ],
+        images: [],
+      },
+      {
+        company: "General Motors",
+        timeframe: "June 2021 - January 2022",
+        role: "Embedded Software Engineer ",
+        achievements: [
+          <>
+            Built the Communication protocols for update services that allowed data transaction between the back office and the
+cloud adapter present on upcoming vehicles released in MY2024.
+          </>,
+          <>
+            Refactored Over-The-Air services for the vehicles to provide the said updates through any Wireless and LTE networks
+and eliminating the need to go to car dealerships for feature updates after verifying authentication for all requests.
+          </>,
+          <>
+          Connected the new communication interface with all existing services depending on the state of the vehicle.
+          </>
         ],
         images: [],
       },
