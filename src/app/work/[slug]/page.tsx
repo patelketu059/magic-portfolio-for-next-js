@@ -84,6 +84,7 @@ export default async function Project({
         description={post.metadata.summary || ""}
         avatars={avatars}
         link={post.metadata.link || ""}
+        isProjectPage={true}
       />
       <Schema
         as="blogPosting"

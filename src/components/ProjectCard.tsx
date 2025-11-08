@@ -19,6 +19,7 @@ interface ProjectCardProps {
   description: string;
   avatars: { src: string }[];
   link: string;
+  isProjectPage?: boolean;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -29,6 +30,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   description,
   avatars,
   link,
+  isProjectPage = false,
 }) => {
   return (
     <Column fillWidth gap="m">
@@ -65,39 +67,37 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                 }))}
               />
       </div>
-      <Flex
-        s={{ direction: "column" }}
-        fillWidth
-        paddingX="s"
-        paddingTop="12"
-        paddingBottom="24"
-        gap="l"
-      >
+      <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "12px 0 24px 0" }}>
         {title && (
-          <Flex flex={5}>
-            <Heading as="h2" wrap="balance" variant="heading-strong-xl">
-              {title}
-            </Heading>
-          </Flex>
+          <Heading
+            as="h2"
+            wrap="balance"
+            variant={isProjectPage ? "display-strong-m" : "heading-strong-xl"}
+            style={{ textAlign: "center", width: "100%", fontSize: isProjectPage ? "2.5rem" : undefined }}
+          >
+            {title}
+          </Heading>
         )}
         {(avatars?.length > 0 || description?.trim() || content?.trim()) && (
           <Column flex={7} gap="16">
-            {avatars?.length > 0 && <AvatarGroup avatars={avatars} size="m" reverse />}
-            {description?.trim() && (
-              <Text wrap="balance" variant="body-default-s" onBackground="neutral-weak">
-                {description}
-              </Text>
+            {/* AvatarGroup removed from carousel and card */}
+            {!isProjectPage && description?.trim() && (
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
+                <Text wrap="balance" variant="body-default-s" onBackground="neutral-weak" style={{ margin: 0 }}>
+                  {description}
+                </Text>
+                {!isProjectPage && content?.trim() && (
+                  <SmartLink
+                    suffixIcon="arrowRight"
+                    style={{ margin: 0, width: "fit-content" }}
+                    href={href}
+                  >
+                    <Text variant="body-default-s">Read case study</Text>
+                  </SmartLink>
+                )}
+              </div>
             )}
             <Flex gap="24" wrap>
-              {content?.trim() && (
-                <SmartLink
-                  suffixIcon="arrowRight"
-                  style={{ margin: "0", width: "fit-content" }}
-                  href={href}
-                >
-                  <Text variant="body-default-s">Read case study</Text>
-                </SmartLink>
-              )}
               {link && (
                 <SmartLink
                   suffixIcon="arrowUpRightFromSquare"
@@ -110,7 +110,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             </Flex>
           </Column>
         )}
-      </Flex>
+  </div>
     </Column>
   );
 };
