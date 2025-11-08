@@ -3,9 +3,12 @@ title: "AI Image Generation"
 publishedAt: "2025-11-06"
 summary: "Using Generative AI alogrithms including VAEs, GANs and Diffusion models."
 images:
+  - "/images/projects/Image_Generation/Outcomes.png"
+  - "/images/projects/Image_Generation/Gan_mode_collapse.png"
   - "/images/projects/Image_Generation/Forward_diff_epoch.png"
   - "/images/projects/Image_Generation/Reverse_diff_epoch.png"
   - "/images/projects/Image_Generation/Gan_Objective.png"
+  
 
 
 team:
@@ -17,11 +20,32 @@ team:
 
 ## Overview
 
+
+
+
 This project explored modern generative modeling techniques—Variational Autoencoders (VAEs), Generative Adversarial Networks (GANs), and Denoising Diffusion Probabilistic Models (DDPMs)—to learn and synthesize image distributions from MNIST and Fashion-MNIST datasets.
 
 The study implemented and analyzed each model’s architecture, training dynamics, and output quality, benchmarking them using the Frechet Inception Distance (FID) metric to quantify realism and diversity.
 A research review of Latent Diffusion Models (LDMs) complemented the practical component, connecting theoretical insights with experimental performance.
 
+### Table of Contents
+
+- [1. Key Features](#1.-key-features)
+  - [1.1 Variational Autoencoder (VAE)](#1.1-variational-autoencoder-vae)
+  - [1.2 Generative Adversarial Network (GAN)](#1.2-generative-adversarial-network-gan)
+  - [1.3 Diffusion Models (DDPM)](#1.3-diffusion-models-ddpm)
+- [2. Technologies / Algorithms Used](#2.-technologies-algorithms-used)
+- [3. Challenges & Learning](#3.-challenges-learning)
+  - [3.1 Balancing Reconstruction vs Regularization (VAEs)](#3.1-balancing-reconstruction-vs-regularization-vaes)
+  - [3.2 GAN Instability and Mode Collapse](#3.2-gan-instability-and-mode-collapse)
+  - [3.3 Diffusion Model Trade-offs](#3.3-diffusion-model-trade-offs)
+  - [3.4 Metric Bias (FID Limitations)](#3.4-metric-bias-fid-limitations)
+- [4. Outcome](#4.-outcome)
+- [5. Conceptual Insights](#5.-conceptual-insights)
+  - [5.1 Variational Autoencoders (VAEs)](#5.1-variational-autoencoders-vaes)
+  - [5.2 Generative Adversarial Networks (GANs)](#5.2-generative-adversarial-networks-gans)
+  - [5.3 Diffusion Models (DDPMs)](#5.3-diffusion-models-ddpms)
+- [6. Project Highlight](#6.-project-highlight)
 ## **1. Key Features**
 
 ### **1.1 Variational Autoencoder (VAE)**
@@ -31,8 +55,8 @@ A research review of Latent Diffusion Models (LDMs) complemented the practical c
     `z = μ + σ * ε` to enable backpropagation through stochastic sampling.
   - **VAE loss** combining **reconstruction loss (L1/L2)** and **KL-divergence regularization**:
 
-    ![KL Divergence Loss](/images/projects/Image_Generation/L_KL.png "KL Loss")
-    ![Total Loss](/images/projects/Image_Generation/L_total.png "Total Loss")
+    <Image src="/images/projects/Image_Generation/L_KL.png" alt="KL Divergence Loss" title="KL Loss" size={40} />
+    <Image src="/images/projects/Image_Generation/L_total.png" alt="Total Loss" title="Total Loss" size={40} />
 
 
   - Tuned **β** values to balance latent regularization and reconstruction fidelity.
@@ -52,9 +76,7 @@ A research review of Latent Diffusion Models (LDMs) complemented the practical c
   - **Generator:** Maps random latent vectors → 28×28 images.
   - **Discriminator:** Outputs probability of real vs fake samples.
   - **Objective Function:**
-
-  ![GAN Objective](/images/projects/Image_Generation/Gan_Objective.png "GAN Objective")
-  <img src="/images/projects/Image_Generation/Gan_Objective.png" alt="Foo" sizeMobile="95" sizeTablet="70" sizeDesktop="50" title="GAN Objective" />
+  <Image src="/images/projects/Image_Generation/Gan_Objective.png" alt="GAN Objective" title="GAN Objective" size="70" />
 
 
 - Implemented individual loss functions for real, fake, and generator batches.
@@ -63,30 +85,30 @@ A research review of Latent Diffusion Models (LDMs) complemented the practical c
   - Varying learning rate, latent dimension, and activation (LeakyReLU).
   - Observed generator convergence on limited modes with high discriminator capacity.
 
----
+----
 
 ### **1.3 Diffusion Models (DDPM)**
 
 - Developed an end-to-end **Denoising Diffusion Probabilistic Model** following *Ho et al., 2020*.
   - **Forward Process:** Gradually corrupt images with Gaussian noise:
-    ![Forward Diffsuion](/images/projects/Image_Generation/Forward_diffusion.png "Forward_diffusion")
-    ![Forward Demo](/images/projects/Image_Generation/Forward_diff_epoch.png "Forward Demo")
+    <Image src="/images/projects/Image_Generation/Forward_diffusion.png" alt="Forward Diffusion" title="Forward Diffusion Formula" size="40" />
+    <Image src="/images/projects/Image_Generation/Forward_diff_epoch.png" alt="Forward Demo" title="Forward Diffusion Epoch" size="95" />
 
 
   - **Reverse Process:** Train a neural network `ε_θ(x_t, t)` (UNet) to predict noise at each timestep and iteratively denoise to reconstruct `x_0`.
-    ![Reverse Diffsuion](/images/projects/Image_Generation/Reverse_diffusion.png "Reverse_diffusion")
-    ![Reverse Demo](/images/projects/Image_Generation/Reverse_diff_epoch.png "Reverse Demo")
+    <Image src="/images/projects/Image_Generation/Reverse_diffusion.png" alt="Reverse Diffusion" title="Reverse Diffusion Formula" size="40" />
+    <Image src="/images/projects/Image_Generation/Reverse_diff_epoch.png" alt="Reverse Demo" title="Reverse Diffusion Epoch" size="95" />
 
   - Implemented a **linear noise schedule** and cached α_t and ᾱ_t for training efficiency.
 
 - Visualized both **forward diffusion** (progressive noising) and **reverse diffusion** (iterative denoising) to interpret model behavior.
 
----
+----
 
 ## **2. Technologies / Algorithms Used**
 --- 
 
-<TechTable leftHeader="Category" rightHeader="Details">
+<TechTable leftHeader="Category" rightHeader="Details" alignDetails="left">
   <TechRow label="Frameworks">
     PyTorch 2.x, TorchVision, NumPy, Matplotlib, PyYAML
   </TechRow>
@@ -143,14 +165,14 @@ A research review of Latent Diffusion Models (LDMs) complemented the practical c
 - L1 applied linear penalty → sharper contrast with small artifacts.
 - Demonstrated implicit likelihood assumptions (Gaussian vs Laplace).
 
-![L2_L1](/images/projects/Image_Generation/VAE_L2_L1.png "Loss Difference")
+<Image src="/images/projects/Image_Generation/VAE_L2_L1.png" alt="L2 vs L1 Loss Comparison" title="Loss Difference" size="100" />
 
 
 ### 3.2 GAN Instability and Mode Collapse
 - Rapid discriminator convergence led to **vanishing gradients**.
 - Used **LeakyReLU**, reduced discriminator LR, and higher latent dimension to mitigate collapse.
 - Found that **grayscale, low-texture datasets** like Fashion-MNIST reduce GAN feedback quality.
-![Mode Collapse](/images/projects/Image_Generation/Gan_mode_collapse.png "Mode Collapse")
+<Image src="/images/projects/Image_Generation/Gan_mode_collapse.png" alt="Mode Collapse Example" title="Mode Collapse" size="40" />
 
 
 ### 3.3 Diffusion Model Trade-offs
@@ -186,7 +208,7 @@ A research review of Latent Diffusion Models (LDMs) complemented the practical c
   </TechRow>
 </TechTable>
 
-![Outcomes](/images/projects/Image_Generation/Outcomes.png "FID Outcomes")
+<Image src="/images/projects/Image_Generation/Outcomes.png" alt="Model Comparison Outcomes" title="FID Outcomes" size="100" />
 
 --- 
 **Key Takeaway:**  

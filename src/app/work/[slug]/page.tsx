@@ -18,6 +18,7 @@ import {
 import { baseURL, about, person, work } from "@/resources";
 import { formatDate } from "@/utils/formatDate";
 import { ScrollToHash, CustomMDX } from "@/components";
+import { ProjectCard } from "@/components/ProjectCard";
 import { Metadata } from "next";
 import { Projects } from "@/components/work/Projects";
 
@@ -75,6 +76,15 @@ export default async function Project({
 
   return (
     <Column as="section" maxWidth="m" horizontal="center" gap="l">
+      <ProjectCard
+        href={post.metadata.link || post.slug}
+        images={post.metadata.images || []}
+        title={post.metadata.title}
+        content={post.content}
+        description={post.metadata.summary || ""}
+        avatars={avatars}
+        link={post.metadata.link || ""}
+      />
       <Schema
         as="blogPosting"
         baseURL={baseURL}
@@ -92,36 +102,8 @@ export default async function Project({
           image: `${baseURL}${person.avatar}`,
         }}
       />
-      <Column maxWidth="s" gap="16" horizontal="center" align="center">
-        <SmartLink href="/work">
-          <Text variant="label-strong-m">Projects</Text>
-        </SmartLink>
-        <Text variant="body-default-xs" onBackground="neutral-weak" marginBottom="12">
-          {post.metadata.publishedAt && formatDate(post.metadata.publishedAt)}
-        </Text>
-        <Heading variant="display-strong-m">{post.metadata.title}</Heading>
-      </Column>
-      <Row marginBottom="32" horizontal="center">
-        <Row gap="16" vertical="center">
-          {post.metadata.team && <AvatarGroup reverse avatars={avatars} size="s" />}
-          <Text variant="label-default-m" onBackground="brand-weak">
-            {post.metadata.team?.map((member, idx) => (
-              <span key={idx}>
-                {idx > 0 && (
-                  <Text as="span" onBackground="neutral-weak">
-                    ,{" "}
-                  </Text>
-                )}
-                <SmartLink href={member.linkedIn}>{member.name}</SmartLink>
-              </span>
-            ))}
-          </Text>
-        </Row>
-      </Row>
-      {post.metadata.images.length > 0 && (
-        <Media priority aspectRatio="16 / 9" radius="m" alt="image" src={post.metadata.images[0]} />
-      )}
-      <Column style={{ margin: "auto" }} as="article" maxWidth="xs">
+      {/* ProjectCard now handles the carousel and project info at the top */}
+      <Column fillWidth horizontal="center" as="article" style={{ width: "100%" }}>
         <CustomMDX source={post.content} />
       </Column>
       <Column fillWidth gap="40" horizontal="center" marginTop="40">
