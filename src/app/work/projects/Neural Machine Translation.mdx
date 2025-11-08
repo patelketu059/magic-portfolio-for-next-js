@@ -1,14 +1,11 @@
 ---
-title: "AI Image Generation"
-publishedAt: "2025-11-06"
-summary: "Using Generative AI alogrithms including VAEs, GANs and Diffusion models."
+title: "Neural Machine Translation"
+publishedAt: "2024-10-11"
+summary: "Implemented and benchmarked a full pipeline for Neural Machine Translation (NMT) using progressively advanced architectures — from vanilla RNNs and LSTMs to attention-based Seq2Seq and finally Transformer models — trained and tuned from scratch in PyTorch. Evaluated models on translation perplexity, stability, and generalization, revealing how attention and parallel self-attention mechanisms revolutionize sequence modeling."
 images:
-  - "/images/projects/Image_Generation/Outcomes.png"
-  - "/images/projects/Image_Generation/Gan_mode_collapse.png"
-  - "/images/projects/Image_Generation/Forward_diff_epoch.png"
-  - "/images/projects/Image_Generation/Reverse_diff_epoch.png"
-  - "/images/projects/Image_Generation/Gan_Objective.png"
-  
+  - "/images/projects/project-01/cover-04.jpg"
+  - "/images/projects/project-01/video-01.mp4"
+---
 
 
 team:
@@ -18,70 +15,37 @@ team:
     linkedIn: "https://www.linkedin.com/in/ketu-patel/"
 ---
 
+
 ## Overview
 
+The project explored how machines learn to translate human language using deep sequence models. Beginning with recurrent architectures (RNNs, LSTMs), it progressed to attention-augmented Seq2Seq systems and ultimately to the Transformer, analyzing how architectural evolution impacts gradient flow, alignment, and translation coherence.
 
-This project explored modern generative modeling techniques—Variational Autoencoders (VAEs), Generative Adversarial Networks (GANs), and Denoising Diffusion Probabilistic Models (DDPMs)—to learn and synthesize image distributions from MNIST and Fashion-MNIST datasets.
-
-The study implemented and analyzed each model’s architecture, training dynamics, and output quality, benchmarking them using the Frechet Inception Distance (FID) metric to quantify realism and diversity.
-A research review of Latent Diffusion Models (LDMs) complemented the practical component, connecting theoretical insights with experimental performance.
+All models were trained on paired English captions and corresponding target translations using PyTorch implementations built from scratch, without relying on high-level libraries. Metrics such as loss and perplexity were tracked across training and validation to quantify language-model confidence and generalization.
 
 ### Table of Contents
 
-- [1. Key Features](#1.-key-features)
-  - [1.1 Variational Autoencoder (VAE)](#1.1-variational-autoencoder-vae)
-  - [1.2 Generative Adversarial Network (GAN)](#1.2-generative-adversarial-network-gan)
-  - [1.3 Diffusion Models (DDPM)](#1.3-diffusion-models-ddpm)
-- [2. Technologies / Algorithms Used](#2.-technologies-algorithms-used)
-- [3. Challenges & Learning](#3.-challenges-learning)
-  - [3.1 Balancing Reconstruction vs Regularization (VAEs)](#3.1-balancing-reconstruction-vs-regularization-vaes)
-  - [3.2 GAN Instability and Mode Collapse](#3.2-gan-instability-and-mode-collapse)
-  - [3.3 Diffusion Model Trade-offs](#3.3-diffusion-model-trade-offs)
-  - [3.4 Metric Bias (FID Limitations)](#3.4-metric-bias-fid-limitations)
-- [4. Outcome](#4.-outcome)
-- [5. Conceptual Insights](#5.-conceptual-insights)
-  - [5.1 Variational Autoencoders (VAEs)](#5.1-variational-autoencoders-vaes)
-  - [5.2 Generative Adversarial Networks (GANs)](#5.2-generative-adversarial-networks-gans)
-  - [5.3 Diffusion Models (DDPMs)](#5.3-diffusion-models-ddpms)
-- [6. Project Highlight](#6.-project-highlight)
+
 ## **1. Key Features**
+
+This section breaks down the five major model architectures implemented — each representing a distinct stage in the evolution of deep sequence modeling for translation.
 
 ### **1.1 Variational Autoencoder (VAE)**
 
-- Implemented the full probabilistic encoder–decoder pipeline:
-  - **Reparameterization trick**:  
-    `z = μ + σ * ε` to enable backpropagation through stochastic sampling.
-  - **VAE loss** combining **reconstruction loss (L1/L2)** and **KL-divergence regularization**:
-
-    <Image src="/images/projects/Image_Generation/L_KL.png" alt="KL Divergence Loss" title="KL Loss" size={40} />
-    <Image src="/images/projects/Image_Generation/L_total.png" alt="Total Loss" title="Total Loss" size={40} />
-
-
-  - Tuned **β** values to balance latent regularization and reconstruction fidelity.
-
-- **Loss Function Comparison (L1 vs L2):**
-  - L2 yielded smoother, blurrier digits (Gaussian-assumed error).
-  - L1 preserved sharper edges and higher contrast (Laplace-assumed error).
-
-- **Few-Shot Evaluation:**
-  - Used encoder embeddings to train a **KNN classifier** on limited MNIST samples, testing latent generalization.
+- The baseline model implemented a classical sequence-to-sequence (Seq2Seq) structure with separate encoder and decoder RNNs.
+- Each encoder step processes one token at a time and updates a hidden state, which serves as a running summary of all previous tokens. After reading the entire input sequence, the final hidden state of the encoder is passed to the decoder as a condensed vector representation of the source sentence. The decoder then generates each target token autoregressively.
+- INSERT IMAGE HERE
+- This simple recurrent formulation forces the entire source sentence into a single vector representation. While computationally light, this approach suffers from the vanishing gradient problem, causing earlier words to be forgotten as new tokens are processed. This limitation makes it difficult for the model to retain long-range dependencies — particularly in long or complex sentences.
+- In the translation pipeline, the encoder–decoder architecture was identical to the RNN model, but with LSTM cells enabling better temporal context and richer sequence representations. The LSTM provided the foundation for robust and stable optimization in the later attention and transformer experiments.
 
 ---
 
-### **1.2 Generative Adversarial Network (GAN)**
+### **1.2 Long Short-Term Memory (LSTM)**
 
-- Built a full adversarial pipeline:
-  - **Generator:** Maps random latent vectors → 28×28 images.
-  - **Discriminator:** Outputs probability of real vs fake samples.
-  - **Objective Function:**
-  <Image src="/images/projects/Image_Generation/Gan_Objective.png" alt="GAN Objective" title="GAN Objective" size="70" />
-
-
-- Implemented individual loss functions for real, fake, and generator batches.
-
-- Investigated **mode collapse** behavior:
-  - Varying learning rate, latent dimension, and activation (LeakyReLU).
-  - Observed generator convergence on limited modes with high discriminator capacity.
+- To overcome the gradient vanishing problem of vanilla RNNs, the next model replaced the recurrent cell with a Long Short-Term Memory (LSTM) unit.
+- The LSTM introduces three gating mechanisms — input, forget, and output gates — that regulate information flow and maintain a persistent cell state across time steps:
+- INSERT IMAGE HERE
+- This gating mechanism acts like a controlled memory cell, preserving long-term dependencies and selectively forgetting irrelevant information. Unlike an RNN’s compressed hidden state, the LSTM’s dual-state structure allows gradient flow to remain nearly constant through time, dramatically improving convergence stability.
+- 
 
 ----
 
