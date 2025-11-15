@@ -82,19 +82,19 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           <Column flex={7} gap="16">
             {/* AvatarGroup removed from carousel and card */}
             {!isProjectPage && description?.trim() && (
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 8 }}>
-                <Text wrap="balance" variant="body-default-s" onBackground="neutral-weak" style={{ margin: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8, flexWrap: "wrap", wordBreak: "break-word", textAlign: "center", maxWidth: 900 }}>
+                <Text wrap="balance" variant="body-default-s" onBackground="neutral-weak" style={{ margin: 0, wordBreak: "break-word", whiteSpace: "pre-line", textAlign: "center" }}>
                   {description}
+                  {!isProjectPage && content?.trim() && (
+                    <SmartLink
+                      suffixIcon="arrowRight"
+                      style={{ marginLeft: 8, display: "inline-block", verticalAlign: "middle", width: "fit-content" }}
+                      href={href}
+                    >
+                      <Text variant="body-default-s" style={{ display: "inline" }}>Read case study</Text>
+                    </SmartLink>
+                  )}
                 </Text>
-                {!isProjectPage && content?.trim() && (
-                  <SmartLink
-                    suffixIcon="arrowRight"
-                    style={{ margin: 0, width: "fit-content" }}
-                    href={href}
-                  >
-                    <Text variant="body-default-s">Read case study</Text>
-                  </SmartLink>
-                )}
               </div>
             )}
             <Flex gap="24" wrap>

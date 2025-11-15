@@ -1,10 +1,18 @@
 ---
-title: "Neural Machine Translation"
+title: "Neural Machine Translation (NMT)"
 publishedAt: "2024-10-11"
 summary: "Implemented and benchmarked a full pipeline for Neural Machine Translation (NMT) using progressively advanced architectures."
 images:
-  - "/images/projects/project-01/cover-04.jpg"
-  - "/images/projects/project-01/video-01.mp4"
+  - "/images/projects/NMT/Translation_Example.png"
+  - "/images/projects/NMT/LSTM3-chain.png"
+  - "/images/projects/NMT/LSTM3-SimpleRNN.png"
+  - "/images/projects/NMT/attn.png"
+  - "/images/projects/NMT/LSTM_Steps.png"
+  - "/images/projects/NMT/Transformer.png"
+  - "/images/projects/NMT/RNN-unrolled.png"
+  - "/images/projects/NMT/mh_attn.png"
+  - "/images/projects/NMT/attention.drawio.png"
+
 
 team:
   - name: "Ketu Patel"
@@ -12,7 +20,6 @@ team:
     avatar: "/images/avatar.jpg"
     linkedIn: "https://www.linkedin.com/in/ketu-patel/"
 ---
-
 
 
 ## Overview
@@ -31,24 +38,24 @@ All models were trained on paired English captions and corresponding target tran
   - [1.4 LSTM with Attention (Seq2Seq + Attention)](#1.4-lstm-with-attention-seq2seq-attention)
   - [1.5 Transformer](#1.5-transformer)
 - [2. Technologies / Algorithms Used](#2.-technologies-algorithms-used)
-- [3. Challenges & Learning](#3.-challenges-learning)
+- [3. Challenges & Learning](#3.-challenges-and-learning)
   - [3.1 Vanishing Gradients in RNNs](#3.1-vanishing-gradients-in-rnns)
-  - [3.2 Bottleneck in the Context Vector](#3.2-bottleneck-in-the-context-vector)
-  - [3.3 Tuning for Stability in LSTMs](#3.3-tuning-for-stability-in-lstms)
-  - [3.4 Attention Convergence Issues](#3.4-attention-convergence-issues)
-  - [3.5 Transformer Training Sensitivity](#3.5-transformer-training-sensitivity)
-  - [3.6 Interpretability and Model Behavior](#3.6-interpretability-and-model-behavior)
+  - [3.2 Context Vector Bottleneck](#3.2-context-vector-bottleneck)
+  - [3.3 Stabilizing LSTM Training](#3.3-stabilizing-lstm-training)
+  - [3.4 Attention Convergence and Alignment Failures](#3.4-attention-convergence-and-alignment-failures)
+  - [3.5 Transformer Sensitivity to Optimization](#3.5-transformer-sensitivity-to-optimization)
+  - [3.6 Using Attention to Understand Model Behavior](#3.6-using-attention-to-understand-model-behavior)
 - [4. Outcomes / Results](#4.-outcomes-results)
-  - [Seq2Seq Family (RNN → LSTM + Attention)](#seq2seq-family-rnn--lstm--attention)
-  - [Transformer Family (Parallel Self-Attention Models)](#transformer-family-parallel-self-attention-models)
-  - [Comparative Insights](#comparative-insights)
-  - [Performance Summary Grid](#performance-summary-grid)
+  - [4.1 Seq2Seq Family (RNN → LSTM + Attention)](#4.1-seq2seq-family-rnn-lstm-attention)
+  - [4.2 Transformer Family (Parallel Self-Attention Models)](#4.2-transformer-family-parallel-self-attention-models)
+  - [4.3 Comparative Translation Outputs](#4.3-comparative-translation-outputs)
+  - [4.4 Comparative Insights](#4.4-comparative-insights)
 - [5. Conceptual Insights](#5.-conceptual-insights)
-  - [5.1 RNN — Sequential Memory and Its Limits](#5.1-rnn--sequential-memory-and-its-limits)
-  - [5.2 LSTM — Gated Long-Term Memory](#5.2-lstm--gated-long-term-memory)
-  - [5.3 RNN + Attention — Breaking the Bottleneck](#5.3-rnn--attention--breaking-the-bottleneck)
-  - [5.4 LSTM + Attention — Hybrid Strengths](#5.4-lstm--attention--hybrid-strengths)
-  - [5.5 Transformer — Parallel Relational Reasoning](#5.5-transformer--parallel-relational-reasoning)
+  - [5.1 RNN — Sequential Memory and Its Limits](#5.1-rnn-sequential-memory-and-its-limits)
+  - [5.2 LSTM — Gated Long-Term Memory](#5.2-lstm-gated-long-term-memory)
+  - [5.3 RNN + Attention — Breaking the Bottleneck](#5.3-rnn-attention-breaking-the-bottleneck)
+  - [5.4 LSTM + Attention — Hybrid Strengths](#5.4-lstm-attention-hybrid-strengths)
+  - [5.5 Transformer — Parallel Relational Reasoning](#5.5-transformer-parallel-relational-reasoning)
 - [6. Project Highlights](#6.-project-highlights)
 
 ## **1. Key Features**
@@ -230,111 +237,23 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
 ---
 
 ## **3. Challenges & Learning**
+  ### **3.1 Vanishing Gradients in RNNs**    
+    Early experiments with the vanilla RNN Seq2Seq architecture revealed the classical vanishing-gradient failure mode: as sequence length increased, gradients propagated through many recurrent steps and diminished rapidly. This resulted in loss of information from the first half of sentences, producing translations that captured the end of the sentence but often ignored the beginning. Training curves reflected this: loss dropped slowly and plateaued early on longer examples. This reinforced a central limitation of simple RNNs—their compressed hidden representation and nonlinear recurrence make long-term dependency retention inherently unstable.
+  
+  ### **3.2 Context Vector Bottleneck** 
+    Even after replacing RNN cells with LSTMs to stabilize gradient flow, the canonical Seq2Seq design still relied on a single fixed-length context vector to represent the entire source sentence. The Multi30k German→English dataset contains descriptive captions that frequently involve long noun phrases and compositional details; compressing such content into one vector systematically caused semantic omissions and structural distortions. The model often captured the gist of the caption but dropped attributes like color, location, or modifiers. This exposed the structural flaw of the “encoder bottleneck” design and motivated the introduction of attention.
 
-  ### **3.1 Vanishing Gradients in RNNs** 
-  - Nature: purely sequential memory
-    #### 3.1.1 What happened:
-      - In the vanilla RNN Seq2Seq baseline, gradients had to flow through every time step in the sequence.
-      - As sequence length grew, early tokens (e.g., the first few words in a sentence) had almost no influence on later predictions because their gradients effectively vanished.
+  ### **3.3 Stabilizing LSTM Training**
+    LSTMs provided dramatic improvement, but their high capacity made them sensitive to hyperparameters. Larger hidden dimensions initially led to overfitting, where training perplexity dropped rapidly while validation perplexity stagnated. Adding dropout, tuning learning rates, and moderating hidden sizes produced significantly more stable convergence. This revealed a practical lesson: LSTMs excel on small datasets only when regularization and capacity are balanced carefully, especially with descriptive caption data like Multi30k.
 
-    #### 3.1.2 How it showed up:
-      - The model produced translations that captured local structure (the end of the sentence) but often ignored or distorted the beginning.
-      - Training loss decreased slowly and plateaued early, especially on longer sentences.
+  ### **3.4 Attention Convergence and Alignment Failures**
+    Implementing attention introduced its own challenges. Early versions produced flat, noisy, or diffuse alignment weights, with the decoder showing no clear preference for relevant encoder tokens. As a result, translations were fluently structured but conceptually mismatched. Switching to cosine similarity normalization, proper softmax scaling, and weight initialization fixed these issues. Attention began to form diagonal alignment patterns, especially for monotonic caption structures. This showed that attention is powerful but numerically fragile, requiring stable geometry and scoring functions.
 
-    #### 3.1.3 How the model’s nature caused it:
-      - The RNN compresses the entire input into a single hidden vector, updated repeatedly with tanh nonlinearity. This repeated application naturally shrinks gradients over time.
-      
-    #### 3.1.4 What fixed it:
-      - Replacing RNN cells with LSTM cells introduced a separate cell state with nearly linear gradient flow and gating mechanisms.
-      - This structural change allowed the model to retain information from much earlier time steps and significantly improved stability and performance.
-
-  ### **3.2 Bottleneck in the Context Vector** 
-  - Nature: single-vector sentence representation
-    #### 3.2.1 What happened:
-      - In the basic Seq2Seq architecture (even with LSTMs), the encoder produced a single final hidden state that the decoder used as the entire representation of the source sentence.
+  ### **3.5 Transformer Sensitivity to Optimization**
+    The Transformer brought superior capacity but was much more sensitive to optimization choices. High learning rates or insufficient warmup caused loss oscillations, early divergence, or failure to learn meaningful attention patterns. Reducing LR, extending training duration, and correctly applying dropout and LayerNorm produced smooth convergence. These challenges emphasized the trade-off: Transformers achieve the best results, but demand careful, theory-aligned optimization strategies.
     
-    #### 3.2.2 How it showed up:
-      - Translations were often semantically “compressed”:
-        - Important details disappeared.
-        - The model struggled more as sentence length or complexity increased.
-
-    #### 3.2.3 How the model’s nature caused it:
-      - A single fixed-length vector must represent everything: subject, verb, objects, modifiers, word order, and long-range dependencies.
-      - This is fundamentally restrictive for variable-length, information-dense sequences like natural language or images.
-
-    #### 3.2.4 What fixed it:
-      - Adding attention allowed the decoder to access all encoder hidden states, not just the final one.
-      - Instead of one static context vector, the decoder computed a dynamic context distribution per time step, selecting different parts of the source sentence for each generated word.
-      - This directly addressed the bottleneck imposed by the original Seq2Seq design.
-
-  ### **3.3 Tuning for Stability in LSTMs**
-  - Nature: high-capacity gated recurrent models
-    #### 3.3.1 What happened:
-      - Increasing embedding size and hidden dimension in LSTM-based models initially caused overfitting and training instability (oscillating loss, rapidly diverging validation metrics).
-    
-    #### 3.3.2 How it showed up:
-      - Training perplexity would drop quickly, but validation perplexity would either stagnate or worsen.
-      - The model memorized frequent patterns but generalized poorly, especially on longer or rarer examples.
-
-    #### 3.3.3 How the model’s nature caused it:
-      - LSTMs with large hidden states can store a huge amount of information and are highly expressive, but they are also prone to overfitting and sensitive to initialization and learning rate.
-
-    #### 3.3.4 What fixed it:
-      - Introducing dropout on embeddings and between LSTM layers reduced co-adaptation of hidden units.
-      - Lowering the learning rate and carefully choosing hidden sizes struck a balance between capacity and stability.
-      - This tuning aligned the LSTM’s expressive power with the dataset size and complexity.
-
-  ### **3.4 Attention Convergence Issues**
-  - Nature: differentiable alignment mechanism
-    #### 3.4.1 What happened:
-      - Early attention implementations produced flat or noisy attention distributions, where the decoder either spread focus almost uniformly or fixated on the wrong tokens.
-    
-    #### 3.4.2 How it showed up:
-      - Attention heatmaps did not show clear, diagonal-ish patterns (typical of good source–target alignment).
-      - Translations were sometimes grammatically reasonable but semantically misaligned (wrong subject, wrong object).
-
-    #### 3.4.3 How the model’s nature caused it:
-      - Attention is effectively a learned similarity function; if the score function is poorly scaled or unstable, gradients push the model toward trivial solutions (e.g., uniform distributions).
-
-    #### 3.4.4 What fixed it:
-      - Using normalized cosine similarity as the score function stabilized the range of attention scores.
-      - Proper normalization through softmax and careful initialization helped the model learn sharp, interpretable attention weights.
-      - This showed how sensitive attention is to numerical scaling and how its success is tightly coupled to the geometry of the hidden representations.
-
-  ### **3.5 Transformer Training Sensitivity**
-  - Nature: deep, highly parallel attention-based model
-    #### 3.5.1 What happened:
-      - Initial Transformer runs were unstable: loss curves fluctuated, and validation perplexity did not consistently improve.
-
-    #### 3.5.2 How it showed up:
-      - With default hyperparameters (higher learning rates, insufficient warmup), training sometimes overshot minima or got stuck in poor local optima.
-      - Models with more heads or larger feed-forward layers were particularly sensitive.
-
-    #### 3.5.3 How the model’s nature caused it:
-      - Transformers are deep stacks of attention + FFN blocks with residuals; small changes in learning rate or initialization can propagate through many layers.
-      - Multi-head attention introduces multiple subspaces that all need to coordinate; overly aggressive optimization can desynchronize them.
-
-    #### 3.5.4 What fixed it:
-      - Reducing the learning rate (e.g., from 1e−3 to around 3e−4) and training for more epochs (e.g., 16) smoothed convergence.
-      - Using dropout and Layer Normalization correctly at each sublayer improved stability.
-      - This reinforced the idea that Transformers are powerful but demand careful optimization and regularization strategies.
-
-  ### **3.6 Interpretability and Model Behavior**
-  - Nature: attention as a window into model reasoning
-    #### 3.6.1 What happened:
-      - The raw metrics (loss, perplexity) showed improvement, but understanding why required interpreting the internal behavior of attention layers.
-
-    #### 3.6.2 How it showed up:
-      - Visualization of attention maps for both Seq2Seq and Transformer models revealed distinct patterns:
-      - Seq2Seq + attention tended to align target tokens with specific source positions.
-      - The Transformer developed richer patterns where heads focused on different linguistic roles (e.g., one head attending to subjects, another to verbs or objects).
-
-    #### 3.6.3 How the model’s nature caused it:
-      - Attention explicitly exposes which tokens the model considers relevant at each step, making it naturally interpretable compared to a pure RNN hidden state.
-    
-    #### 3.6.4 What was learned:
-      - Attention heatmaps confirmed that the Transformer was not just overfitting numerically; it was learning syntactic and semantic structure (e.g., correctly aligning nouns with their translations, capturing verb–object relations).
-      - This interpretability closed the loop between architecture design (self-attention, multi-heads) and observed behavior, providing confidence that the model’s improvements were due to true structural understanding, not just memorization.
+  ### **3.6 Using Attention to Understand Model Behavior**
+    Attention heatmaps across models revealed stark architectural differences. Seq2Seq attention showed mostly monotonic alignments—suitable for caption-style datasets. Transformers displayed multi-head specialization, with heads attending to nouns, verbs, and spatial descriptors differently. This interpretability confirmed that improved perplexities were not accidental: models were learning linguistic structure, not just memorizing patterns. The process underscored how visualization helps validate whether models are improving for the right reasons.
 
 ---
 
@@ -362,27 +281,62 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
 
 ---
 
-### **4.3 Comparative Insights**
+
+### **4.3 Comparative Translation Outputs**
+
+<TechTable columns={["Sentence", "German Tokenized Input", "True Translation", "LSTM with Attention", "Transformer (Encoder Only)", "Full Transformer"]} style={{ maxWidth: "1800px", width: "100%", overflowX: "auto", margin: "0 auto" }}>
+  <TechRow label="1" values={["['<sos>', 'ein', 'mann', 'mit', 'einem', 'orangefarbenen', 'hut', 'der', 'etwas', '<unk>', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'man', 'in', 'an', 'orange', 'hat', 'starring', 'at', 'something', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'man', 'wearing', 'a', 'orange', 'hat', 'is', 'to', 'something', '<eos>’, ..]", "['<sos>', 'a', 'man', 'in', 'an', 'hat', 'hat', 'hat', 'something', 'something', 'something', '<eos>’, ..]", "['<sos>', 'a', 'man', 'in', 'an', 'orange', 'hat', '<unk>', 'something', '<unk>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
+  <TechRow label="2" values={["['<sos>', 'ein', 'boston', 'terrier', 'läuft', 'über', '<unk>', 'grünes', 'gras', 'vor', 'einem', 'weißen', 'zaun', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'boston', 'terrier', 'is', 'running', 'on', 'lush', 'green', 'grass', 'in', 'front', 'of', 'a', 'white', 'fence', '<eos>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'white', 'team', 'is', 'running', 'through', 'the',  'white', 'grass', 'of', 'of', 'of', 'a', '<eos>’, ..]", "['<sos>', 'a', 'boston', 'vendor', 'runs', 'running', 'grass', 'green', 'the', 'grass', 'of', 'of', 'of', 'fence', 'fence', 'fence', '<eos>’, ..]", "['<sos>', 'a', 'boston', '<unk>', 'dog', 'is', 'running', 'across', 'a', 'white', 'fence', 'in', 'front', 'of', 'a', 'white', 'fence', '<eos>', 'grass', '<eos>']"]} />
+  <TechRow label="3" values={["['<sos>', 'ein', 'mädchen', 'in', 'einem', 'karateanzug', 'bricht', 'ein', 'brett', 'mit', 'einem', 'tritt', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'girl', 'in', 'karate', 'uniform', 'breaking', 'a', 'stick', 'with', 'a', 'front', 'kick', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'girl', 'in', 'a', 'a', 'is', 'a', 'a', 'a', 'a', 'a', 'a', '<eos>’, ..]", "['<sos>', 'a', 'girl', 'in', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', '<eos>’,]", "['<sos>', 'a', 'girl', 'in', 'a', 'drill', 'is', 'putting', 'a', 'board', 'with', 'a', 'video', 'camera', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
+  <TechRow label="4" values={["['<sos>', 'fünf', 'leute', 'in', 'winterjacken', 'und', 'mit', 'helmen', 'stehen', 'im', 'schnee', 'mit', '<unk>', 'im', 'hintergrund', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'five', 'people', 'wearing', 'winter', 'jackets', 'and', 'helmets', 'stand', 'in', 'the', 'snow', 'with', '<unk>', 'in', 'the', 'background', '<eos>', '<pad>', '<pad>']", "['<sos>', 'five', 'people', 'in', 'in', 'and', 'and', 'and', 'and', 'with', 'in', 'in', 'in', 'background', 'background',  '<eos>’, ..]", "['<sos>', 'five', 'people', 'in', 'in', 'and', 'helmets', 'helmets', 'helmets', 'helmets', 'in', 'snow', 'in', 'the', 'the', 'in', '<eos>', 'background', 'background', '<eos>']", "['<sos>', 'five', 'people', 'in', 'bikinis', 'and', 'helmets', 'stand', 'in', 'the', 'snow', 'with', 'helmets', 'in', 'the', 'background', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
+  <TechRow label="5" values={["['<sos>', 'leute', 'reparieren', 'das', 'dach', 'eines', 'hauses', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'people', 'are', 'fixing', 'the', 'roof', 'of', 'a', 'house', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'people', 'on', 'the', 'the', 'of', 'a', 'of', '<eos>’,..]", "['<sos>', 'people', 'are', 'the','the', 'a', 'a', '<eos>’, ..]", "['<sos>', 'people', 'waving', 'the', 'roof', 'of', 'a', 'house', 'on', 'a', 'house', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
+  <TechRow label="6" values={["['<sos>', 'eine', 'gruppe', 'von', 'menschen', 'steht', 'vor', 'einem', 'iglu', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'group', 'of', 'people', 'standing', 'in', 'front', 'of', 'an', 'igloo', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'group', 'of', 'people', 'standing', 'standing', 'front', 'front', 'a', '<eos>’, ..]", "['<sos>', 'a', 'group', 'of', 'people', 'standing', 'standing', 'in', 'a', '<eos>’,..]", "['<sos>', 'a', 'group', 'of', 'people', 'stand', 'in', 'front', 'of', 'a', 'fire', 'pit', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
+  <TechRow label="7" values={["['<sos>', 'ein', 'typ', 'arbeitet', 'an', 'einem', 'gebäude', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'guy', 'works', 'on', 'a', 'building', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'guy', 'is', 'working', 'on', 'a', 'building', 'building', '<eos>’, ..]", "['<sos>', 'a', 'guy', 'is', 'on', 'a', 'building', 'building', '<eos>’, ..]", "['<sos>', 'a', 'guy', 'working', 'on', 'a', 'building', 'with', 'a', 'building', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
+  <TechRow label="8" values={["['<sos>', 'ein', 'mann', 'in', 'einer', 'weste', 'sitzt', 'auf', 'einem', 'stuhl', 'und', 'hält', 'magazine', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'man', 'in', 'a', 'vest', 'is', 'sitting', 'in', 'a', 'chair', 'and', 'holding', 'magazines', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'man', 'in', 'a', 'suit', 'is', 'sitting', 'a', 'a', 'and', 'a', '<eos>’, ..]", "['<sos>', 'a', 'man', 'in', 'a', 'vest', 'vest', 'on', 'on', 'a',  'holding', 'a', 'and', '<eos>’, ..]", "['<sos>', 'a', 'man', 'in', 'a', 'vest', 'is', 'sitting', 'on', 'a', 'chair', 'holding', 'umbrellas', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
+  <TechRow label="9" values={["['<sos>', 'eine', 'mutter', 'und', 'ihr', 'kleiner', 'sohn', 'genießen', 'einen', 'schönen', 'tag', 'im', 'freien', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'mother', 'and', 'her', 'young', 'song', 'enjoying', 'a', 'beautiful', 'day', 'outside', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'mother', 'and', 'her', 'her', 'her', 'her', 'on', 'on', 'the', 'day', '<eos>’, ..]", "['<sos>', 'a', 'mother', 'and', 'her', 'small', 'son', 'enjoying', 'a','<eos>', 'day', 'day', '<eos>’, ..]", "['<sos>', 'a', 'mother', 'and', 'little', 'girl', 'enjoy', 'a', 'nice', 'day', 'outdoors', 'outside', '<eos>', '<eos>', 'day', '<eos>', '<eos>', 'day', '<eos>', '<eos>']"]} />
+</TechTable>
+---
+
+### **4.4 Comparative Insights**
 
 <TechTable leftHeader="Aspect" rightHeader="Observation" alignDetails="left">
 
-  <TechRow label="Performance Trend">
-    Each architectural leap reduced perplexity dramatically — roughly 4× from RNN to LSTM + Attention, and another 3× with the Transformer — reflecting increased capacity to capture long-range dependencies and context.
+  <TechRow label="Performance Evolution Across Architectures">
+    - Every architectural upgrade brought a clear reduction in perplexity and more coherent translation outputs. 
+    - Moving from RNN → LSTM reduced perplexity by ~4×, thanks to stable gradient paths. 
+    - Adding attention removed the context bottleneck and improved semantic accuracy. 
+    - Transformers delivered another major improvement—roughly 3× lower perplexity than Seq2Seq—reflecting their ability to model long-range, non-monotonic dependencies.
   </TechRow>
 
-  <TechRow label="Architecture Impact">
-    LSTM gating preserved gradient flow. Attention removed the fixed-vector bottleneck. Transformer self-attention modeled all token relationships in parallel, providing the best fluency and consistency.
+  <TechRow label="Strength of Architectural Innovations">
+    - LSTM gating preserved long-term information and mitigated gradient decay.
+    - Attention mechanisms eliminated the need to compress all meaning into a single vector, enabling token-level alignment.
+    - Transformer self-attention offered full parallel context modeling, capturing global relationships and reordering patterns far better than recurrent models.
   </TechRow>
 
-  <TechRow label="Training Stability">
-    Transformer models required smaller learning rates (≈3e−4) and longer training (≈16 epochs), but converged more predictably and with less oscillation compared to recurrent models.
+  <TechRow label="Dataset Suitability">
+    The Multi30k-style caption dataset contains short-to-medium-length, mostly monotonic, descriptive sentences—a regime where:
+      - RNNs struggle due to long-range dependencies.
+      - LSTMs perform well but plateau on complex captions.
+      - Seq2Seq with attention performs strongly due to clear alignment structure.
+    Transformers excel due to global relational modeling and ability to integrate spatial/visual descriptors.
+
+Transformers are somewhat “overpowered” for this dataset, yet they still produce the highest-quality translations and lowest perplexities.
   </TechRow>
 
-  <TechRow label="Qualitative Example">
-    <strong>Ground Truth:</strong> “A girl in karate uniform breaking a stick with a front kick.”<br />
-    <strong>Seq2Seq (LSTM + Attention):</strong> “A girl in a uniform kicking something.”<br />
-    <strong>Transformer:</strong> “A girl in a karate uniform is kicking a board with a ball.”<br />
+  <TechRow label="Qualitative Behavior">
+    Example comparisons showed:
+      - RNNs lost early nouns and attributes (“a man … something”).
+      - LSTMs captured sentence structure but sometimes omitted modifiers.
+      - Attentional Seq2Seq aligned source and target tokens correctly, preserving detail.
+      - Transformers produced the most fluent, globally coherent translations—even when restructuring sentence order.
+
+    Concrete example
+    - Ground truth: “A girl in karate uniform breaking a stick with a front kick.”
+    - LSTM + Attention: “A girl in a uniform kicking something.”
+    - Transformer: “A girl in a karate uniform is kicking a board with a ball.”
     The Transformer maintained subject–verb agreement, captured object relations, and produced fluent natural sentences closer to human translation quality.
+
   </TechRow>
 
 </TechTable>
@@ -393,61 +347,123 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
 
 ### **5.1 RNN — Sequential Memory and Its Limits**
 
-- RNNs capture temporal structure by updating a single hidden state, but this compressed representation leads to **information bottlenecks** and severe **vanishing gradients**.
-- In translation, this means the beginning of a sentence becomes “washed out” as the model processes longer inputs, hurting fidelity and word order.
+  #### **5.1.1 Strengths**
+    - Simple structure and easy to implement from scratch.
+    - Suitable for very short, local-dependency tasks.
+    - Low memory footprint compared to LSTMs and Transformers.
+
+  #### **5.1.2 Weaknesses**
+    - Suffers severely from vanishing gradients.
+    - Cannot capture long-range dependencies due to hidden state compression.
+    - One hidden state must encode the entire meaning → major bottleneck.
+    - Training becomes unstable as sentence length increases.
+
+  #### **5.1.3 Dataset Suitability (Multi30k Captions)**
+    - Mostly unsuitable.
+    - The caption dataset includes descriptors (colors, objects, spatial info) that RNNs frequently lose.
+    - Works only on extremely short captions with minimal complexity.
 
 ### **5.2 LSTM — Gated Long-Term Memory**
 
-- LSTMs introduce a **cell state** and gating mechanisms to maintain information across many time steps.
-- The notebook’s custom LSTM implementation demonstrates how these gates create a **nearly linear gradient path**, enabling the model to remember early tokens when predicting later ones.
-- As the experiments show, this significantly narrows the gap between training and validation performance.
+  #### **5.2.1 Strengths**
+    - Input, output, and forget gates stabilize gradient flow.
+    - Captures longer dependencies far more reliably than vanilla RNNs.
+    - Dual-state structure (hidden + cell state) improves representational richness.
+    - Better at retaining early sentence structure.
+
+  #### **5.2.2 Weaknesses**
+    - Large number of parameters → can overfit small datasets.
+    - Training is slower than RNNs due to gate computations.
+    - Still compresses entire meaning into a single final state (bottleneck persists).
+    - Sequential decoding → cannot parallelize token generation.
+
+  #### **5.2.3 Dataset Suitability (Multi30k Captions)**
+    - Good for Multi30k captions.
+    - Can handle typical 8–14 word captions with modest complexity.
+    - Still loses details in longer or multi-clause captions without attention.
 
 ### **5.3 RNN + Attention — Breaking the Bottleneck**
 
-- Attention transforms the encoder–decoder contract from “single fixed vector” to a **flexible, token-level alignment**:
-  - The decoder can revisit any encoder state at any step.
-- Cosine similarity attention in the decoder is a lightweight way to compute relevance between the current decoder state and the entire source sentence.
-- This architecture teaches a critical lesson: **alignment and context retrieval are as important as memory capacity**.
+  #### **5.3.1 Strengths**
+    - Eliminates the fixed-length context vector → allows flexible retrieval of information.
+    - Attention scores act like soft alignments between tokens.
+    - Supports more complete translations with fewer omissions.
+    - Heatmaps provide excellent interpretability of alignment patterns.
+
+  #### **5.3.2 Weaknesses**
+    - Still bottlenecked by RNN recurrence.
+    - Slow decoding and training compared to Transformers.
+    - Sensitive to attention scoring stability.
+    - Struggles when alignment is non-monotonic.
+
+  #### **5.3.3 Dataset Suitability (Multi30k Captions)**
+    - Very strong.
+    - Caption translation is mostly monotonic—attention heatmaps form near-diagonal patterns.
+    - Great for preserving object–attribute relationships (e.g., “orange hat,” “green grass”).
 
 ### **5.4 LSTM + Attention — Hybrid Strengths**
 
-- The LSTM + Attention model combines:
-  - Stable long-range memory from the LSTM cell.
-  - Direct, context-sensitive access to all encoder states via attention.
-- In practice, this yields:
-  - Stronger alignments.
-  - More coherent word order.
-  - Better handling of longer sentences than any RNN-only baseline.
-- It also exposes the limits of **sequential computation**: the decoder still processes tokens one by one, and gradients must still flow through a chain of recurrent updates.
+  #### **5.4.1 Strengths**
+    - Combines LSTM’s memory stability with attention’s contextual flexibility.
+    - Produces the best results among Seq2Seq models.
+    - Handles long noun phrases and descriptive attributes effectively.
+    - Highly interpretable and visually aligned with human translation flow.
+
+  #### **5.4.2 Weaknesses**
+    - Still slow due to sequential decoding.
+    - Requires careful regularization on small datasets to avoid overfitting.
+    - Attention maps occasionally noisy for rare words.
+
+  #### **5.4.3 Dataset Suitability (Multi30k Captions)**
+    - Excellent.
+    - Multi30k contains descriptive captions—this architecture effectively captures spatial and visual details.
+    - Preserves sentence structure without the over-parameterization risk of Transformers.
 
 ### **5.5 Transformer — Parallel Relational Reasoning**
 
-- The Transformer replaces recurrence with **self-attention** and **positional encodings**, allowing:
-  - Each token to attend to all others in a single layer.
-  - Fully parallel sequence modeling.
-- Multi-head self-attention learns multiple complementary views of the sequence: local patterns, long-distance dependencies, and cross-token relationships.
-- Residual connections and LayerNorm compress depth into a manageable gradient path, enabling deeper and wider models.
-- In translation, this manifests as:
-  - Better global consistency.
-  - More accurate reordering of words between languages.
-  - Significantly lower perplexity and fewer repetition artifacts.
+  #### **5.5.1 Strengths**
+    - Fully parallelized → fastest training on GPUs.
+    - Multi-head self-attention models many linguistic relationships simultaneously.
+    - No recurrence → no long-range gradient decay.
+    - Best global coherence, fluency, and reordering ability.
+    - Residual connections + LayerNorm support deep architectures.
+
+  #### **5.5.2 Weaknesses**
+    - High memory usage.
+    - Requires precise LR, warmup, dropout, and normalization for stability.
+    - Overfits easily when dataset is small without proper regularization.
+    - Multi-head attention can collapse without tuning.
+
+  #### **5.5.3 Dataset Suitability (Multi30k Captions)**
+    - Very good to excellent.
+    - While Multi30k is small for a Transformer, moderate dropout and tuning prevent overfitting.
+    - Captures global sentence structure and subtle conceptual relations (e.g., subject–verb–object alignment).
 
 ---
 
 ## **6. Project Highlights**
 
-- Implemented **five translation architectures** from scratch — from RNN and LSTM to attention-based Seq2Seq and a full Transformer encoder–decoder.
-- Designed and executed a **unit-test-driven development process**:
-  - Verified the LSTM cell, embeddings, multi-head attention, and FFN against precomputed reference outputs.
-- Built a robust **data pipeline**:
-  - Downloaded and preprocessed German–English caption pairs.
-  - Implemented custom vocabulary, tokenization, batching, and padding logic.
-- Conducted **systematic hyperparameter tuning**:
-  - Scaling hidden dimensions, FFN width, number of heads, dropout, learning rate, and epochs.
-- Produced **quantitative and qualitative evidence**:
-  - Perplexity curves for all models.
-  - Side-by-side comparisons of true vs predicted translations.
-- Connected implementation details and experimental findings back to **modern NLP theory**:
-  - Highlighting how architectural design choices — memory vs attention, recurrence vs self-attention — directly drive translation performance and robustness.
+- Implemented five neural machine translation architectures from scratch (RNN, LSTM, RNN+Attention, LSTM+Attention, Transformer), demonstrating the full historical progression of sequence modeling.
+- Designed a fully custom NMT pipeline, including:
+  - Vocabulary Construction
+  - Tokenization and Padding
+  - Batching
+  - Perplexity tracking and LR scheduling
+- Performed rigorous hyperparameter tuning, including adjustments to:
+  - Hidden sizes
+  - FFN widths
+  - Attention Head count
+  - Dropout and LR schedules
+  - Teacher Forcing and Gradient Clipping
+- Generated comprehensive evaluation artifacts, including:
+  - Perplexity and Loss Curves
+  - Side-by-side Translation Comparisons (including spreadsheet outputs)
+  - Qualitative Alignment Analysis
+
+- Connected empirical findings to modern NLP theory, showing:
+  - Why LSTMs outperform RNNs
+  - How attention overcomes the context bottleneck
+  - Why Transformers achieve the best alignment and fluency
+- Demonstrated clear performance improvements, culminating in the tuned Transformer model achieving the lowest perplexity and highest translation coherence.
 
 ---
