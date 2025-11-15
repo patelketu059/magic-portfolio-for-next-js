@@ -67,8 +67,8 @@ This section breaks down the five major model architectures implemented — each
 - The baseline model implemented a classical sequence-to-sequence (Seq2Seq) structure with separate encoder and decoder RNNs.
 - Each encoder step processes one token at a time and updates a hidden state, which serves as a running summary of all previous tokens. After reading the entire input sequence, the final hidden state of the encoder is passed to the decoder as a condensed vector representation of the source sentence. The decoder then generates each target token autoregressively.
   
-  <Image src="/images/projects/NMT/RNN-unrolled.png" alt="RNN-unrolled" title="RNN-Unrolled" size="70" />
-  <Image src="/images/projects/NMT/LSTM3-SimpleRNN.png" alt="Simple-RNN" title="Simple-RNN" size="70" />
+  <Image src="/images/projects/NMT/RNN-unrolled.png" alt="RNN-unrolled" title="RNN-Unrolled" size="60" />
+  <Image src="/images/projects/NMT/LSTM3-SimpleRNN.png" alt="Simple-RNN" title="Simple-RNN" size="60" />
 
 
 
@@ -83,8 +83,8 @@ This section breaks down the five major model architectures implemented — each
 - The LSTM introduces three gating mechanisms — input, forget, and output gates — that regulate information flow and maintain a persistent cell state across time steps using forget gate, input gate,
 cell state update, cell state, output gate, and hidden state:
 
-<Image src="/images/projects/NMT/LSTM_Steps.png" alt="LSTM-operation" title="LSTM Operations" size="40" />
-<Image src="/images/projects/NMT/LSTM3-chain.png" alt="LSTM" title="LSTM" size="70" />
+<Image src="/images/projects/NMT/LSTM_Steps.png" alt="LSTM-operation" title="LSTM Operations" size="50" />
+<Image src="/images/projects/NMT/LSTM3-chain.png" alt="LSTM" title="LSTM" size="60" />
 
 
 - This gating mechanism acts like a controlled memory cell, preserving long-term dependencies and selectively forgetting irrelevant information. Unlike an RNN’s compressed hidden state, the LSTM’s dual-state structure allows gradient flow to remain nearly constant through time, dramatically improving convergence stability.
@@ -97,14 +97,14 @@ cell state update, cell state, output gate, and hidden state:
 - While LSTMs significantly improve memory retention, even they struggle to encode all sentence information into a single vector — a bottleneck known as the context vector limitation. To resolve this, an attention mechanism was introduced.
 - In this variant, the decoder no longer relies on a single fixed-length vector. Instead, at each decoding step, it computes a similarity score between the current decoder state and all encoder hidden states. These scores are converted into a softmax distribution, which acts as a set of attention weights, denoting how much the decoder should focus on each input token.
 
-<Image src="/images/projects/NMT/RNN_Attention.png" alt="RNN-Attention" title="RNN with Attention" size="70" />
+<Image src="/images/projects/NMT/RNN_Attention.png" alt="RNN-Attention" title="RNN with Attention" size="60" />
 
 
 - This dynamic alignment process enables the decoder to “look back” at relevant parts of the source sentence while generating each word. Conceptually, attention acts like a learned lookup table, assigning focus to semantically aligned words.
 - This architecture marks a major step toward human-like translation, where the model attends selectively rather than relying on pure memorization.
 ----
 
-<Image src="/images/projects/NMT/attention.drawio.png" alt="Attention" title="Attention-Mechanism" size="40" />
+<Image src="/images/projects/NMT/attention.drawio.png" alt="Attention" title="Attention-Mechanism" size="50" />
 
 ----
 ### **1.4 LSTM with Attention (Seq2Seq + Attention)**
