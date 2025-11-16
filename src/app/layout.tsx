@@ -14,6 +14,7 @@ import {
   SpacingToken,
 } from "@once-ui-system/core";
 import { Footer, Header, RouteGuard, Providers } from "@/components";
+import GlobalBackground from "@/components/GlobalBackground";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
 
@@ -33,11 +34,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Flex
+    <html
       suppressHydrationWarning
-      as="html"
       lang="en"
-      fillWidth
+      style={{ scrollBehavior: "smooth" }}
       className={classNames(
         fonts.heading.variable,
         fonts.body.variable,
@@ -105,16 +105,18 @@ export default async function RootLayout({
         />
       </head>
       <Providers>
-        <Column
-          as="body"
-          background="page"
-          fillWidth
-          style={{ minHeight: "100vh" }}
-          margin="0"
-          padding="0"
-          horizontal="center"
+        <body
+          style={{ 
+            minHeight: "100vh",
+            margin: 0,
+            padding: 0,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
         >
-          <RevealFx fill position="absolute">
+          <div style={{ position: "absolute", width: "100%", height: "100%" }}>
             <Background
               mask={{
                 x: effects.mask.x,
@@ -155,18 +157,31 @@ export default async function RootLayout({
                 color: effects.lines.color,
               }}
             />
-          </RevealFx>
-          <Flex fillWidth minHeight="16" s={{ hide: true }} />
+            <GlobalBackground preserve="meet" />
+          </div>
+          <div style={{ width: "100%", minHeight: "16px" }} className="mobile-spacer" />
           <Header />
-          <Flex zIndex={0} fillWidth padding="l" horizontal="center" flex={1}>
-            <Flex horizontal="center" fillWidth minHeight="0">
+          <div style={{ 
+            zIndex: 0, 
+            width: "100%", 
+            padding: "var(--static-space-24)", 
+            display: "flex",
+            justifyContent: "center",
+            flex: 1
+          }}>
+            <div style={{ 
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              minHeight: 0
+            }}>
               <RouteGuard>{children}</RouteGuard>
-            </Flex>
-          </Flex>
+            </div>
+          </div>
           <Footer />
           <ScrollToTopButton />
-        </Column>
+        </body>
       </Providers>
-    </Flex>
+    </html>
   );
 }

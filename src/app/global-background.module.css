@@ -1,0 +1,350 @@
+/* Global background styles for site-wide decorative SVG (cleaned)
+   Infinity artwork removed per request. Only ring artwork styles remain. */
+.globalBackground {
+  position: fixed;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.composite {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+}
+
+.artwork {
+  transform: translate(0, 0);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.ringsGroup { transform-origin: center; transform: translateZ(60px); will-change: transform, opacity; }
+.ring { transition: transform 0.3s ease, opacity 0.3s ease; mix-blend-mode: multiply; filter: blur(0.6px); opacity: 0.28; transform-box: fill-box; transform-origin: 50% 50%; stroke-width: 0.8; }
+
+.brokenRing {
+  stroke-dasharray: 18 8 6 12 4 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: 0.04;
+}
+
+.streak1 { animation: ring-streak-1 6s linear infinite; }
+.streak2 { animation: ring-streak-2 10s linear infinite; }
+.streak3 { animation: ring-streak-3 14s linear infinite; }
+
+@keyframes ring-streak-1 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -300; } }
+@keyframes ring-streak-2 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -600; } }
+@keyframes ring-streak-3 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -900; } }
+
+@keyframes wobble-breathe-1 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(2px, -1px) scale(1.002); }
+  25% { transform: translate(0px, 2px) scale(5); }
+  37.5% { transform: translate(-2px, 1px) scale(5.001); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(2px, -1px) scale(5.002); }
+  75% { transform: translate(0px, 2px) scale(5); }
+  87.5% { transform: translate(-2px, 1px) scale(1.001); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes wobble-breathe-2 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(1px, -2px) scale(1.001); }
+  25% { transform: translate(-1px, 1px) scale(5); }
+  37.5% { transform: translate(2px, 0px) scale(5.002); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(-2px, 1px) scale(5.001); }
+  75% { transform: translate(1px, -1px) scale(5); }
+  87.5% { transform: translate(0px, 2px) scale(1.002); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes wobble-breathe-3 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(-1px, 2px) scale(1.001); }
+  25% { transform: translate(2px, 0px) scale(5); }
+  37.5% { transform: translate(0px, -2px) scale(5.001); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(1px, 1px) scale(5.002); }
+  75% { transform: translate(-2px, 0px) scale(5); }
+  87.5% { transform: translate(1px, -1px) scale(1.001); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.ringWrap1 { transform-box: fill-box; transform-origin: 50% 50%; }
+.ringWrap2 { transform-box: fill-box; transform-origin: 50% 50%; }
+.ringWrap3 { transform-box: fill-box; transform-origin: 50% 50%; }
+
+.wob1 { animation: wobble-breathe-1 14s ease-in-out infinite; transform-origin: 50% 50%; }
+.wob2 { animation: wobble-breathe-2 11s ease-in-out infinite; transform-origin: 50% 50%; }
+.wob3 { animation: wobble-breathe-3 18s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* responsive fallbacks */
+@media (max-width: 420px) { .rings { display: none; } }
+/* Global background styles for site-wide decorative SVG */
+.globalBackground {
+  /* full-bleed fixed background covering the viewport */
+  position: fixed;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.composite {
+  /* stretch SVG to cover viewport; use CSS sizing and let the SVG's
+     preserveAspectRatio control cropping */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+}
+
+/* Shift the artwork group's coordinate center (700,400) to the viewport center */
+.artwork {
+  transform: translate(0, 0);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.ringsGroup { transform-origin: center; transform: translateZ(60px); will-change: transform, opacity; }
+.ring { transition: transform 0.3s ease, opacity 0.3s ease; mix-blend-mode: multiply; filter: blur(0.6px); opacity: 0.28; transform-box: fill-box; transform-origin: 50% 50%; stroke-width: 0.8; }
+
+/* make a slightly broken/textured appearance for ring 1 */
+.brokenRing {
+  stroke-dasharray: 18 8 6 12 4 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-opacity: 0.04;
+}
+
+/* moving streaks for rings: animate dash offset at different speeds */
+.streak1 { animation: ring-streak-1 6s linear infinite; }
+.streak2 { animation: ring-streak-2 10s linear infinite; }
+.streak3 { animation: ring-streak-3 14s linear infinite; }
+
+@keyframes ring-streak-1 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -300; } }
+@keyframes ring-streak-2 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -600; } }
+@keyframes ring-streak-3 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -900; } }
+
+
+/* Combined wobble + breathe animations for rings */
+@keyframes wobble-breathe-1 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(2px, -1px) scale(1.002); }
+  25% { transform: translate(0px, 2px) scale(5); }
+  37.5% { transform: translate(-2px, 1px) scale(5.001); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(2px, -1px) scale(5.002); }
+  75% { transform: translate(0px, 2px) scale(5); }
+  87.5% { transform: translate(-2px, 1px) scale(1.001); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes wobble-breathe-2 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(1px, -2px) scale(1.001); }
+  25% { transform: translate(-1px, 1px) scale(5); }
+  37.5% { transform: translate(2px, 0px) scale(5.002); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(-2px, 1px) scale(5.001); }
+  75% { transform: translate(1px, -1px) scale(5); }
+  87.5% { transform: translate(0px, 2px) scale(1.002); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes wobble-breathe-3 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(-1px, 2px) scale(1.001); }
+  25% { transform: translate(2px, 0px) scale(5); }
+  37.5% { transform: translate(0px, -2px) scale(5.001); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(1px, 1px) scale(5.002); }
+  75% { transform: translate(-2px, 0px) scale(5); }
+  87.5% { transform: translate(1px, -1px) scale(1.001); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+/* Ring wrappers without rotation */
+.ringWrap1 { transform-box: fill-box; transform-origin: 50% 50%; }
+.ringWrap2 { transform-box: fill-box; transform-origin: 50% 50%; }
+.ringWrap3 { transform-box: fill-box; transform-origin: 50% 50%; }
+
+/* Combined wobble + breathe on the ellipse shapes */
+.wob1 { animation: wobble-breathe-1 14s ease-in-out infinite; transform-origin: 50% 50%; }
+.wob2 { animation: wobble-breathe-2 11s ease-in-out infinite; transform-origin: 50% 50%; }
+.wob3 { animation: wobble-breathe-3 18s ease-in-out infinite; transform-origin: 50% 50%; }
+
+/* infinity artwork removed */
+
+/* responsive fallbacks */
+@media (max-width: 420px) { .rings { display: none; } }
+/* Global background styles for site-wide decorative SVG */
+.globalBackground {
+  /* full-bleed fixed background covering the viewport */
+  position: fixed;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.composite {
+  /* stretch SVG to cover viewport; use CSS sizing and let the SVG's
+     preserveAspectRatio control cropping */
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+}
+
+/* Shift the artwork group's coordinate center (700,400) to the viewport center
+  using viewport-based calc() values. This keeps inner path coords unchanged
+  while ensuring the artwork is visually centered regardless of viewport size. */
+.artwork {
+  /* JavaScript will compute and apply the precise translate to center the artwork */
+  transform: translate(0, 0);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.ringsGroup { transform-origin: center; transform: translateZ(60px); will-change: transform, opacity; }
+.ring { transition: transform 0.3s ease, opacity 0.3s ease; mix-blend-mode: multiply; filter: blur(0.6px); opacity: 0.28; transform-box: fill-box; transform-origin: 50% 50%; stroke-width: 0.8; }
+
+/* make a slightly broken/textured appearance for ring 1 */
+.brokenRing {
+  stroke-dasharray: 18 8 6 12 4 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* keep same opacity as previous ellipses */
+  stroke-opacity: 0.04;
+}
+
+/* moving streaks for rings: animate dash offset at different speeds */
+.streak1 { animation: ring-streak-1 6s linear infinite; }
+.streak2 { animation: ring-streak-2 10s linear infinite; }
+.streak3 { animation: ring-streak-3 14s linear infinite; }
+
+@keyframes ring-streak-1 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -300; } }
+@keyframes ring-streak-2 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -600; } }
+@keyframes ring-streak-3 { 0% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -900; } }
+
+
+
+/* Combined wobble + breathe animations for rings */
+@keyframes wobble-breathe-1 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(2px, -1px) scale(1.002); }
+  25% { transform: translate(0px, 2px) scale(5); }
+  37.5% { transform: translate(-2px, 1px) scale(5.001); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(2px, -1px) scale(5.002); }
+  75% { transform: translate(0px, 2px) scale(5); }
+  87.5% { transform: translate(-2px, 1px) scale(1.001); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes wobble-breathe-2 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(1px, -2px) scale(1.001); }
+  25% { transform: translate(-1px, 1px) scale(5); }
+  37.5% { transform: translate(2px, 0px) scale(5.002); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(-2px, 1px) scale(5.001); }
+  75% { transform: translate(1px, -1px) scale(5); }
+  87.5% { transform: translate(0px, 2px) scale(1.002); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes wobble-breathe-3 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  12.5% { transform: translate(-1px, 2px) scale(1.001); }
+  25% { transform: translate(2px, 0px) scale(5); }
+  37.5% { transform: translate(0px, -2px) scale(5.001); }
+  50% { transform: translate(0px, 0px) scale(15); }
+  62.5% { transform: translate(1px, 1px) scale(5.002); }
+  75% { transform: translate(-2px, 0px) scale(5); }
+  87.5% { transform: translate(1px, -1px) scale(1.001); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+/* Ring wrappers without rotation */
+.ringWrap1 { transform-box: fill-box; transform-origin: 50% 50%; }
+.ringWrap2 { transform-box: fill-box; transform-origin: 50% 50%; }
+.ringWrap3 { transform-box: fill-box; transform-origin: 50% 50%; }
+
+/* Combined wobble + breathe on the ellipse shapes */
+.wob1 { animation: wobble-breathe-1 14s ease-in-out infinite; transform-origin: 50% 50%; }
+.wob2 { animation: wobble-breathe-2 11s ease-in-out infinite; transform-origin: 50% 50%; }
+.wob3 { animation: wobble-breathe-3 18s ease-in-out infinite; transform-origin: 50% 50%; }
+
+.infinity { display: none !important; }
+.infinityPathGlow { display: none; }
+.infinityWrap1 { display: none !important; }
+.infinityPathMain2 { display: none !important; }
+.infinityPathMain3 { display: none !important; }
+.infinityPathMain { display: none !important; }
+.infinityPathHighlight { display: none !important; }
+
+
+
+@keyframes complete-infinity-1 { 
+  0% { transform: translate(0px, 0px) scale(1); stroke: #7b61ff; filter: hue-rotate(0deg) brightness(5) saturate(1.05); } 
+  12.5% { transform: translate(-1px, 5px) scale(1.5); stroke: #5a4fd8; filter: hue-rotate(20deg) brightness(0.9) saturate(1.0); }
+  25% { transform: translate(5px, -5px) scale(2); stroke: #3a3db1; filter: hue-rotate(40deg) brightness(0.85) saturate(0.95); } 
+  37.5% { transform: translate(10px, 10px) scale(2.5); stroke: #2a4593; filter: hue-rotate(60deg) brightness(0.8) saturate(0.92); }
+  50% { transform: translate(20px, -70px) scale(3); stroke: #1a4d6d; filter: hue-rotate(80deg) brightness(10) saturate(0.9); } 
+  62.5% { transform: translate(-50px, -50px) scale(2.5); stroke: #2a4d8a; filter: hue-rotate(100deg) brightness(0.8) saturate(0.95); }
+  75% { transform: translate(0px, 0px) scale(2); stroke: #4a55b5; filter: hue-rotate(120deg) brightness(0.85) saturate(1.0); } 
+  87.5% { transform: translate(0px, 0px) scale(1.5); stroke: #6a5de5; filter: hue-rotate(60deg) brightness(0.9) saturate(1.02); }
+  100% { transform: translate(0px, 0px) scale(1); stroke: #7b61ff; filter: hue-rotate(0deg) brightness(10) saturate(1.05); } 
+}
+
+@keyframes complete-infinity-2 { 
+  0% { transform: translate(0px, 0px) scale(1); stroke: #6850d4; filter: hue-rotate(0deg) brightness(0.95) saturate(1.05); } 
+  15% { transform: translate(-2px, 3px) scale(0.98); stroke: #5547b8; filter: hue-rotate(25deg) brightness(0.88) saturate(0.98); }
+  30% { transform: translate(2px, 0px) scale(0.96); stroke: #423e9c; filter: hue-rotate(50deg) brightness(0.82) saturate(0.93); } 
+  45% { transform: translate(0px, -3px) scale(1.02); stroke: #334978; filter: hue-rotate(75deg) brightness(0.78) saturate(0.91); }
+  60% { transform: translate(0px, 0px) scale(1.04); stroke: #2a5f7e; filter: hue-rotate(100deg) brightness(0.75) saturate(0.9); } 
+  75% { transform: translate(-2px, 2px) scale(1.01); stroke: #3d5b9d; filter: hue-rotate(120deg) brightness(0.82) saturate(0.97); }
+  90% { transform: translate(2px, -1px) scale(0.98); stroke: #5753bd; filter: hue-rotate(60deg) brightness(0.9) saturate(1.02); } 
+  100% { transform: translate(0px, 0px) scale(1); stroke: #6850d4; filter: hue-rotate(0deg) brightness(0.95) saturate(1.05); } 
+}
+
+@keyframes complete-infinity-3 { 
+  0% { transform: translate(0px, 0px) scale(1); stroke: #5840b8; filter: hue-rotate(50deg) brightness(0.95) saturate(1.05); } 
+  10% { transform: translate(50px, -6px) scale(1.25); stroke: #4a3ca0; filter: hue-rotate(18deg) brightness(0.91) saturate(1.01); }
+  20% { transform: translate(80px, -3px) scale(1.5); stroke: #3c3888; filter: hue-rotate(36deg) brightness(0.87) saturate(0.97); } 
+  35% { transform: translate(-3px, 0px) scale(2); stroke: #2a3a70; filter: hue-rotate(60deg) brightness(0.81) saturate(0.93); }
+  50% { transform: translate(0px, 0px) scale(1.5); stroke: #0f3d5a; filter: hue-rotate(90deg) brightness(0.75) saturate(0.9); } 
+  65% { transform: translate(3px, 2px) scale(1.25); stroke: #254174; filter: hue-rotate(110deg) brightness(0.8) saturate(0.94); }
+  80% { transform: translate(0px, -2px) scale(1); stroke: #3e439b; filter: hue-rotate(130deg) brightness(0.88) saturate(1.0); } 
+  90% { transform: translate(-2px, 1px) scale(1.25); stroke: #4c41ac; filter: hue-rotate(50deg) brightness(0.92) saturate(1.03); }
+  100% { transform: translate(0px, 0px) scale(1.5); stroke: #5840b8; filter: hue-rotate(0deg) brightness(0.95) saturate(1.05); } 
+}
+
+
+/* responsive adjustments */
+@media (max-width: 900px) { .infinity { width: 100vw; opacity: 0.05; } }
+@media (max-width: 420px) { .infinity, .rings { display: none; } }
+
+/* Temporarily hide the animated infinity symbol groups */
+.infinityWrap1,
+.infinityWrap2,
+.infinityWrap3 {
+  display: none !important;
+}
+.infinity { /* removed */ }

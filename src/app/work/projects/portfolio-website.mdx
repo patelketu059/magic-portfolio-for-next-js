@@ -1,0 +1,148 @@
+---
+title: "Portfolio Website"
+publishedAt: "2025-11-15"
+summary: "A modern, responsive portfolio website built with Next.js, TypeScript, and cutting-edge web technologies."
+images:
+  - "/images/projects/project-01/cover-01.jpg"
+team:
+  - name: "Ketu Patel"
+    role: "Full Stack Developer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://www.linkedin.com/in/ketu-patel/"
+---
+
+## Overview
+
+Yes, I developed the website you are currently looking at! This portfolio was designed to showcase my work and skills in a clean, modern interface inspired by contemporary web design trends. The site features a single-page layout with smooth scrolling, interactive elements, and a focus on user experience.
+
+### Table of Contents
+
+- [1. Key Features](#1-key-features)
+- [2. Technologies Used](#2-technologies-used)
+- [3. Design Philosophy](#3-design-philosophy)
+- [4. Challenges & Solutions](#4-challenges-solutions)
+- [5. Future Enhancements](#5-future-enhancements)
+
+## 1. Key Features
+
+### 1.1 Single-Page Architecture
+- **Smooth scrolling navigation** between sections (About, Experience, Skills, Projects, Contact)
+- **Fixed side navigation** for quick access to different sections
+- **Responsive design** that adapts seamlessly to mobile, tablet, and desktop devices
+
+### 1.2 Interactive Components
+- **Typing animation** on the hero section for dynamic first impressions
+- **Hover-interactive skill cards** that reveal proficiency percentages
+- **Smooth transitions** and animations throughout the site
+
+### 1.3 Performance Optimized
+- **Server-side rendering** with Next.js for optimal SEO and initial load times
+- **Static generation** for blog posts and project pages
+- **Image optimization** using Next.js Image component
+- **CSS Modules** for scoped, efficient styling
+
+## 2. Technologies Used
+
+<TechTable leftHeader="Category" rightHeader="Details" alignDetails="left">
+  <TechRow label="Framework">
+    Next.js 15.5 with App Router
+  </TechRow>
+
+  <TechRow label="Language">
+    TypeScript 5.x for type safety
+  </TechRow>
+
+  <TechRow label="Styling">
+    CSS Modules, Once UI design system tokens
+  </TechRow>
+
+  <TechRow label="Components">
+    React 18 with Server and Client Components
+  </TechRow>
+
+  <TechRow label="Content">
+    MDX for rich content with embedded components
+  </TechRow>
+
+  <TechRow label="Deployment">
+    Vercel for instant deployments and edge functions
+  </TechRow>
+
+  <TechRow label="Version Control">
+    Git & GitHub for source control
+  </TechRow>
+</TechTable>
+
+## 3. Design Philosophy
+
+The design was inspired by [mitchellsparrow.com](https://www.mitchellsparrow.com/), focusing on:
+
+### 3.1 Minimalism
+- Clean layouts with generous whitespace
+- Typography-driven hierarchy
+- Subtle animations that enhance rather than distract
+
+### 3.2 Accessibility
+- Semantic HTML for better screen reader support
+- Proper heading hierarchy
+- Keyboard navigation support
+- High contrast ratios for readability
+
+### 3.3 Performance
+- Lazy loading for images and components
+- Minimal JavaScript bundle sizes
+- Efficient CSS with CSS Modules (no runtime CSS-in-JS)
+
+## 4. Challenges & Solutions
+
+### 4.1 Layout Context Provider Issue
+
+**Challenge:** The Once UI design system required a LayoutProvider context, but using layout components before the provider was initialized caused errors.
+
+**Solution:** 
+- Restructured the layout to use plain HTML elements (`<html>`, `<body>`) outside the provider
+- Wrapped all Once UI components inside the `<Providers>` component
+- Used CSS Modules for custom components to avoid context dependencies
+
+### 4.2 Server vs Client Components
+
+**Challenge:** Balancing server-side rendering benefits with client-side interactivity.
+
+**Solution:**
+- Kept page components as server components for metadata and SEO
+- Created separate client components for interactive features (typing animation, hover states)
+- Used the `"use client"` directive strategically
+
+### 4.3 Smooth Scrolling
+
+**Challenge:** Implementing smooth scrolling between sections with proper anchor positioning.
+
+**Solution:**
+- Added `scroll-behavior: smooth` to the HTML element
+- Used `scroll-margin-top` for sections to account for fixed header
+- Implemented proper section IDs for anchor navigation
+
+## 5. Future Enhancements
+
+### Planned Features
+- **Dark/Light theme toggle** with persistent user preference
+- **Blog section** for technical writing and tutorials
+- **Project filtering** by technology or category
+- **Contact form** with email integration
+- **Analytics** to track visitor engagement
+- **Parallax effects** on scroll for enhanced visual interest
+- **Case study pages** with detailed project breakdowns
+
+### Performance Improvements
+- **Image lazy loading** with blur-up placeholders
+- **Code splitting** for faster initial page loads
+- **Service worker** for offline support
+- **CDN optimization** for global content delivery
+
+---
+
+## Project Highlight
+
+Built a modern, responsive portfolio website from scratch using Next.js 15 and TypeScript, featuring a single-page architecture with smooth scrolling, interactive components, and optimized performance. The site showcases clean design principles, accessibility best practices, and cutting-edge web technologies.
+
+**Key Achievement:** Successfully redesigned the entire site to match a target aesthetic while maintaining performance and accessibility standards, solving complex layout provider issues and implementing a hybrid server/client component architecture.

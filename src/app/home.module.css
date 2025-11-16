@@ -1,0 +1,594 @@
+.container {
+  width: 100%;
+  padding: 0 10vw; /* increased horizontal gutters */
+}
+
+/* Hero Section */
+.hero {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: -80px;
+}
+
+.role {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  /* expose the role color as a variable so other elements can reuse the exact value */
+  --role-color: var(--neutral-on-background-weak);
+  color: var(--role-color);
+  margin: 0;
+}
+
+.heroTitle {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow: hidden;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.heroBackground {
+  position: fixed; /* keep background fixed while scrolling */
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* place behind all content: use negative z-index so text, icons and links sit above */
+  z-index: -1;
+  overflow: visible;
+}
+
+.composite {
+  /* center the SVG graphics in the viewport regardless of internal viewBox/content
+     and prevent the artwork from appearing stuck to the top-left */
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 120vw; /* slightly larger so shapes that are off-center remain visible */
+  height: 120vh;
+  max-width: 1600px;
+  max-height: 120vh;
+  overflow: visible;
+  display: block;
+}
+
+.composite { perspective: 1200px; }
+
+
+@keyframes dash-move {
+  0% { stroke-dashoffset: 2200; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes float-3d {
+  0% { transform: translate(-50%, -50%) rotateX(10deg) rotateZ(0deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotateX(14deg) rotateZ(180deg) scale(1.02); }
+  100% { transform: translate(-50%, -50%) rotateX(10deg) rotateZ(360deg) scale(1); }
+}
+
+@keyframes warp-1 {
+  0% { transform: translate(0,0) scale(1) rotate(0deg); }
+  25% { transform: translate(-6px,4px) scale(1.01) rotate(-4deg); }
+  50% { transform: translate(4px,-6px) scale(0.995) rotate(2deg); }
+  75% { transform: translate(-2px,6px) scale(1.005) rotate(-3deg); }
+  100% { transform: translate(0,0) scale(1) rotate(0deg); }
+}
+
+@keyframes warp-2 {
+  0% { transform: translate(0,0) scale(1) rotate(0deg); }
+  20% { transform: translate(8px,-4px) scale(0.995) rotate(3deg); }
+  50% { transform: translate(-8px,6px) scale(1.01) rotate(-2deg); }
+  80% { transform: translate(4px,-8px) scale(0.995) rotate(4deg); }
+  100% { transform: translate(0,0) scale(1) rotate(0deg); }
+}
+
+@keyframes warp-3 {
+  0% { transform: translate(0,0) scale(1) rotate(0deg); }
+  30% { transform: translate(-10px,6px) scale(1.02) rotate(-6deg); }
+  60% { transform: translate(6px,-10px) scale(0.99) rotate(5deg); }
+  100% { transform: translate(0,0) scale(1) rotate(0deg); }
+}
+
+
+@keyframes glow {
+  0% { opacity: 0.8; filter: drop-shadow(0 0 0px var(--brand-on-background-strong)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 12px rgba(0,0,0,0)); }
+  100% { opacity: 0.8; filter: drop-shadow(0 0 0px var(--brand-on-background-strong)); }
+}
+
+@keyframes glow-pulse {
+  0% { opacity: 0.18; transform: scale(1); }
+  50% { opacity: 0.32; transform: scale(1.02); }
+  100% { opacity: 0.18; transform: scale(1); }
+}
+
+@keyframes highlight-move {
+  0% { stroke-dashoffset: 0; opacity: 1; }
+  50% { opacity: 0.95; }
+  100% { stroke-dashoffset: -2200; opacity: 1; }
+}
+
+@keyframes color-shift {
+  0% { filter: hue-rotate(0deg) brightness(0.95) saturate(1.05); }
+  25% { filter: hue-rotate(40deg) brightness(0.85) saturate(0.95); }
+  50% { filter: hue-rotate(80deg) brightness(0.75) saturate(0.9); }
+  75% { filter: hue-rotate(120deg) brightness(0.85) saturate(1.0); }
+  100% { filter: hue-rotate(0deg) brightness(0.95) saturate(1.05); }
+}
+
+/* reduce visual load on small screens */
+/* Infinity symbols removed — no styles needed */
+
+@media (max-width: 1100px) {
+  .sectionContent {
+    width: 92%;
+  }
+
+  .heroInner {
+    width: 92%;
+  }
+
+  .rings {
+    max-width: 220vmin;
+  }
+}
+
+@media (max-width: 640px) {
+  .sectionContent {
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .heroInner {
+    width: 100%;
+    padding: 0 12px;
+  }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes pulse {
+  0% { opacity: 0.12; }
+  50% { opacity: 0.18; }
+  100% { opacity: 0.12; }
+}
+
+/* Navigation Sidebar */
+.sidebar {
+  position: fixed;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 10;
+}
+
+.navLink {
+  text-decoration: none;
+  color: var(--neutral-on-background-weak);
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: var(--brand-on-background-strong);
+}
+.heroNav {
+  margin-top: 24px;
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+}
+
+.heroNavLink {
+  text-decoration: none;
+  /* reduce vertical padding so size more closely matches the small role label */
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--neutral-alpha-medium);
+  color: var(--role-color);
+  /* match the role typography: slightly wider tracking and same font-size */
+  letter-spacing: 0.2em;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
+  background: transparent;
+  font-family: inherit;
+}
+
+.heroNavLink:hover {
+  background: var(--neutral-alpha-weak);
+  color: var(--brand-on-background-strong);
+  transform: translateY(-3px);
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+/* Sections */
+.section {
+  width: 100%;
+  min-height: 100vh;
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Standard content wrapper used across sections to center and constrain width
+   Ensures Projects carousel, About, and Experience line up visually */
+.sectionContent {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 12px; /* small inner padding for very narrow viewports */
+}
+
+/* Increase padding for About section by 20% (96px / 24px) */
+#about {
+  padding: 96px 24px;
+}
+
+.sectionTitle {
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+/* About Section (two-column portrait + copy like Mitchell Sparrow) */
+.aboutGrid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 48px;
+  align-items: start;
+  width: 100%;
+}
+
+.aboutImage {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  background: var(--surface-background);
+}
+
+.aboutImage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: none; /* show avatar in full color */
+}
+
+.aboutText {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+.aboutHeading {
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  line-height: 1.05;
+  color: var(--neutral-on-background-strong);
+}
+
+.aboutDescription {
+  font-size: 1.125rem;
+  max-width: 760px;
+  line-height: 1.7;
+  color: var(--neutral-on-background-weak);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .aboutGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .aboutImage {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+}
+
+/* Experience Section */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.timelineItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 32px;
+}
+
+.experienceRole {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.experienceCompany {
+  font-size: 1.125rem;
+  color: var(--brand-on-background-medium);
+  margin: 0;
+}
+
+.experienceTimeframe {
+  font-size: 0.875rem;
+  color: var(--neutral-on-background-weak);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.achievementsList {
+  list-style-type: disc;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.achievement {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Skills Section */
+.skillsSubtitle {
+  font-size: 0.875rem;
+  color: var(--neutral-on-background-weak);
+  margin-bottom: 40px;
+  font-weight: 500;
+}
+
+.skillsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skillCategory {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.categoryTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: var(--neutral-on-background-strong);
+  text-transform: none;
+}
+
+/* Per-category title hues */
+.hue1 { color: #9b5cf6; }
+.hue2 { color: #00b3b3; }
+.hue3 { color: #ff8a00; }
+.hue4 { color: #00a3ff; }
+.hue5 { color: #ff6b9f; }
+
+.skillBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skillList {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: nowrap; /* keep items on a single row */
+  align-items: center;
+  overflow-x: auto; /* allow horizontal scroll if items overflow */
+  -webkit-overflow-scrolling: touch;
+}
+
+.skillListItem {
+  list-style: none;
+  font-size: 0.95rem;
+  color: var(--neutral-on-background-strong);
+  padding: 6px 12px;
+  border-radius: 999px;
+  /* subtle transparent grey background with gentle border */
+  background: rgba(128,128,128,0.06);
+  border: 1px solid rgba(128,128,128,0.12);
+  display: inline-flex;
+  align-items: center;
+}
+
+.skillCard {
+  padding: 16px 24px;
+  border-radius: 8px;
+  border: 1px solid var(--neutral-alpha-medium);
+  background: var(--surface-background);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.skillCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.skillName {
+  font-size: 1rem;
+}
+
+.skillTooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--neutral-strong);
+  color: var(--static-white);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+/* Projects Section */
+.projectsList {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.projectLink {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+  display: block;
+}
+
+.projectLink:hover {
+  transform: translateX(8px);
+}
+
+.projectLink:hover .projectTitle {
+  color: var(--brand-on-background-strong);
+}
+
+.projectItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.projectTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  transition: color 0.2s ease;
+}
+
+.projectDescription {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--neutral-on-background-weak);
+  margin: 0;
+}
+
+/* Contact Section */
+#contact {
+  min-height: 80vh;
+}
+
+.contactHeading {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.contactDetail {
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+.socialLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 1rem;
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  border: 1px solid var(--neutral-alpha-medium);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--neutral-on-background-strong);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: var(--surface-background);
+}
+
+.socialLink:hover {
+  background: var(--neutral-alpha-weak);
+  border-color: var(--brand-alpha-medium);
+  transform: translateY(-2px);
+}
+
+.socialIcon {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  color: var(--brand-on-background-strong);
+}
+
+.socialLink > span:last-child {
+  font-size: 0.95rem;
+  font-weight: 500;
+}

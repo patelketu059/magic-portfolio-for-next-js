@@ -1,0 +1,191 @@
+---
+title: "Autonomous Vehicle Mapping"
+publishedAt: "2024-08-15"
+summary: "High-precision mapping solutions for autonomous vehicles using aerial imagery and telemetry data."
+images:
+  - "/images/projects/project-01/cover-02.jpg"
+  - "/images/projects/project-01/cover-03.jpg"
+team:
+  - name: "Ketu Patel"
+    role: "AI/ML Scientist"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://www.linkedin.com/in/ketu-patel/"
+---
+
+## Overview
+
+Created high-precision mapping solutions for autonomous vehicles by processing aerial imagery and telemetry data. This project involved developing algorithms for road network topology extraction and lane detection using computer vision and deep learning techniques. The system generates accurate maps that enable autonomous vehicles to navigate safely and efficiently.
+
+### Table of Contents
+
+- [1. Key Features](#1-key-features)
+- [2. Technologies & Algorithms Used](#2-technologies-algorithms-used)
+- [3. Technical Approach](#3-technical-approach)
+- [4. Challenges & Solutions](#4-challenges-solutions)
+- [5. Results & Impact](#5-results-impact)
+
+## 1. Key Features
+
+### 1.1 High-Speed Vehicle Telemetry (HSVT) Processing
+- **Large-scale embeddings generation** from raw HSVT data using PySpark
+- **Geohash-based spatial indexing** for efficient data organization
+- **95% time reduction** in data fetching through optimized queries
+- **Country-wide coverage** with scalable processing pipeline
+
+### 1.2 Feature Extraction from Aerial Imagery
+- **Intersection mapping** by aligning inference points to road edges
+- **Road and lane edge detection** from high-resolution aerial images
+- **Multi-source data fusion** combining HSVT, aerial imagery, and road network topology
+- **Network graph creation** connecting all edges along geohash boundaries
+
+### 1.3 Road Network Topology (RNT)
+- **Automatic topology correction** based on HSVT patterns
+- **Lane count detection** using vehicle trajectory analysis
+- **Map accuracy improvement** through data fusion algorithms
+- **Edge filtering optimization** for adjoining road segments
+
+## 2. Technologies & Algorithms Used
+
+<TechTable leftHeader="Category" rightHeader="Details" alignDetails="left">
+  <TechRow label="Big Data Processing">
+    Apache Spark (PySpark), distributed computing
+  </TechRow>
+
+  <TechRow label="Machine Learning">
+    Computer Vision models, deep learning for image segmentation
+  </TechRow>
+
+  <TechRow label="Geospatial">
+    Geohashing (level-4), spatial indexing, map matching
+  </TechRow>
+
+  <TechRow label="Data Sources">
+    High-Speed Vehicle Telemetry, Aerial Imagery, Road Network Topology
+  </TechRow>
+
+  <TechRow label="Languages">
+    Python, SQL for data processing
+  </TechRow>
+
+  <TechRow label="Libraries">
+    OpenCV, NumPy, Pandas, GeoPandas, Shapely
+  </TechRow>
+
+  <TechRow label="Graph Algorithms">
+    Network analysis, shortest path, connectivity
+  </TechRow>
+
+  <TechRow label="Infrastructure">
+    Cloud computing (AWS/Azure), distributed storage
+  </TechRow>
+</TechTable>
+
+## 3. Technical Approach
+
+### 3.1 Data Pipeline Architecture
+
+The system processes three primary data sources:
+
+1. **HSVT Data Processing**
+   - Fetch raw telemetry data using PySpark queries
+   - Generate embeddings at different geohash levels
+   - Optimize data retrieval for 95% faster processing
+   - Create spatial indexes for efficient querying
+
+2. **Aerial Imagery Analysis**
+   - Segment road surfaces using computer vision
+   - Extract road and lane boundaries
+   - Identify intersection geometries
+   - Map inference points to road edges
+
+3. **Road Network Topology**
+   - Correct existing RNT based on actual vehicle behavior
+   - Detect lane counts from trajectory patterns
+   - Validate and update road classifications
+   - Ensure consistency across map tiles
+
+### 3.2 Network Graph Construction
+
+Created a sophisticated graph structure:
+- **Nodes:** Road segment endpoints and intersections
+- **Edges:** Road segments with attributes (lanes, classification, geometry)
+- **Connections:** Adjacency relationships across geohash boundaries
+- **Filtering:** Intelligent selection of relevant adjoining edges
+
+### 3.3 Map Fusion Algorithm
+
+Developed a multi-source fusion approach:
+- Weighted combination of HSVT, aerial, and RNT data
+- Confidence scoring based on data quality and coverage
+- Conflict resolution when sources disagree
+- Quality assurance through geometric consistency checks
+
+## 4. Challenges & Solutions
+
+### 4.1 Scale and Performance
+
+**Challenge:** Processing country-wide telemetry and imagery data efficiently.
+
+**Solution:**
+- Implemented distributed processing with PySpark
+- Used geohashing for spatial partitioning
+- Created optimized data fetching pipelines
+- Achieved 95% reduction in processing time
+
+### 4.2 Data Quality and Noise
+
+**Challenge:** Dealing with GPS drift, occlusions in aerial imagery, and incomplete RNT data.
+
+**Solution:**
+- Applied Kalman filtering for trajectory smoothing
+- Used ensemble methods for robust edge detection
+- Implemented outlier detection and removal
+- Validated results through cross-source verification
+
+### 4.3 Intersection Complexity
+
+**Challenge:** Accurately mapping complex intersection geometries and lane connections.
+
+**Solution:**
+- Developed specialized intersection detection algorithms
+- Used trajectory clustering to identify lane-level connections
+- Implemented transition smoothing between road and lane edges
+- Validated against ground truth data
+
+### 4.4 Map Matching
+
+**Challenge:** Aligning sporadic and overlapping data from different sources.
+
+**Solution:**
+- Created a probabilistic map matching algorithm
+- Used temporal and spatial consistency constraints
+- Implemented Hidden Markov Model for trajectory matching
+- Optimized performance through network graph structure
+
+## 5. Results & Impact
+
+### 5.1 Performance Metrics
+- **95% faster** data processing compared to previous methods
+- **Improved map accuracy** through multi-source fusion
+- **Lane-level precision** for autonomous vehicle navigation
+- **Country-wide coverage** with consistent quality
+
+### 5.2 Technical Achievements
+- Successfully processed and integrated three distinct data sources
+- Created scalable pipeline handling terabytes of telemetry data
+- Developed robust algorithms for noisy real-world data
+- Enabled high-precision mapping for next-generation vehicles
+
+### 5.3 Business Impact
+- Reduced computational costs through optimized processing
+- Accelerated map generation timelines significantly
+- Improved safety and reliability of autonomous driving systems
+- Enabled deployment of advanced driver assistance features
+
+---
+
+## Project Highlight
+
+Developed a scalable, multi-source mapping pipeline for autonomous vehicles that processes High-Speed Vehicle Telemetry and aerial imagery using PySpark and computer vision. Achieved 95% faster data processing while improving map accuracy through intelligent fusion algorithms, enabling lane-level precision for safe autonomous navigation across an entire country.
+
+**Key Innovation:** Created a network graph structure that efficiently connects road edges across geohash boundaries, enabling optimized map matching and feature extraction from sparse, noisy real-world data sources.

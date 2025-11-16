@@ -8,6 +8,157 @@
     mask-size: 100% 100%;
 }
 
+.navLink {
+    text-decoration: none;
+    color: var(--neutral-on-background-medium);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+    position: relative;
+    padding-bottom: 4px;
+
+    &:hover {
+        color: var(--neutral-on-background-strong);
+    }
+
+    &[data-active="true"] {
+        color: var(--brand-on-background-strong);
+        
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--brand-on-background-strong);
+        }
+    }
+}
+
+.navigation {
+    display: flex;
+    gap: 1rem; /* slightly tighter spacing */
+    align-items: center;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    /* center the nav using the header's flex layout instead of absolute positioning */
+    position: static;
+    margin: 0 auto;
+    transform: none;
+}
+
+/* prevent visual selection highlight inside the nav */
+.navigation ::selection,
+.toggleBtn ::selection,
+.navLink ::selection {
+    background: transparent;
+    color: inherit;
+}
+
+/* small wrapper so ThemeToggle visually matches nav buttons */
+.toggleBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--surface-transparent, transparent);
+    border: 1px solid var(--neutral-outline, transparent);
+    transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+    min-width: 40px;
+    height: 36px;
+    box-sizing: border-box;
+
+    &:hover {
+        background: var(--surface-hover, rgba(0,0,0,0.04));
+        transform: translateY(-1px);
+    }
+
+    &[data-active="true"] {
+        background: var(--brand-surface, rgba(99,102,241,0.12));
+        border-color: var(--brand-on-background-strong);
+    }
+
+        /* remove default focus ring when not keyboard-focused (preserve :focus-visible for a11y) */
+        &:focus:not(:focus-visible) {
+                outline: none;
+                box-shadow: none;
+        }
+
+        /* ensure any generated selection highlight is invisible */
+        &::selection {
+            background: transparent;
+            color: inherit;
+        }
+
+        /* hide decorative underline that applies to .navLink[data-active] for icon-only buttons */
+        &::after {
+            display: none !important;
+        }
+
+        /* darker icon when selected */
+        &[data-active="true"] .navIcon {
+                color: var(--brand-on-background-strong);
+        }
+}
+
+/* Hide any remaining decorative underline for icon-only nav links */
+.navigation .navLink[data-active="true"]::after {
+    display: none !important;
+}
+
+/* Ensure ThemeToggle internal button doesn't show a white outline on mouse click
+     but keep keyboard-visible focus for a11y */
+.toggleBtn :global(button):focus:not(:focus-visible) {
+    outline: none !important;
+    box-shadow: none !important;
+}
+.toggleBtn :global(button) {
+  /* when ThemeToggle renders a button internally, make it fit */
+  padding: 0;
+  margin: 0;
+}
+
+.position {
+    /* ensure header sits above decorative background */
+    z-index: 20;
+    position: relative;
+}
+
+/* make left/right sides equal width so center nav is visually centered */
+.side {
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+}
+.side.left {
+    justify-content: flex-start;
+}
+.side.right {
+    justify-content: flex-end;
+}
+
+.navIcon {
+    vertical-align: middle;
+    font-size: 1.25rem;
+    margin-right: 0;
+    color: var(--neutral-on-background-medium);
+}
+
+.navLabel {
+    vertical-align: middle;
+}
+
+@media (max-width: breakpoints.$m) {
+    .navigation {
+        display: none;
+    }
+}
+
 @media (max-width: breakpoints.$s) {
     .position {
         top: auto;
