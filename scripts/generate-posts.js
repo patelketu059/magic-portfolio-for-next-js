@@ -5,7 +5,6 @@ const matter = require('gray-matter');
 
 const postsDir = path.join(process.cwd(), 'src', 'app', 'work', 'projects');
 if (!fs.existsSync(postsDir)) {
-  console.warn('posts dir not found:', postsDir);
   process.exit(0);
 }
 
@@ -33,4 +32,3 @@ const posts = files.map((file) => {
 const outDir = path.join(process.cwd(), 'public', 'data');
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'posts.json'), JSON.stringify({ posts }, null, 2));
-console.log('Wrote public/data/posts.json with', posts.length, 'posts');

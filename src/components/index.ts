@@ -1,4 +1,4 @@
-export { Header } from "@/components/Header";
+export { default as Header } from "./Header";
 export { Footer } from "@/components/Footer";
 export { Mailchimp } from "@/components/Mailchimp";
 export { ProjectCard } from "@/components/ProjectCard";

@@ -96,7 +96,6 @@ export default async function RootLayout({
                     }
                   });
                 } catch (e) {
-                  console.error('Failed to initialize theme:', e);
                   document.documentElement.setAttribute('data-theme', 'dark');
                 }
               })();

@@ -332,6 +332,20 @@
   box-sizing: border-box;
 }
 
+/* Narrow the Experience page content by 20% to reduce overall width
+   Use :global for the ID so it matches the literal `id="experience"` in the markup
+   while still using the local `.sectionContent` class from this CSS Module. */
+/* Narrow the Experience page content by 20% to reduce overall width
+   Scoped via a module class name so CSS Modules hashing stays consistent. */
+.experiencePage .sectionContent {
+  width: 100%;
+  /* Reduce each clamp boundary by 20%: 900->720, 80vw->64vw, 1400->1120 */
+  max-width: clamp(720px, 64vw, 1120px);
+  margin: 0 auto;
+  padding: 0 0.75rem;
+  box-sizing: border-box;
+}
+
 /* Increase padding for About section by 20% (96px / 24px) */
 #about {
   padding: clamp(3rem, 6.5vw, 6rem) 1.5rem;

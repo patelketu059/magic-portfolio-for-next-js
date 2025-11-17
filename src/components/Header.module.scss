@@ -69,6 +69,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     padding: 0 10px;
     border-radius: 999px;
     background: var(--surface-transparent, transparent);
@@ -109,6 +110,45 @@
         &[data-active="true"] .navIcon {
                 color: var(--brand-on-background-strong);
         }
+
+    /* Tooltip label for icon buttons */
+    .navLabel {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%) translateY(0);
+        background: var(--neutral-on-background-strong);
+        color: var(--static-white);
+        padding: 6px 8px;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        white-space: nowrap;
+        display: inline-block;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 120ms ease, transform 120ms ease, visibility 0s linear 120ms;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        z-index: 40;
+    }
+
+    &:hover .navLabel {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(-6px);
+        transition-delay: 0s;
+    }
+
+    /* also show tooltip when keyboard-focused for accessibility */
+    &:focus-within .navLabel,
+    &:focus .navLabel {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(-50%) translateY(-6px);
+        transition-delay: 0s;
+    }
 }
 
 /* Hide any remaining decorative underline for icon-only nav links */
@@ -155,8 +195,153 @@
     color: var(--neutral-on-background-medium);
 }
 
+/* Fallback navLabel in case it's used outside .toggleBtn context */
 .navLabel {
-    vertical-align: middle;
+    display: inline-block;
+}
+
+/* Mobile menu toggle (hidden by default, shown at tablet/smaller widths) */
+.mobileToggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 36px;
+    border-radius: 999px;
+    /* translucent background so the hamburger feels light on top of content */
+    background: rgba(0,0,0,0.04);
+    border: 1px solid var(--neutral-outline, transparent);
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+    padding: 0 8px;
+}
+
+.mobileToggle .navIcon {
+    opacity: 0.9;
+    transition: opacity 120ms ease, color 120ms ease;
+}
+.mobileToggle:hover {
+    background: rgba(0,0,0,0.06);
+}
+.mobileToggle:active {
+    transform: translateY(1px);
+}
+.mobileToggle:focus-visible {
+    outline: 2px solid rgba(0,0,0,0.08);
+    outline-offset: 2px;
+}
+
+.hamburger,
+.hamburgerOpen {
+    display: inline-block;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    position: relative;
+}
+.hamburger::before,
+.hamburger::after,
+.hamburgerOpen::before,
+.hamburgerOpen::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transition: transform 180ms ease, opacity 120ms ease;
+}
+.hamburger::before { top: -6px; }
+.hamburger::after { top: 6px; }
+.hamburgerOpen { background: transparent; }
+.hamburgerOpen::before { transform: rotate(45deg); top: 0; }
+.hamburgerOpen::after { transform: rotate(-45deg); top: 0; }
+
+/* Mobile nav (hidden by default) */
+.mobileNav {
+    /* start hidden with zero max-height for smooth slide */
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: var(--page-background);
+    border-bottom: 1px solid var(--neutral-outline, rgba(0,0,0,0.06));
+    z-index: 60;
+    padding: 0 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: max-height 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease, transform 220ms ease;
+}
+.mobileNav.open {
+    max-height: 420px; /* large enough for nav content */
+    padding: 12px 20px;
+    opacity: 1;
+    transform: translateY(0);
+}
+.mobileNav nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+}
+.mobileNavLink {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 10px 12px;
+}
+
+/* When the nav receives the .open class (from Header) we treat it as the mobile dropdown */
+.navigation.open {
+    /* mobile dropdown appearance */
+    display: block;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    background: var(--page-background);
+    border-bottom: 1px solid var(--neutral-outline, rgba(0,0,0,0.06));
+    z-index: 60;
+    padding: 12px 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    max-height: 420px;
+    overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition: max-height 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease, transform 220ms ease;
+}
+.navigation.open > a,
+.navigation.open > .toggleBtn {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+}
+
+/* When the navigation is opened (mobile) show inline labels instead of tooltips */
+.navigation.open .navLabel {
+    position: static;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    margin-left: 8px;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .navigation,
+    .navigation.open,
+    .hamburger,
+    .hamburgerOpen,
+    .toggleBtn .navLabel {
+        transition: none !important;
+    }
 }
 
 /* Plain text variant for the left-side role label: matches nav font but without button visuals */
@@ -174,9 +359,12 @@
     line-height: 1;
 }
 
-@media (max-width: breakpoints.$m) {
+@include breakpoints.m {
     .navigation {
         display: none;
+    }
+    .mobileToggle {
+        display: inline-flex;
     }
 }
 
@@ -192,7 +380,7 @@
     }
 }
 
-@media (max-width: breakpoints.$s) {
+@include breakpoints.s {
     .position {
         top: auto;
         bottom: var(--static-space-24);

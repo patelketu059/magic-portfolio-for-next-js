@@ -41,7 +41,6 @@ function createHeading(as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6") {
 
 function createImage({ alt, src, ...props }: MediaProps & { src: string }) {
   if (!src) {
-    console.error("Media requires a valid 'src' property.");
     return null;
   }
   const { title: imgTitle, size, sizeMobile, sizeTablet, sizeDesktop, widthPercent, fullPage, ...restProps } = props as any;
@@ -275,7 +274,6 @@ function createTable({ children }: { children: ReactNode }) {
   );
 
   if (!thead || !tbody) {
-    console.error('Table structure is incomplete');
     return null;
   }
 
@@ -284,7 +282,6 @@ function createTable({ children }: { children: ReactNode }) {
   const headerRow = headerRows[0] as TableElement;
   
   if (!headerRow) {
-    console.error('No header row found');
     return null;
   }
 

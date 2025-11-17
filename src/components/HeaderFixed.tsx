@@ -10,7 +10,12 @@ import { display, person } from "@/resources";
 import HeaderNav from "./HeaderNav";
 import styles from "./Header.module.scss";
 
-export const TimeDisplay: React.FC<{ timeZone: string; locale?: string }> = ({ timeZone, locale = "en-GB" }) => {
+export type TimeDisplayProps = {
+  timeZone: string;
+  locale?: string;
+};
+
+export const TimeDisplay: React.FC<TimeDisplayProps> = ({ timeZone, locale = "en-GB" }) => {
   const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
@@ -35,14 +40,13 @@ export const TimeDisplay: React.FC<{ timeZone: string; locale?: string }> = ({ t
   return <>{currentTime}</>;
 };
 
-const Header: React.FC = () => {
+export const Header: React.FC = () => {
   const pathname = usePathname() ?? "";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const navRef = useRef<HTMLElement | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
 
-  // Track whether viewport is at mobile width so we can set aria-hidden appropriately
   useEffect(() => {
     if (typeof window === "undefined") return;
     const m = window.matchMedia("(max-width: 1024px)");
@@ -52,7 +56,6 @@ const Header: React.FC = () => {
     return () => m.removeEventListener?.("change", update);
   }, []);
 
-  // Focus trap + ESC-to-close + body-scroll lock when mobile nav is open
   useEffect(() => {
     if (!mobileOpen) {
       document.body.style.overflow = "";
@@ -152,7 +155,6 @@ const Header: React.FC = () => {
             className={mobileOpen ? styles.open : ""}
             onLinkClick={() => setMobileOpen(false)}
             ariaHidden={isMobile && !mobileOpen}
-            showLabels={!isMobile}
           />
 
           <button
@@ -164,21 +166,7 @@ const Header: React.FC = () => {
             ref={toggleRef}
             type="button"
           >
-            <span className={styles.navIcon} aria-hidden>
-              {mobileOpen ? (
-                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden>
-                  <title>Close menu</title>
-                  <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              ) : (
-                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden>
-                  <title>Open menu</title>
-                  <path d="M3 6H21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M3 12H21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M3 18H21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
-            </span>
+            <span className={mobileOpen ? styles.hamburgerOpen : styles.hamburger} aria-hidden />
           </button>
         </Row>
 
@@ -195,4 +183,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-/* removed duplicated trailing content */

@@ -144,10 +144,9 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
 
           <nav className={styles.heroNav} aria-label="Primary">
             <a href="#about" className={styles.heroNavLink}>About</a>
-            {/* Experience link removed per request */}
-            <a href="#education" className={styles.heroNavLink}>Studies</a>
             <a href="#projects" className={styles.heroNavLink}>Projects</a>
             <a href="#skills" className={styles.heroNavLink}>Skills</a>
+            <a href="#education" className={styles.heroNavLink}>Studies</a>
             <a href="#contact" className={styles.heroNavLink}>Contact</a>
           </nav>
         </div>
@@ -209,6 +208,28 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
         </div>
       </section>
 
+      {/* Skills Section (moved above Studies) */}
+      <section id="skills" className={`${styles.section} ${styles.skillsSection}`}>
+        <div className={styles.sectionContent}>
+          <h2 className={styles.sectionTitle}>SKILLS</h2>
+          <p className={styles.skillsSubtitle}> </p>
+          <div className={styles.skillsGrid}>
+            {skillCategories.map((cat, i) => (
+              <div key={cat.title} className={styles.skillCategory}>
+                <h3 className={`${styles.categoryTitle} ${styles[`hue${i + 1}`]}`}>{cat.title}</h3>
+                <ul className={styles.skillList} aria-label={`${cat.title} skills`}>
+                  {cat.items.map((name) => (
+                    <li key={`${cat.title}-${name}`} className={styles.skillListItem}>
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Education / Studies Section */}
       {about.studies.display && (
         <section id="education" className={`${styles.section} ${styles.educationSection}`}>
@@ -240,28 +261,6 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
           </div>
         </section>
       )}
-
-      {/* Skills Section */}
-      <section id="skills" className={`${styles.section} ${styles.skillsSection}`}>
-        <div className={styles.sectionContent}>
-          <h2 className={styles.sectionTitle}>SKILLS</h2>
-          <p className={styles.skillsSubtitle}> </p>
-          <div className={styles.skillsGrid}>
-            {skillCategories.map((cat, i) => (
-              <div key={cat.title} className={styles.skillCategory}>
-                <h3 className={`${styles.categoryTitle} ${styles[`hue${i + 1}`]}`}>{cat.title}</h3>
-                <ul className={styles.skillList} aria-label={`${cat.title} skills`}>
-                  {cat.items.map((name) => (
-                    <li key={`${cat.title}-${name}`} className={styles.skillListItem}>
-                      {name}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Contact Section */}
       <section id="contact" className={`${styles.section} ${styles.contactSection}`}>

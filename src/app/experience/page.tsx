@@ -1,6 +1,4 @@
-"use client";
-
-import React from "react";
+import type React from "react";
 import styles from "../home.module.css";
 import Image from "next/image";
 import { about } from "@/resources";
@@ -10,7 +8,7 @@ export default function ExperiencePage() {
 
   if (!work?.display) {
     return (
-      <div className={styles.section}>
+      <div className={`${styles.section} ${styles.experiencePage}`}>
         <div className={styles.sectionContent}>
           <h2 className={styles.sectionTitle}>EXPERIENCE</h2>
           <p>Experience details are currently hidden.</p>
@@ -20,7 +18,7 @@ export default function ExperiencePage() {
   }
 
   return (
-    <div className={styles.section}>
+    <div className={`${styles.section} ${styles.experiencePage}`}>
       <div className={styles.sectionContent}>
         <h2 className={styles.sectionTitle}>{work.title}</h2>
         <div className={styles.timeline}>
@@ -32,7 +30,7 @@ export default function ExperiencePage() {
               </div>
               <div className={styles.experienceCompany}>{exp.company}</div>
               <ul className={styles.achievementsList}>
-                {exp.achievements.map((ach: string, i: number) => (
+                {exp.achievements.map((ach: React.ReactNode, i: number) => (
                   <li key={`${exp.company}-ach-${i}`} className={styles.achievement}>{ach}</li>
                 ))}
               </ul>

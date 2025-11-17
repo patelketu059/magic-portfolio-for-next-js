@@ -61,8 +61,15 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                   {!isProjectPage && content?.trim() && (
                     <SmartLink
                       suffixIcon="arrowRight"
-                      style={{ marginLeft: 8, display: "inline-block", verticalAlign: "middle", width: "fit-content" }}
+                      style={{ marginLeft: 8, display: "inline-block", verticalAlign: "middle", width: "fit-content", position: 'relative', zIndex: 30, pointerEvents: 'auto' }}
                       href={href}
+                      onClick={(e) => {
+                        // Prevent parent carousel/slide from intercepting clicks so the link works
+                        e.stopPropagation();
+                      }}
+                      onPointerDown={(e) => e.stopPropagation()}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      onTouchStart={(e) => e.stopPropagation()}
                     >
                       <Text variant="body-default-s" style={{ display: "inline" }}>Read case study</Text>
                     </SmartLink>
@@ -74,8 +81,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
               {link && (
                 <SmartLink
                   suffixIcon="arrowUpRightFromSquare"
-                  style={{ margin: "0", width: "fit-content" }}
+                  style={{ margin: "0", width: "fit-content", position: 'relative', zIndex: 30, pointerEvents: 'auto' }}
                   href={link}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
                 >
                   <Text variant="body-default-s">View project</Text>
                 </SmartLink>
