@@ -1,6 +1,7 @@
 import { Meta } from "@once-ui-system/core";
 import { home, baseURL, hiddenProjects } from "@/resources";
 import HomeClient from "./HomeClient";
+import { getPosts } from "@/utils/utils";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -13,20 +14,23 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  // Request the filtered project list from the server API so server-rendered HTML
-  // contains the visible projects (keeps data-fetching at the API layer).
-  let initialPosts = [];
+  // Read MDX files directly on the server first so preview deployments always render content.
+  const allLocal = getPosts(["src", "app", "work", "projects"]);
+  let initialPosts = allLocal.filter((p) => !hiddenProjects.includes(p.slug));
+
+  // Optionally try the API to get an authoritative, possibly dynamic set — if it succeeds,
+  // override the local list. This is best-effort and won't block rendering.
   try {
     const excludes = hiddenProjects && hiddenProjects.length > 0 ? `?exclude=${encodeURIComponent(hiddenProjects.join(","))}` : "";
-    // Use a relative URL so the request targets the current deployment (works in Vercel previews)
     const res = await fetch(`/api/projects${excludes}`);
     if (res.ok) {
       const body = await res.json();
-      initialPosts = body.posts || [];
+      if (body?.posts && Array.isArray(body.posts) && body.posts.length > 0) {
+        initialPosts = body.posts;
+      }
     }
   } catch (e) {
-    // swallow — fallback to empty list
-    initialPosts = [];
+    // ignore and keep local posts
   }
 
   return <HomeClient initialPosts={initialPosts} />;
