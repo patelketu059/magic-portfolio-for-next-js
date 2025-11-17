@@ -66,6 +66,22 @@ a:hover {
   background: var(--neutral-alpha-strong);
 }
 
+/* Apply label font to global button elements (Once UI buttons and native buttons) */
+button,
+.once-ui-button,
+[role="button"] {
+  font-family: var(--font-label, inherit);
+  letter-spacing: 0.14em;
+}
+
+/* Force spacing for the Education section (overrides module cascade when needed) */
+#education {
+  margin-top: 96px;
+  padding-top: 96px;
+  padding-bottom: 12px;
+}
+
+
 /* :root {
   /*
   /* Example setup for custom colors */

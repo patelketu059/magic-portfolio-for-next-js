@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "export": "next export",
+    "prebuild": "node ./scripts/generate-posts.js",
     "build": "next build",
     "biome-write": " @biomejs/biome format --write .",
     "start": "next start",

@@ -173,8 +173,12 @@ export interface About extends BasePageConfig {
     institutions: Array<{
       /** Institution name */
       name: string;
-      /** Description of studies */
-      description: React.ReactNode[];
+      /** Degree obtained (e.g., "Masters of Science") */
+      degree?: string;
+      /** Specialization or major (e.g., "Artificial Intelligence") */
+      specialization?: string;
+      /** Optional freeform description lines */
+      description?: React.ReactNode[];
     }>;
   };
   /** Technical skills section */

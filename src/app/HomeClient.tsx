@@ -43,7 +43,8 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
       items: [
         "Neural Networks",
         "Diffusion Models",
-        "RNNs / LSTMs",
+        "RNNs",
+        "LSTMs",
         "Transformers",
         "Seq2Seq",
         "VAEs",
@@ -56,7 +57,7 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
       title: "Computer Vision & Representation Learning",
       items: [
         "Computer Vision",
-        "CNNs / ResNet",
+        "CNNs",
         "Autoencoders",
         "Vision Transformers (ViT)",
         "Representation Learning",
@@ -144,8 +145,10 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
           <nav className={styles.heroNav} aria-label="Primary">
             <a href="#about" className={styles.heroNavLink}>About</a>
             <a href="#experience" className={styles.heroNavLink}>Experience</a>
-            <a href="#skills" className={styles.heroNavLink}>Skills</a>
+            <a href="#education" className={styles.heroNavLink}>Studies</a>
             <a href="#projects" className={styles.heroNavLink}>Projects</a>
+            <a href="#skills" className={styles.heroNavLink}>Skills</a>
+            <a href="#contact" className={styles.heroNavLink}>Contact</a>
           </nav>
         </div>
       </section>
@@ -169,6 +172,7 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
             <div className={styles.aboutText}>
               <h3 className={styles.aboutHeading}>A little something about me</h3>
               <div className={styles.aboutDescription}>{about.intro.description}</div>
+              
             </div>
           </div>
         </div>
@@ -199,8 +203,40 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
           </section>
         )}
 
+      {/* Education / Studies Section */}
+      {about.studies.display && (
+        <section id="education" className={`${styles.section} ${styles.educationSection}`}>
+          <div className={styles.sectionContent}>
+            <h2 className={styles.sectionTitle}>{about.studies.title || "Education"}</h2>
+            <div className={styles.educationList}>
+              {about.studies.institutions.map((inst) => (
+                <div key={inst.name} className={styles.institution}>
+                  <div className={styles.institutionHeader}>
+                    <div className={styles.institutionTitle}>{inst.name}</div>
+                    <div className={styles.institutionMeta}>
+                      {inst.degree ? <div className={styles.institutionDegree}>{inst.degree}</div> : null}
+                      {inst.specialization ? (
+                        <div className={styles.institutionSpecialization}>{inst.specialization}</div>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {inst.description?.length ? (
+                    <div className={styles.institutionDesc}>
+                      {inst.description.map((d, idx) => (
+                        <div key={`${inst.name}-desc-${idx}`}>{d}</div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Projects Section */}
-      <section id="projects" className={styles.section}>
+      <section id="projects" className={`${styles.section} ${styles.projectsSection}`}>
         <div className={styles.sectionContent}>
           <h2 className={styles.sectionTitle}>PROJECTS</h2>
           <div className={styles.projectsList}>
@@ -228,7 +264,7 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className={styles.section}>
+      <section id="skills" className={`${styles.section} ${styles.skillsSection}`}>
         <div className={styles.sectionContent}>
           <h2 className={styles.sectionTitle}>SKILLS</h2>
           <p className={styles.skillsSubtitle}> </p>
@@ -250,13 +286,25 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className={styles.section}>
+      <section id="contact" className={`${styles.section} ${styles.contactSection}`}>
         <div className={styles.sectionContent}>
           <h2 className={styles.sectionTitle}>CONTACT</h2>
-          <h3 className={styles.contactHeading}>I have got just what you need. Let's talk.</h3>
+          
+          <h3 className={styles.contactHeading}>Got something interesting to work on? Let's Talk.</h3>
           <div className={styles.contactInfo}>
-            <p className={styles.contactDetail}>{person.email}</p>
-            <p className={styles.contactDetail}>{person.location}</p>
+            <p className={styles.contactDetail}>
+            {(() => {
+              const Globe = iconLibrary["globe" as keyof typeof iconLibrary];
+              if (Globe) return (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                  <Globe className={styles.socialIcon} aria-hidden />
+                  <span>{person.location}</span>
+                </span>
+              );
+              return <span>{person.location}</span>;
+            })()}
+          </p>
+            
           </div>
           <div className={styles.socialLinks}>
             {social.map((item) => {
@@ -268,9 +316,10 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
                   className={styles.socialLink}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={item.name}
+                  title={item.name}
                 >
                   {Icon ? <Icon className={styles.socialIcon} aria-hidden /> : <span className={styles.socialIcon}>{item.icon}</span>}
-                  <span>{item.name}</span>
                 </a>
               );
             })}

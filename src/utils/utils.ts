@@ -68,11 +68,5 @@ function getMDXData(dir: string) {
 
 export function getPosts(customPath = ["", "", "", ""]) {
   const postsDir = path.join(process.cwd(), ...customPath);
-  const posts = getMDXData(postsDir);
-  try {
-    console.log('[DEBUG getPosts] postsDir:', postsDir, 'found posts:', posts.length);
-  } catch (e) {
-    // swallow logging errors in edge environments
-  }
-  return posts;
+  return getMDXData(postsDir);
 }

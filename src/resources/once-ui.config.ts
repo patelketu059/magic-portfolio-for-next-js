@@ -39,6 +39,7 @@ const protectedRoutes: ProtectedRoutesConfig = {
 // Import and set font for each variant
 import { Geist } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
+import { Montserrat } from "next/font/google";
 
 const heading = Geist({
   variable: "--font-heading",
@@ -52,10 +53,11 @@ const body = Geist({
   display: "swap",
 });
 
-const label = Geist({
+const label = Montserrat({
   variable: "--font-label",
   subsets: ["latin"],
   display: "swap",
+  weight: ["300", "400", "600", "700"],
 });
 
 const code = Geist_Mono({

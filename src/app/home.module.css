@@ -15,6 +15,28 @@
   margin-top: -80px;
 }
 
+.heroInner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.heroTitle {
+  font-family: var(--font-heading, inherit);
+  font-weight: 400;
+  line-height: 0.92;
+  margin: 0;
+  /* Large, responsive display type similar to screenshot */
+  font-size: clamp(1rem, 9vw, 8rem);
+  letter-spacing: -0.02em;
+  color: var(--neutral-on-background-strong);
+}
+
 .role {
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -25,35 +47,34 @@
   margin: 0;
 }
 
-.heroTitle {
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 700;
-  margin: 0;
-  text-align: center;
-  line-height: 1.1;
+/* use the label font (Montserrat) for the spaced role label */
+.role {
+  font-family: var(--font-label, inherit);
+  font-weight: 600;
+  letter-spacing: 0.22em; /* slightly increased to match visual */
 }
 
-.hero {
-  position: relative;
-  min-height: 92vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  overflow: hidden;
+/* Apply the label font (Montserrat) to navbar text and section titles */
+.navLink,
+.heroNavLink,
+.sidebar a,
+.sectionTitle,
+.contactHeading,
+.aboutHeading,
+.projectTitle,
+.experienceRole,
+.categoryTitle {
+  font-family: var(--font-label, inherit);
+  letter-spacing: 0.14em;
 }
 
-.heroInner {
-  position: relative;
-  z-index: 10;
-  max-width: 1200px;
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-}
+/* Global button font rules moved to `src/resources/custom.css` to avoid CSS Modules :global syntax here. */
+
+/* Contact Section */
+/* Contact Section */
+/* Consolidated/compacted styles for the Contact section.
+   Duplicate blocks were removed and replaced further below. */
+
 
 .heroBackground {
   position: fixed; /* keep background fixed while scrolling */
@@ -221,16 +242,16 @@
 .heroNavLink {
   text-decoration: none;
   /* reduce vertical padding so size more closely matches the small role label */
-  padding: 6px 18px;
+  padding: 5px 14px;
   border-radius: 999px;
   border: 1px solid var(--neutral-alpha-medium);
   color: var(--role-color);
   /* match the role typography: slightly wider tracking and same font-size */
   letter-spacing: 0.2em;
-  font-size: 0.875rem;
+  font-size: 0.78rem;
   font-weight: 600;
   text-transform: uppercase;
-  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease, opacity 0.15s ease;
   background: transparent;
   font-family: inherit;
 }
@@ -239,6 +260,7 @@
   background: var(--neutral-alpha-weak);
   color: var(--brand-on-background-strong);
   transform: translateY(-3px);
+  opacity: 0.86; /* subtle transparency on hover */
 }
 
 @media (max-width: 1024px) {
@@ -251,9 +273,38 @@
 .section {
   width: 100%;
   min-height: 100vh;
-  padding: 80px 20px;
+  padding: 40px 20px; /* reduced vertical padding by 50% */
   display: flex;
   justify-content: center;
+}
+
+/* Tighter vertical spacing for contiguous home sections (Education, Projects, Skills) */
+/* Force tighter spacing for projects/skills/contact and tailor education separately */
+/* Module-scoped spacing classes to reliably apply spacing from CSS Modules */
+.projectsSection,
+.skillsSection,
+.contactSection,
+.educationSection {
+  min-height: auto !important;
+  margin-top: 180px;
+  padding-top: 180px;
+  padding-bottom: 6px;
+}
+
+
+
+/* Reduce title spacing for education specifically */
+#education .sectionTitle {
+  margin-bottom: 8px;
+}
+
+/* Tighten the cards inside education */
+.educationList {
+  gap: 8px; /* smaller gap between cards */
+}
+
+.institution {
+  padding: 8px; /* smaller card padding */
 }
 
 /* Standard content wrapper used across sections to center and constrain width
@@ -531,64 +582,139 @@
   margin: 0;
 }
 
+/* Education / Studies styles */
+.educationList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.institution {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 10px;
+  /* subtle outline */
+  border: 1px solid rgba(128,128,128,0.08);
+  /* translucent background to give a soft card look */
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(6px) saturate(1.05);
+  -webkit-backdrop-filter: blur(6px) saturate(1.05);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  opacity: 0.96;
+}
+
+.institutionTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--neutral-on-background-strong);
+}
+
+.institutionDesc {
+  font-size: 1rem;
+  color: var(--neutral-on-background-weak);
+}
+
+.institutionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.institution:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  opacity: 1;
+}
+
+.institutionMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.institutionDegree {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--neutral-on-background-strong);
+  font-family: var(--font-label, inherit); /* match section title font */
+  text-transform: none;
+  letter-spacing: 0.14em;
+}
+
+.institutionSpecialization {
+  font-size: 0.9rem;
+  color: var(--neutral-on-background-weak);
+  font-family: var(--font-label, inherit); /* match section title font */
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.12em;
+}
+
+/* Contact Section */
 /* Contact Section */
 #contact {
-  min-height: 80vh;
+  min-height: 40vh; /* tighter vertical footprint */
+  padding-top: 28px;
+  padding-bottom: 20px;
 }
 
 .contactHeading {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem; /* tighter spacing */
 }
 
 .contactInfo {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 0.25rem; /* tighter stack */
+  margin-bottom: 0.5rem;
 }
 
 .contactDetail {
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   margin: 0;
 }
 
 .socialLinks {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
-  margin-top: 1rem;
+  gap: 8px;
+  margin-top: 0.35rem; /* reduced top gap for tighter layout */
 }
 
 .socialLink {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 24px;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   border: 1px solid var(--neutral-alpha-medium);
-  border-radius: 6px;
+  border-radius: 8px;
   text-decoration: none;
   color: var(--neutral-on-background-strong);
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   background: var(--surface-background);
 }
 
 .socialLink:hover {
   background: var(--neutral-alpha-weak);
   border-color: var(--brand-alpha-medium);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .socialIcon {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  font-size: 1.5rem;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
   color: var(--brand-on-background-strong);
 }
 
-.socialLink > span:last-child {
-  font-size: 0.95rem;
-  font-weight: 500;
-}

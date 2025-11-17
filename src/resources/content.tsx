@@ -1,4 +1,4 @@
-import { About, Blog, Gallery, Home, Newsletter, Person, Social, Work } from "@/types";
+import { About, Gallery, Home, Newsletter, Person, Social, Work } from "@/types";
 import { Line, Logo, Row, Text } from "@once-ui-system/core";
 
 const person: Person = {
@@ -219,18 +219,13 @@ and eliminating the need to go to car dealerships for feature updates after veri
     institutions: [
       {
         name: "Georgia Institute of Technology",
-        description: 
-        [
-          <>Degree: Masters of Science</>,
-          <>Specialization: Artificial Intelligence</>
-        ]
+          degree: "Masters of Science",
+          specialization: "Artificial Intelligence",
       },
       {
-        name: "Build the Future",
-        description: [
-        <>Degree: Bachelors of Science</>,
-        <>Specialization: Electrical and Computer Engineering</>
-        ]
+        name: "Rutgers University",
+          degree: "Bachelors of Science",
+          specialization: "Electrical and Computer Engineering",
       },
     ],
   },
@@ -298,14 +293,6 @@ and eliminating the need to go to car dealerships for feature updates after veri
   },
 };
 
-const blog: Blog = {
-  path: "/blog",
-  label: "Blog",
-  title: "Writing about design and tech...",
-  description: `Read what ${person.name} has been up to recently`,
-  // Create new blog posts by adding a new .mdx file to app/blog/posts
-  // All posts will be listed on the /blog route
-};
 
 const work: Work = {
   path: "/work",
@@ -374,4 +361,4 @@ const gallery: Gallery = {
   ],
 };
 
-export { person, social, newsletter, home, about, blog, work, gallery, hiddenProjects };
+export { person, social, newsletter, home, about, work, gallery, hiddenProjects };
