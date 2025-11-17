@@ -144,7 +144,7 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
 
           <nav className={styles.heroNav} aria-label="Primary">
             <a href="#about" className={styles.heroNavLink}>About</a>
-            <a href="#experience" className={styles.heroNavLink}>Experience</a>
+            {/* Experience link removed per request */}
             <a href="#education" className={styles.heroNavLink}>Studies</a>
             <a href="#projects" className={styles.heroNavLink}>Projects</a>
             <a href="#skills" className={styles.heroNavLink}>Skills</a>
@@ -179,29 +179,35 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
       </section>
 
         {/* Experience Section (from about.work) */}
-        {about.work.display && (
-          <section id="experience" className={styles.section}>
-            <div className={styles.sectionContent}>
-              <h2 className={styles.sectionTitle}>{about.work.title}</h2>
-              <div className={styles.timeline}>
-                {about.work.experiences.map((exp, idx) => (
-                  <div key={`${exp.company}-${exp.role}-${idx}`} className={styles.timelineItem}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                      <h3 className={styles.experienceRole}>{exp.role}</h3>
-                      <div className={styles.experienceTimeframe}>{exp.timeframe}</div>
-                    </div>
-                    <div className={styles.experienceCompany}>{exp.company}</div>
-                    <ul className={styles.achievementsList}>
-                      {exp.achievements.slice(0, 3).map((ach, i) => (
-                        <li key={`${exp.company}-ach-${i}`} className={styles.achievement}>{ach}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        {/* Experience moved to its own page at /experience */}
+
+      {/* Projects Section */}
+      <section id="projects" className={`${styles.section} ${styles.projectsSection}`}>
+        <div className={styles.sectionContent}>
+          <h2 className={styles.sectionTitle}>PROJECTS</h2>
+          <div className={styles.projectsList}>
+            {posts && posts.length > 0 ? (
+              <Carousel
+                items={posts.map((post: PostMeta) => ({
+                  slide: (
+                    <ProjectCard
+                      cardId={post.slug}
+                      href={`/work/${post.slug}`}
+                      images={post.metadata.images || []}
+                      title={post.metadata.title}
+                      description={post.metadata.summary || ""}
+                      content={post.content || ""}
+                      avatars={post.metadata.team?.filter((m) => !!m.avatar).map((m) => ({ src: m.avatar as string })) || []}
+                      link={post.metadata.link || ""}
+                    />
+                  ),
+                  alt: post.metadata.title,
+                }))}
+              />
+            ) : null}
+          </div>
+        </div>
+      </section>
 
       {/* Education / Studies Section */}
       {about.studies.display && (
@@ -234,34 +240,6 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
           </div>
         </section>
       )}
-
-      {/* Projects Section */}
-      <section id="projects" className={`${styles.section} ${styles.projectsSection}`}>
-        <div className={styles.sectionContent}>
-          <h2 className={styles.sectionTitle}>PROJECTS</h2>
-          <div className={styles.projectsList}>
-            {posts && posts.length > 0 ? (
-              <Carousel
-                items={posts.map((post: PostMeta) => ({
-                  slide: (
-                    <ProjectCard
-                      cardId={post.slug}
-                      href={`/work/${post.slug}`}
-                      images={post.metadata.images || []}
-                      title={post.metadata.title}
-                      description={post.metadata.summary || ""}
-                      content={post.content || ""}
-                      avatars={post.metadata.team?.filter((m) => !!m.avatar).map((m) => ({ src: m.avatar as string })) || []}
-                      link={post.metadata.link || ""}
-                    />
-                  ),
-                  alt: post.metadata.title,
-                }))}
-              />
-            ) : null}
-          </div>
-        </div>
-      </section>
 
       {/* Skills Section */}
       <section id="skills" className={`${styles.section} ${styles.skillsSection}`}>

@@ -12,6 +12,6 @@
 
 .indicator {
     transform: rotate(-90deg);
-    left: -2rem;
+    left: -1.25rem; /* reduce left offset so it doesn't overflow on narrow screens */
     transition: var(--transition-micro-medium);
 }

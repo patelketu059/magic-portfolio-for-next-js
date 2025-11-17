@@ -136,7 +136,8 @@
 
 /* make left/right sides equal width so center nav is visually centered */
 .side {
-    min-width: 180px;
+    /* responsive side width so header centers correctly at all sizes */
+    min-width: clamp(96px, 12vw, 180px);
     display: flex;
     align-items: center;
 }
@@ -158,9 +159,36 @@
     vertical-align: middle;
 }
 
+/* Plain text variant for the left-side role label: matches nav font but without button visuals */
+.roleText {
+    color: var(--neutral-on-background-medium);
+    /* match nav label style from design: slightly larger, heavier, wide tracking */
+    font-family: var(--font-label, inherit);
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 0;
+    height: auto;
+    line-height: 1;
+}
+
 @media (max-width: breakpoints.$m) {
     .navigation {
         display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .navLink {
+        font-size: 0.78rem;
+        height: 32px;
+        padding: 0 8px;
+    }
+
+    .side {
+        min-width: 64px;
     }
 }
 

@@ -77,7 +77,7 @@ export const Header = () => {
         }}
       >
         <Row className={`${styles.side} ${styles.left}`} paddingLeft="12" vertical="center" textVariant="label-default-s" style={{ letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600 }}>
-          <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
+          <Link href="/" aria-label="Home" className={styles.roleText} style={{ textDecoration: "none", color: "inherit" }}>
             {person.role}
           </Link>
         </Row>
@@ -91,6 +91,7 @@ export const Header = () => {
                 })()}
               </Link>
             )}
+            {/* Experience icon removed from header navigation */}
             {routes["/work"] && (
               <Link href="/work" aria-label="Projects" className={`${styles.toggleBtn} ${styles.navLink}`} data-active={pathname.startsWith("/work")}>
                 {(() => {

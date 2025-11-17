@@ -13,7 +13,7 @@ import {
   RevealFx,
   SpacingToken,
 } from "@once-ui-system/core";
-import { Footer, Header, RouteGuard, Providers } from "@/components";
+import { Header, RouteGuard, Providers } from "@/components";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
 
@@ -45,6 +45,7 @@ export default async function RootLayout({
       )}
     >
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{
@@ -202,15 +203,15 @@ export default async function RootLayout({
           </div>
           <div style={{ width: "100%", minHeight: "16px" }} className="mobile-spacer" />
           <Header />
-          <div style={{ 
-            zIndex: 0, 
-            width: "100%", 
-            padding: "var(--static-space-24)", 
-            display: "flex",
-            justifyContent: "center",
-            flex: 1
-          }}>
             <div style={{ 
+              zIndex: 0, 
+              width: "100%", 
+              padding: "var(--static-space-24)", 
+              display: "flex",
+              justifyContent: "center",
+              flex: 1
+            }}>
+            <div className="site-container" style={{ 
               display: "flex",
               justifyContent: "center",
               width: "100%",
@@ -219,7 +220,6 @@ export default async function RootLayout({
               <RouteGuard>{children}</RouteGuard>
             </div>
           </div>
-          <Footer />
           <ScrollToTopButton />
         </body>
       </Providers>

@@ -5,3 +5,19 @@
         text-align: center;
     }
 }
+
+/* Make footer icon rows wrap and center on small screens */
+.footerRow {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+    .mobile {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}

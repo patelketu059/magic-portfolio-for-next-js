@@ -22,3 +22,15 @@
     opacity: 0;
     transform: scale(0.875);
 }
+
+@media (max-width: 640px) {
+    .text {
+        /* slightly smaller headings on narrow screens */
+        font-size: clamp(1rem, 4.2vw, 1.125rem);
+    }
+
+    /* hide copy button on very small screens to avoid layout shift */
+    .visibility {
+        display: none;
+    }
+}

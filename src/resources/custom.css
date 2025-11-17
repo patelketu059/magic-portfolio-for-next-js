@@ -26,7 +26,7 @@ body {
 
 /* Section spacing */
 section {
-  scroll-margin-top: 80px;
+  scroll-margin-top: 5rem;
 }
 
 /* Link styles for sidebar navigation */
@@ -50,7 +50,7 @@ a:hover {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 0.625rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -76,9 +76,9 @@ button,
 
 /* Force spacing for the Education section (overrides module cascade when needed) */
 #education {
-  margin-top: 96px;
-  padding-top: 96px;
-  padding-bottom: 12px;
+  margin-top: clamp(4rem, 9vw, 6rem);
+  padding-top: clamp(4rem, 9vw, 6rem);
+  padding-bottom: 0.75rem;
 }
 
 
@@ -136,3 +136,87 @@ button,
   --scheme-neutral-600-50: rgba(137,152,159,0.5);
   /*
 }*/
+
+/* Responsive utilities: global, lightweight rules to help all pages adapt */
+:root {
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --fluid-type-min: 14px;
+  --fluid-type-max: 18px;
+}
+
+/* Base font sizing that scales down on small devices */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  font-size: 16px;
+}
+
+@media (max-width: 1200px) {
+  html { font-size: 15px; }
+}
+
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+}
+
+/* Fluid body type fallback for elements that don't use CSS modules */
+body, p, input, button, a { font-size: clamp(var(--fluid-type-min), 1.6vw, var(--fluid-type-max)); }
+
+/* Prevent horizontal overflow on small screens */
+html, body { overflow-x: hidden; }
+
+/* Make images, video and svg responsive */
+img, picture, svg, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Simple responsive container utility (pages can reuse `.site-container`) */
+.site-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 4vw;
+  box-sizing: border-box;
+  max-width: none; /* allow vw-based sizing on large screens */
+}
+
+/* Desktop: make the main content occupy 70% of the viewport width (centered) */
+@media (min-width: 1100px) {
+  .site-container {
+    width: 80vw;
+    max-width: 1600px; /* slightly larger cap for wider desktop layouts */
+  }
+}
+
+/* Tablet fallback: use 85% width */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .site-container { width: 85vw; }
+}
+
+/* Utility stack for vertical rhythm */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Tidy long pre/code blocks on small screens */
+pre, code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Reduce large paddings on very small devices */
+@media (max-width: 420px) {
+  .site-container { padding: 0 16px; }
+}
+
+/* Safeguard for form elements on narrow devices */
+input, textarea, select, button { min-width: 0; }
+
+/* Accessibility: ensure focus outlines visible on keyboard nav */
+*:focus { outline: 2px solid rgba(0,0,0,0.12); outline-offset: 2px; }

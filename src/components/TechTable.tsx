@@ -91,7 +91,7 @@ export function TechTable({
           backgroundColor: tableBg,
           boxShadow,
           margin: "0 auto",
-          maxWidth: "1000px",
+          maxWidth: "clamp(720px, 70vw, 1000px)",
           width: "100%",
         }}
       >

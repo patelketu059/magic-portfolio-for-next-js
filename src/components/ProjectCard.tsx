@@ -36,11 +36,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   return (
     <Column fillWidth gap="m">
-      <div style={{ width: "100%", maxWidth: "100%", height: "100%", margin: "0 auto", overflow: "hidden", borderRadius: 16 }}>
+      <div style={{ width: "100%", maxWidth: "100%", height: "100%", margin: "0 auto", overflow: "hidden", borderRadius: "1rem" }}>
         {/* Simple image carousel with 3s autoplay */}
         <ImageCarousel images={images} title={title} id={cardId} />
       </div>
-      <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "12px 0 24px 0" }}>
+      <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "0.75rem 0 1.5rem 0" }}>
         {title && (
           <Heading
             as="h2"
@@ -55,7 +55,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           <Column flex={7} gap="16">
             {/* AvatarGroup removed from carousel and card */}
             {!isProjectPage && description?.trim() && (
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8, flexWrap: "wrap", wordBreak: "break-word", textAlign: "center", maxWidth: 900 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginTop: "0.5rem", flexWrap: "wrap", wordBreak: "break-word", textAlign: "center", maxWidth: "clamp(520px, 65vw, 900px)" }}>
                 <Text wrap="balance" variant="body-default-s" onBackground="neutral-weak" style={{ margin: 0, wordBreak: "break-word", whiteSpace: "pre-line", textAlign: "center" }}>
                   {description}
                   {!isProjectPage && content?.trim() && (
@@ -115,16 +115,18 @@ const ImageCarousel: React.FC<{ images: string[]; title?: string; interval?: num
     hoverRef.current = false;
   };
 
+  const carouselHeight = "clamp(220px, 30vw, 420px)";
+
   if (!images || images.length === 0) {
     return (
-      <div style={{ width: "100%", height: "320px", display: "flex", alignItems: "center", justifyContent: "center", background: "#1a1a1a" }}>
+      <div style={{ width: "100%", height: carouselHeight, display: "flex", alignItems: "center", justifyContent: "center", background: "#1a1a1a" }}>
         <Text variant="body-default-s" onBackground="neutral-weak">No images available</Text>
       </div>
     );
   }
 
   return (
-    <div style={{ width: "100%", position: "relative", overflow: "hidden", height: "320px" }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <div style={{ width: "100%", position: "relative", overflow: "hidden", height: carouselHeight }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       {/* shiftPercent is percent of the inner container width to move so the correct child is visible */}
       {/** For an inner width of N*100% the correct translate percent (relative to inner) is index*(100/N)% */}
       <div style={{ display: "flex", transition: isMounted ? "transform 480ms ease" : "none", transform: `translateX(-${(index * 100) / images.length}%)`, width: `${images.length * 100}%`, height: "100%" }}>
@@ -134,23 +136,23 @@ const ImageCarousel: React.FC<{ images: string[]; title?: string; interval?: num
             <img 
               src={img} 
               alt={`${title} screenshot ${i + 1}`} 
-              style={{ width: "auto", maxWidth: "100%", height: "auto", maxHeight: "320px", objectFit: "contain", display: "block" }} 
+              style={{ width: "auto", maxWidth: "100%", height: "auto", maxHeight: carouselHeight, objectFit: "contain", display: "block" }} 
               loading={i === 0 ? "eager" : "lazy"}
             />
           </div>
         ))}
       </div>
       {images.length > 1 && (
-        <div style={{ position: "absolute", left: 0, right: 0, bottom: 12, display: "flex", justifyContent: "center", gap: 8, zIndex: 10 }}>
+        <div style={{ position: "absolute", left: 0, right: 0, bottom: "0.75rem", display: "flex", justifyContent: "center", gap: "0.5rem", zIndex: 10 }}>
           {images.map((img, i) => (
             <button 
               key={`${id ?? title}-${img}-dot-${i}`} 
               type="button" 
               onClick={() => setIndex(i)} 
               style={{ 
-                width: 8, 
-                height: 8, 
-                borderRadius: 8, 
+                width: "0.5rem", 
+                height: "0.5rem", 
+                borderRadius: "0.5rem", 
                 border: "none", 
                 padding: 0, 
                 background: i === index ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.45)",
