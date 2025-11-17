@@ -9,7 +9,20 @@ import styles from "./home.module.css";
 import { Carousel } from "@once-ui-system/core";
 import { ProjectCard } from "@/components";
 
-export default function HomeClient() {
+type PostMeta = {
+  slug: string;
+  metadata: {
+    title: string;
+    summary?: string;
+    images?: string[];
+    team?: { avatar?: string }[];
+    link?: string;
+    publishedAt?: string;
+  };
+  content?: string;
+};
+
+export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[] }) {
   
 
   const skillCategories = [
@@ -74,35 +87,21 @@ export default function HomeClient() {
     },
   ];
 
-  type PostMeta = {
-    slug: string;
-    metadata: {
-      title: string;
-      summary?: string;
-      images?: string[];
-      team?: { avatar?: string }[];
-      link?: string;
-      publishedAt?: string;
-    };
-    content?: string;
-  };
-
-  const [posts, setPosts] = useState<PostMeta[]>([]);
+  const [posts, setPosts] = useState<PostMeta[]>(initialPosts || []);
 
   useEffect(() => {
+    // Fetch updates on mount to get any changes since server render
     let mounted = true;
     fetch('/api/projects')
       .then((res) => res.json())
       .then((data) => {
         if (!mounted) return;
         const all = data.posts || [];
-        // Filter out any globally hidden projects
         const visible = all.filter((p: PostMeta) => !hiddenProjects.includes(p.slug));
         setPosts(visible);
       })
       .catch(() => {
         if (!mounted) return;
-        setPosts([]);
       });
 
     return () => { mounted = false; };

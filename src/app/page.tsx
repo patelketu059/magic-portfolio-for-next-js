@@ -1,5 +1,5 @@
 import { Meta } from "@once-ui-system/core";
-import { home, baseURL } from "@/resources";
+import { home, baseURL, hiddenProjects } from "@/resources";
 import HomeClient from "./HomeClient";
 
 export async function generateMetadata() {
@@ -12,6 +12,21 @@ export async function generateMetadata() {
   });
 }
 
-export default function Home() {
-  return <HomeClient />;
+export default async function Home() {
+  // Request the filtered project list from the server API so server-rendered HTML
+  // contains the visible projects (keeps data-fetching at the API layer).
+  let initialPosts = [];
+  try {
+    const excludes = hiddenProjects && hiddenProjects.length > 0 ? `?exclude=${encodeURIComponent(hiddenProjects.join(","))}` : "";
+    const res = await fetch(`${baseURL}/api/projects${excludes}`);
+    if (res.ok) {
+      const body = await res.json();
+      initialPosts = body.posts || [];
+    }
+  } catch (e) {
+    // swallow — fallback to empty list
+    initialPosts = [];
+  }
+
+  return <HomeClient initialPosts={initialPosts} />;
 }
