@@ -18,7 +18,8 @@ export default async function Home() {
   let initialPosts = [];
   try {
     const excludes = hiddenProjects && hiddenProjects.length > 0 ? `?exclude=${encodeURIComponent(hiddenProjects.join(","))}` : "";
-    const res = await fetch(`${baseURL}/api/projects${excludes}`);
+    // Use a relative URL so the request targets the current deployment (works in Vercel previews)
+    const res = await fetch(`/api/projects${excludes}`);
     if (res.ok) {
       const body = await res.json();
       initialPosts = body.posts || [];
