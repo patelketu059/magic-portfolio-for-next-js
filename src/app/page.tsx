@@ -33,5 +33,7 @@ export default async function Home() {
     // ignore and keep local posts
   }
 
+  console.log('[DEBUG Home] initialPosts count (server):', Array.isArray(initialPosts) ? initialPosts.length : 0);
+
   return <HomeClient initialPosts={initialPosts} />;
 }
