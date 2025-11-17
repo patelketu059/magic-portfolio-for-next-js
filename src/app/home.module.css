@@ -17,7 +17,7 @@
 
 .heroInner {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1020px;
   margin: 0 auto;
   padding: 0 12px;
   display: flex;
@@ -32,7 +32,8 @@
   line-height: 0.92;
   margin: 0;
   /* Large, responsive display type similar to screenshot */
-  font-size: clamp(1rem, 9vw, 8rem);
+  /* slightly reduced maximum and viewport scale to make the heading less dominant */
+  font-size: clamp(1rem, 6.5vw, 6rem);
   letter-spacing: -0.02em;
   color: var(--neutral-on-background-strong);
 }
@@ -311,7 +312,7 @@
    Ensures Projects carousel, About, and Experience line up visually */
 .sectionContent {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1020px;
   margin: 0 auto;
   padding: 0 12px; /* small inner padding for very narrow viewports */
 }
@@ -331,7 +332,7 @@
 
 /* About Section (two-column portrait + copy like Mitchell Sparrow) */
 .aboutGrid {
-  max-width: 1200px;
+  max-width: 1020px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 420px 1fr;
@@ -488,10 +489,9 @@
   display: flex;
   flex-direction: row;
   gap: 8px;
-  flex-wrap: nowrap; /* keep items on a single row */
+  flex-wrap: wrap; /* allow badges to wrap into multiple rows when needed */
   align-items: center;
-  overflow-x: auto; /* allow horizontal scroll if items overflow */
-  -webkit-overflow-scrolling: touch;
+  overflow: visible; /* no scrollbars */
 }
 
 .skillListItem {
