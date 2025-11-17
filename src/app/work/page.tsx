@@ -1,5 +1,5 @@
 import { Column, Heading, Meta, Schema } from "@once-ui-system/core";
-import { baseURL, about, person, work } from "@/resources";
+import { baseURL, about, person, work, hiddenProjects } from "@/resources";
 import { Projects } from "@/components/work/Projects";
 
 export async function generateMetadata() {
@@ -31,7 +31,7 @@ export default function Work() {
       <Heading marginBottom="l" variant="heading-strong-xl" align="center">
         {work.title}
       </Heading>
-      <Projects exclude={["portfolio-website", "autonomous-vehicle-mapping"]} />
+      <Projects />
     </Column>
   );
 }

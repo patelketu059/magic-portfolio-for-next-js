@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { about, person, social } from "@/resources";
+import { about, person, social, hiddenProjects } from "@/resources";
 import { iconLibrary } from "@/resources/icons";
 import { TypingAnimation } from "@/components/TypingAnimation";
 import Image from "next/image";
 import styles from "./home.module.css";
-import PostsCarousel from "@/components/PostsCarousel";
+import { Carousel } from "@once-ui-system/core";
 import { ProjectCard } from "@/components";
 
 export default function HomeClient() {
@@ -16,30 +16,27 @@ export default function HomeClient() {
     {
       title: "Core ML & Optimization",
       items: [
-        "Python",
-        "scikit-learn",
         "Classical ML",
-        "Optimization",
-        "Evaluation Metrics",
+        "Regression & Classification",
+        "Tree-Based Models",
+        "Imbalanced Learning",
+        "Regularization",
+        "Optimization & Tuning",
+        "Model Evaluation"
       ],
     },
     {
       title: "Deep Learning & Generative Models",
       items: [
-        "PyTorch",
-        "TensorFlow",
-        "Keras",
-        "GANs / VAEs",
+        "Neural Networks",
         "Diffusion Models",
-      ],
-    },
-    {
-      title: "NLP, Seq2Seq & Transformers",
-      items: [
-        "NLP",
+        "RNNs / LSTMs",
         "Transformers",
         "Seq2Seq",
-        "Attention / Tokenization",
+        "VAEs",
+        "GANs",
+        "Natural Language Processing (NLP)",
+        "Tokenization"
       ],
     },
     {
@@ -47,13 +44,33 @@ export default function HomeClient() {
       items: [
         "Computer Vision",
         "CNNs / ResNet",
-        "Object Detection",
-        "Segmentation / ViT",
+        "Autoencoders",
+        "Vision Transformers (ViT)",
+        "Representation Learning",
+        "Robustness & Bias",
+        "Image Generation",
+        "3D Point Cloud Reconstruction"
       ],
     },
+
     {
       title: "Engineering & Tools",
-      items: ["React", "Next.js", "TypeScript", "Node.js", "Docker", "AWS", "Git", "SQL"],
+      items: [
+        "Python",
+        "Scikit-learn",
+        "TensorFlow",
+        "Keras",
+        "PySpark",
+        "Databricks",
+        "Docker",
+        "AWS", 
+        "Git", 
+        "SQL",
+        "React",
+        "Next.js", 
+        "TypeScript", 
+        "Node.js", 
+      ],
     },
   ];
 
@@ -74,11 +91,14 @@ export default function HomeClient() {
 
   useEffect(() => {
     let mounted = true;
-    fetch('/api/projects?exclude=portfolio-website,autonomous-vehicle-mapping')
+    fetch('/api/projects')
       .then((res) => res.json())
       .then((data) => {
         if (!mounted) return;
-        setPosts(data.posts || []);
+        const all = data.posts || [];
+        // Filter out any globally hidden projects
+        const visible = all.filter((p: PostMeta) => !hiddenProjects.includes(p.slug));
+        setPosts(visible);
       })
       .catch(() => {
         if (!mounted) return;
@@ -96,7 +116,28 @@ export default function HomeClient() {
         {/* Background moved to global layout */}
 
         <div className={styles.heroInner}>
-          <p className={styles.role}>{person.role}</p>
+          <div className={styles.role} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+            {(() => {
+              const order = ["linkedin", "github", "email", "instagram"];
+              return order.map((key) => {
+                const item = social.find((s) => s.name.toLowerCase().includes(key));
+                if (!item) return null;
+                const Icon = iconLibrary[item.icon as keyof typeof iconLibrary];
+                return (
+                  <a
+                    key={item.name}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.name}
+                    style={{ color: 'inherit', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 8, textDecoration: 'none' }}
+                  >
+                    {Icon ? <Icon style={{ width: 18, height: 18 }} aria-hidden /> : <span>{item.name}</span>}
+                  </a>
+                );
+              });
+            })()}
+          </div>
           <h1 className={styles.heroTitle}>
             <TypingAnimation text={`Hi, I am ${person.firstName} ${person.lastName}`} />
           </h1>
@@ -165,25 +206,22 @@ export default function HomeClient() {
           <h2 className={styles.sectionTitle}>PROJECTS</h2>
           <div className={styles.projectsList}>
             {posts && posts.length > 0 ? (
-              <PostsCarousel
-                slides={posts.map((post: PostMeta) => ({
-                  key: post.slug,
-                  alt: post.metadata.title,
-                  node: (
-                    <div style={{ padding: 12 }}>
-                      <ProjectCard
-                        href={`/work/${post.slug}`}
-                        images={post.metadata.images || []}
-                        title={post.metadata.title}
-                        description={post.metadata.summary || ""}
-                        content={post.content || ""}
-                        avatars={post.metadata.team?.filter((m) => !!m.avatar).map((m) => ({ src: m.avatar as string })) || []}
-                        link={post.metadata.link || ""}
-                      />
-                    </div>
+              <Carousel
+                items={posts.map((post: PostMeta) => ({
+                  slide: (
+                    <ProjectCard
+                      cardId={post.slug}
+                      href={`/work/${post.slug}`}
+                      images={post.metadata.images || []}
+                      title={post.metadata.title}
+                      description={post.metadata.summary || ""}
+                      content={post.content || ""}
+                      avatars={post.metadata.team?.filter((m) => !!m.avatar).map((m) => ({ src: m.avatar as string })) || []}
+                      link={post.metadata.link || ""}
+                    />
                   ),
+                  alt: post.metadata.title,
                 }))}
-                interval={3000}
               />
             ) : null}
           </div>

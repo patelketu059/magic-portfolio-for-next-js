@@ -16,7 +16,12 @@
     letter-spacing: 0.05em;
     transition: color 0.2s ease;
     position: relative;
-    padding-bottom: 4px;
+    /* align nav links like icon buttons */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 10px;
 
     &:hover {
         color: var(--neutral-on-background-strong);
@@ -64,12 +69,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 10px;
+    padding: 0 10px;
     border-radius: 999px;
     background: var(--surface-transparent, transparent);
     border: 1px solid var(--neutral-outline, transparent);
     transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
-    min-width: 40px;
+    min-width: 36px;
     height: 36px;
     box-sizing: border-box;
 
@@ -144,7 +149,7 @@
 
 .navIcon {
     vertical-align: middle;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     margin-right: 0;
     color: var(--neutral-on-background-medium);
 }

@@ -15,7 +15,7 @@ import {
   Avatar,
   Line,
 } from "@once-ui-system/core";
-import { baseURL, about, person, work } from "@/resources";
+import { baseURL, about, person, work, hiddenProjects } from "@/resources";
 import { formatDate } from "@/utils/formatDate";
 import { ScrollToHash, CustomMDX } from "@/components";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -112,7 +112,7 @@ export default async function Project({
         <Heading as="h2" variant="heading-strong-xl" marginBottom="24">
           Related projects
         </Heading>
-        <Projects exclude={[post.slug]} range={[2]} />
+        <Projects exclude={[post.slug, ...hiddenProjects]} range={[2]} />
       </Column>
       <ScrollToHash />
     </Column>

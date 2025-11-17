@@ -14,7 +14,6 @@ import {
   SpacingToken,
 } from "@once-ui-system/core";
 import { Footer, Header, RouteGuard, Providers } from "@/components";
-import GlobalBackground from "@/components/GlobalBackground";
 import { ScrollToTopButton } from "@/components/ScrollToTopButton";
 import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
 
@@ -103,9 +102,52 @@ export default async function RootLayout({
             `,
           }}
         />
+        {/* Remove common browser-extension attributes (e.g. Grammarly) before hydration to avoid SSR/CSR mismatches */}
+        <script
+          id="strip-extension-attrs"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                try {
+                  // Common extension attributes and patterns to remove
+                  var attrs = [
+                    'data-new-gr-c-s-check-loaded',
+                    'data-gr-ext-installed',
+                    'data-gramm',
+                    'data-gramm_id'
+                  ];
+                  attrs.forEach(function(a){
+                    try { document.documentElement.removeAttribute(a); } catch(e) {}
+                    try { if (document.body) document.body.removeAttribute(a); } catch(e) {}
+                  });
+
+                  // Remove any attributes starting with data-gr* on html/body
+                  try {
+                    var el = document.documentElement;
+                    if (el && el.attributes) {
+                      Array.prototype.slice.call(el.attributes).forEach(function(at){
+                        if (/^data-gr/i.test(at.name)) {
+                          try { el.removeAttribute(at.name); } catch(e){}
+                        }
+                      });
+                    }
+                    var b = document.body;
+                    if (b && b.attributes) {
+                      Array.prototype.slice.call(b.attributes).forEach(function(at){
+                        if (/^data-gr/i.test(at.name)) {
+                          try { b.removeAttribute(at.name); } catch(e){}
+                        }
+                      });
+                    }
+                  } catch(e){}
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
       </head>
       <Providers>
-        <body
+        <body suppressHydrationWarning
           style={{ 
             minHeight: "100vh",
             margin: 0,
@@ -157,7 +199,6 @@ export default async function RootLayout({
                 color: effects.lines.color,
               }}
             />
-            <GlobalBackground preserve="meet" />
           </div>
           <div style={{ width: "100%", minHeight: "16px" }} className="mobile-spacer" />
           <Header />

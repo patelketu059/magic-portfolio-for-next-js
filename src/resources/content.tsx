@@ -31,6 +31,11 @@ const social: Social = [
     icon: "linkedin",
     link: "https://www.linkedin.com/in/ketu-patel/",
   },
+  {
+    name: "Instagram",
+    icon: "instagram",
+    link: "https://www.instagram.com/ketu__p?igsh=MTdvZ2d0dnVuZ3hmeg==",
+  },
   // {
   //   name: "Threads",
   //   icon: "threads",
@@ -311,6 +316,13 @@ const work: Work = {
   // All projects will be listed on the /home and /work routes
 };
 
+// Global list of project slugs to hide across the site (useful for drafts or in-progress work)
+const hiddenProjects: string[] = [
+  "portfolio-website",
+  "autonomous-vehicle-mapping",
+  "automate-design-handovers-with-a-figma-to-code-pipeline",
+];
+
 const gallery: Gallery = {
   path: "/gallery",
   label: "Gallery",
@@ -362,4 +374,4 @@ const gallery: Gallery = {
   ],
 };
 
-export { person, social, newsletter, home, about, blog, work, gallery };
+export { person, social, newsletter, home, about, blog, work, gallery, hiddenProjects };

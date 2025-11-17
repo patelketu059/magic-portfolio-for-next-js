@@ -1,6 +1,7 @@
 import { getPosts } from "@/utils/utils";
 import { Column } from "@once-ui-system/core";
 import { ProjectCard } from "@/components";
+import { hiddenProjects } from "@/resources";
 
 interface ProjectsProps {
   range?: [number, number?];
@@ -10,9 +11,10 @@ interface ProjectsProps {
 export function Projects({ range, exclude }: ProjectsProps) {
   let allProjects = getPosts(["src", "app", "work", "projects"]);
 
-  // Exclude by slug (exact match)
-  if (exclude && exclude.length > 0) {
-    allProjects = allProjects.filter((post) => !exclude.includes(post.slug));
+  // Merge any component-level excludes with global hiddenProjects and remove duplicates
+  const combinedExcludes = Array.from(new Set([...(exclude || []), ...hiddenProjects]));
+  if (combinedExcludes.length > 0) {
+    allProjects = allProjects.filter((post) => !combinedExcludes.includes(post.slug));
   }
 
   const sortedProjects = allProjects.sort((a, b) => {
@@ -27,6 +29,7 @@ export function Projects({ range, exclude }: ProjectsProps) {
     <Column fillWidth gap="xl" marginBottom="40" paddingX="l">
       {displayedProjects.map((post, index) => (
         <ProjectCard
+          cardId={post.slug}
           priority={index < 2}
           key={post.slug}
           href={`/work/${post.slug}`}
