@@ -81,7 +81,7 @@ export default async function Project({
       gap="l"
       style={{
         width: "100%",
-        maxWidth: "clamp(720px, 90vw, 1120px)",
+        maxWidth: "clamp(640px, 90vw, 950px)",
         margin: "0 auto",
         padding: "0 16px",
         boxSizing: "border-box",

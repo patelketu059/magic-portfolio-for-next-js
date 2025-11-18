@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@once-ui-system/core";
 
 export type TechTableProps = {
@@ -14,6 +14,12 @@ export type TechTableProps = {
    * When omitted, the table uses legacy behavior (infers columns from row props).
    */
   columns?: string[];
+  /** Optional explicit widths for each column (e.g. ["10%","20%","70%"]).
+   * When provided and the array length matches `columns.length`, these widths
+   * will be used as the base distribution for the table. Percent values are
+   * parsed and normalized; non-percent units are used verbatim.
+   */
+  columnWidths?: string[];
 };
 
 export type TechRowProps = {
@@ -24,7 +30,7 @@ export type TechRowProps = {
    * In that mode, a row is rendered as: [label, ...values].
    */
   values?: React.ReactNode[];
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 function formatHeader(key: string): string {
@@ -38,6 +44,7 @@ export function TechTable({
   leftHeader = "Label",
   hideHeader = false,
   columns,
+  columnWidths,
 }: TechTableProps) {
   const childArray = React.Children.toArray(children).filter(
     React.isValidElement
@@ -60,6 +67,31 @@ export function TechTable({
   // --- MODE DETECTION ---
   // Multi-column mode is active when `columns` prop is provided.
   const isExplicitMultiColumn = Array.isArray(columns) && columns.length > 0;
+  const cols = Array.isArray(columns) ? columns : [];
+
+  // Responsive flag: when true, we'll widen the middle three columns by 10%.
+  const [widenMiddleCols, setWidenMiddleCols] = useState(false);
+
+  useEffect(() => {
+    // Apply widening on viewports >= 640px (adjust breakpoint as needed)
+    const mq = window.matchMedia("(min-width: 640px)");
+    const handler = (e: MediaQueryListEvent) => {
+      setWidenMiddleCols(!!e.matches);
+    };
+    // initial
+    setWidenMiddleCols(mq.matches);
+    // older browsers: fallback (typed without `any`)
+    type MQLegacy = MediaQueryList & {
+      addListener?: (listener: (e: MediaQueryListEvent) => void) => void;
+      removeListener?: (listener: (e: MediaQueryListEvent) => void) => void;
+    };
+    const mqLegacy = mq as MQLegacy;
+    if (typeof mqLegacy.addListener === "function") {
+      mqLegacy.addListener(handler);
+      return () => mqLegacy.removeListener?.(handler);
+    }
+    return undefined;
+  }, []);
 
   // Legacy / auto-column detection (only used when NOT in explicit mode)
   const columnKeySet = new Set<string>();
@@ -68,10 +100,10 @@ export function TechTable({
   if (!isExplicitMultiColumn) {
     for (const child of childArray) {
       const props = child.props || {};
-      Object.keys(props).forEach((key) => {
-        if (key === "label" || key === "category" || key === "children") return;
+      for (const key of Object.keys(props)) {
+        if (key === "label" || key === "category" || key === "children") continue;
         columnKeySet.add(key);
-      });
+      }
       if (props.children != null) hasDetailsColumn = true;
     }
   }
@@ -94,12 +126,84 @@ export function TechTable({
           backgroundColor: tableBg,
           boxShadow,
           margin: "0 auto",
-          maxWidth: "clamp(720px, 70vw, 1000px)",
+          maxWidth: "clamp(945px, 90vw, 1260px)",
           width: "100%",
-          tableLayout: "auto",
+          // When explicit column widths are provided, use fixed layout so
+          // <col> widths are honored predictably by the browser.
+          tableLayout:
+            isExplicitMultiColumn && Array.isArray(columnWidths) ? "fixed" : "auto",
           wordBreak: "break-word",
         }}
       >
+        {isExplicitMultiColumn && (
+          // Render a colgroup that uses optional `columnWidths` (percent strings)
+          // or falls back to equal share. When numeric percent widths are
+          // provided, we can apply the `widenMiddleCols` multiplier and
+          // normalize so that the widths sum to 100%.
+          (() => {
+            const count = cols.length;
+
+            // Helper: check if an array of strings are all percent values.
+            const allPercents = Array.isArray(columnWidths) && columnWidths.length === count && columnWidths.every((s) => typeof s === "string" && s.trim().endsWith("%"));
+
+            if (allPercents) {
+              // Parse numeric percent values
+              const widths = columnWidths as string[];
+              const numeric = widths.map((s) => Number.parseFloat(s));
+              const base = [...numeric];
+
+              if (widenMiddleCols && count >= 5) {
+                const center = Math.floor(count / 2);
+                const mids = [center - 1, center, center + 1];
+                for (const i of mids) {
+                  if (i >= 0 && i < count) base[i] = base[i] * 1.1;
+                }
+              }
+
+              const sum = base.reduce((s, v) => s + v, 0) || 1;
+              const normalized = base.map((v) => `${(v / sum) * 100}%`);
+              return (
+                <colgroup>
+                  {normalized.map((w, i) => (
+                    <col key={cols[i] ?? `c-${i}`} style={{ width: w }} />
+                  ))}
+                </colgroup>
+              );
+            }
+
+            // Fallback: if columnWidths provided but not all percent values,
+            // and length matches, render them verbatim; otherwise fall back
+            // to equal share.
+            if (Array.isArray(columnWidths) && columnWidths.length === count) {
+              return (
+                <colgroup>
+                  {columnWidths.map((w, i) => (
+                    <col key={cols[i] ?? `c-${i}`} style={{ width: w }} />
+                  ))}
+                </colgroup>
+              );
+            }
+
+            // Default equal-share behavior (with optional widening)
+            const base = new Array<number>(count).fill(100 / count);
+            if (widenMiddleCols && count >= 5) {
+              const center = Math.floor(count / 2);
+              const mids = [center - 1, center, center + 1];
+              for (const i of mids) {
+                if (i >= 0 && i < count) base[i] = base[i] * 1.1;
+              }
+            }
+            const sum = base.reduce((s, v) => s + v, 0);
+            const normalized = base.map((v) => `${(v / sum) * 100}%`);
+            return (
+              <colgroup>
+                {normalized.map((w, i) => (
+                  <col key={cols[i] ?? `c-${i}`} style={{ width: w }} />
+                ))}
+              </colgroup>
+            );
+          })()
+        )}
         {!hideHeader && (
           <thead>
             <tr
@@ -110,10 +214,10 @@ export function TechTable({
               }}
             >
                 {isExplicitMultiColumn ? (
-                // Explicit multi-column headers: use `columns` array as-is
-                columns!.map((col, idx) => (
+                // Explicit multi-column headers: use `cols` array as-is
+                cols.map((col, idx) => (
                   <th
-                    key={idx}
+                    key={col ?? `c-${idx}`}
                     style={{
                       padding: "0.75rem 1.25rem",
                         textAlign: idx === 0 ? "center" : "left",
@@ -121,7 +225,7 @@ export function TechTable({
                       textTransform: "none",
                       letterSpacing: "0.02em",
                         borderRight:
-                          idx === columns!.length - 1
+                          idx === cols.length - 1
                             ? "0"
                             : `1px solid ${borderColor}`,
                         whiteSpace: "normal",
@@ -186,12 +290,15 @@ export function TechTable({
         <tbody>
           {childArray.map((child, idx) => {
             const props = child.props || {};
+            const p = props as unknown as Record<string, unknown>;
             const leftText = props.label ?? props.category ?? "";
-            const values: React.ReactNode[] = props.values || [];
+            const values: React.ReactNode[] = (p.values as React.ReactNode[]) || [];
+            const labelAlign = (p.alignLabel as React.CSSProperties["textAlign"]) || (p.alignCategory as React.CSSProperties["textAlign"]) || "center";
+            const detailsAlign = (p.alignDetails as React.CSSProperties["textAlign"]) || "left";
 
             return (
               <tr
-                key={idx}
+                key={`${leftText ? String(leftText) : 'row'}-${idx}`}
                 style={{
                   transition: "background-color 160ms ease",
                   borderBottom: `1px solid ${borderColor}`,
@@ -210,24 +317,27 @@ export function TechTable({
                         verticalAlign: "middle",
                         color: leftTextColor,
                         fontWeight: 600,
-                        textAlign:
-                          props.alignLabel || props.alignCategory || "center",
+                        textAlign: labelAlign,
                         borderRight: `1px solid ${borderColor}`,
-                        whiteSpace: "nowrap",
+                        whiteSpace: "normal",
+                        overflowWrap: "anywhere",
+                        wordBreak: "break-word",
                       }}
                     >
                       {leftText}
                     </td>
                     {/* Remaining columns: values[i] for each header after the first */}
-                    {columns!.slice(1).map((_, colIdx) => (
+                    {cols.slice(1).map((_, colIdx) => (
                       <td
-                        key={colIdx}
+                        key={cols[colIdx + 1] ?? `c-${colIdx + 1}`}
                         style={{
                           padding: "0.75rem 1.25rem",
                           color: cellText,
                           textAlign: "left",
+                          overflowWrap: "anywhere",
+                          wordBreak: "break-word",
                           borderRight:
-                            colIdx === columns!.length - 2
+                            colIdx === cols.length - 2
                               ? "0"
                               : `1px solid ${borderColor}`,
                         }}
@@ -245,10 +355,11 @@ export function TechTable({
                         verticalAlign: "middle",
                         color: leftTextColor,
                         fontWeight: 600,
-                        textAlign:
-                          props.alignLabel || props.alignCategory || "center",
+                        textAlign: labelAlign,
                         borderRight: `1px solid ${borderColor}`,
-                        whiteSpace: "nowrap",
+                        whiteSpace: "normal",
+                        overflowWrap: "anywhere",
+                        wordBreak: "break-word",
                       }}
                     >
                       {leftText}
@@ -258,28 +369,31 @@ export function TechTable({
                         style={{
                           padding: "0.75rem 1.25rem",
                           color: cellText,
-                          textAlign: props.alignDetails || "left",
+                          textAlign: detailsAlign,
+                          overflowWrap: "anywhere",
+                          wordBreak: "break-word",
                         }}
                       >
-                        {props.children}
+                        {(p.children as React.ReactNode)}
                       </td>
                     ) : (
                       <>
                         {columnKeys.map((key) => {
-                          const alignKey = `align${key
-                            .charAt(0)
-                            .toUpperCase()}${key.slice(1)}`;
+                          const alignKey = `align${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+                          const alignKeyVal = (p[alignKey] as React.CSSProperties["textAlign"]) || "left";
                           return (
                             <td
                               key={key}
                               style={{
                                 padding: "0.75rem 1.25rem",
                                 color: cellText,
-                                borderRight: `1px solid ${borderColor}`,
-                                textAlign: props[alignKey] || "left",
+                                  borderRight: `1px solid ${borderColor}`,
+                                  textAlign: alignKeyVal,
+                                  overflowWrap: "anywhere",
+                                  wordBreak: "break-word",
                               }}
                             >
-                              {props[key]}
+                              {(p[key] as React.ReactNode)}
                             </td>
                           );
                         })}
@@ -288,10 +402,12 @@ export function TechTable({
                             style={{
                               padding: "0.75rem 1.25rem",
                               color: cellText,
-                              textAlign: props.alignDetails || "left",
+                              textAlign: detailsAlign,
+                              overflowWrap: "anywhere",
+                              wordBreak: "break-word",
                             }}
                           >
-                            {props.children}
+                            {(p.children as React.ReactNode)}
                           </td>
                         )}
                       </>

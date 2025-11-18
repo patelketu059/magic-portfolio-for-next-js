@@ -144,7 +144,7 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
 ## **2. Technologies / Algorithms Used**
 --- 
 
-<TechTable leftHeader="Category" rightHeader="Details" alignDetails="left">
+<TechTable leftHeader="Category" rightHeader="Details" alignDetails="left" columnWidthsResponsive={{ "10px": ["100px", "10%"], "10px": ["40px", "10%"] }}>
 
   <TechRow label="Frameworks & Libraries">
     - PyTorch 2.x, NumPy, tqdm, matplotlib 
@@ -261,7 +261,7 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
 
 ### **4.1 Seq2Seq Family (RNN → LSTM + Attention)**
 
-<TechTable columns={["Model","Train Loss","Val Loss","Train PPL","Val PPL","Summary / Insight"]}>
+<TechTable columns={["Model","Train Loss","Val Loss","Train PPL","Val PPL","Summary / Insight"]} style={{ maxWidth: "clamp(720px, 90vw, 1200px)", width: "100%", overflowX: "auto", margin: "0 auto" }} columnWidths={["15%","11%","11%","11%","11%","41%"]}>
   <TechRow label="RNN (Baseline)" values={["4.61","4.70","100.6","110.0","Struggled to preserve early context. Gradients vanished through long sequences, causing the model to focus only on the last few tokens and produce truncated translations."]} />
   <TechRow label="LSTM (No Attention)" values={["3.23","3.39","25.4","29.7","Gated memory cells maintained long-term gradients, yielding more stable training and improved fluency for shorter sentences."]} />
   <TechRow label="RNN + Attention" values={["3.20","3.42","26.8","30.6","Attention introduced dynamic alignment, allowing selective focus across source tokens. Improved context usage but still limited by shallow recurrence."]} />
@@ -273,7 +273,7 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
 
 ### **4.2 Transformer Family (Parallel Self-Attention Models)**
 
-<TechTable columns={["Model","Train Loss","Val Loss","Train PPL","Val PPL","Summary / Insight"]}>
+<TechTable columns={["Model","Train Loss","Val Loss","Train PPL","Val PPL","Summary / Insight"]} style={{ maxWidth: "clamp(720px, 90vw, 1200px)", width: "100%", overflowX: "auto", margin: "0 auto" }} columnWidths={["19%","10%","10%","10%","10%","41%"]}>
   <TechRow label="Encoder-Only Transformer" values={["–","–","8.6","22.5","Served as a partial baseline without cross-attention. Produced monotonic, less context-aware translations but demonstrated strong sentence embeddings."]} />
   <TechRow label="Full Transformer (Default Hyperparameters)" values={["1.49","1.83","4.46","6.24","Multi-head self-attention captured global dependencies and improved fluency. Parallelism accelerated training but required careful learning-rate tuning."]} />
   <TechRow label="Full Transformer (Tuned Hyperparameters)" values={["1.20","1.79","3.33","6.02","Best-performing model. Tuned dropout, feed-forward width, and learning rate to achieve smooth convergence, low uncertainty, and high-quality translations."]} />
@@ -284,7 +284,7 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
 
 ### **4.3 Comparative Translation Outputs**
 
-<TechTable columns={["Sentence", "German Tokenized Input", "True Translation", "LSTM with Attention", "Transformer (Encoder Only)", "Full Transformer"]} style={{ maxWidth: "clamp(720px, 90vw, 1200px)", width: "100%", overflowX: "auto", margin: "0 auto" }}>
+<TechTable columns={["Sentence", "German Tokenized Input", "True Translation", "LSTM with Attention", "Transformer (Encoder Only)", "Full Transformer"]} style={{ maxWidth: "clamp(720px, 90vw, 1200px)", width: "100%", overflowX: "auto", margin: "0 auto" }} columnWidths={["10%","21.5%","19%","14%","14%","21.5%"]}>
   <TechRow label="1" values={["['<sos>', 'ein', 'mann', 'mit', 'einem', 'orangefarbenen', 'hut', 'der', 'etwas', '<unk>', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'man', 'in', 'an', 'orange', 'hat', 'starring', 'at', 'something', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'man', 'wearing', 'a', 'orange', 'hat', 'is', 'to', 'something', '<eos>’, ..]", "['<sos>', 'a', 'man', 'in', 'an', 'hat', 'hat', 'hat', 'something', 'something', 'something', '<eos>’, ..]", "['<sos>', 'a', 'man', 'in', 'an', 'orange', 'hat', '<unk>', 'something', '<unk>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
   <TechRow label="2" values={["['<sos>', 'ein', 'boston', 'terrier', 'läuft', 'über', '<unk>', 'grünes', 'gras', 'vor', 'einem', 'weißen', 'zaun', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'boston', 'terrier', 'is', 'running', 'on', 'lush', 'green', 'grass', 'in', 'front', 'of', 'a', 'white', 'fence', '<eos>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'white', 'team', 'is', 'running', 'through', 'the',  'white', 'grass', 'of', 'of', 'of', 'a', '<eos>’, ..]", "['<sos>', 'a', 'boston', 'vendor', 'runs', 'running', 'grass', 'green', 'the', 'grass', 'of', 'of', 'of', 'fence', 'fence', 'fence', '<eos>’, ..]", "['<sos>', 'a', 'boston', '<unk>', 'dog', 'is', 'running', 'across', 'a', 'white', 'fence', 'in', 'front', 'of', 'a', 'white', 'fence', '<eos>', 'grass', '<eos>']"]} />
   <TechRow label="3" values={["['<sos>', 'ein', 'mädchen', 'in', 'einem', 'karateanzug', 'bricht', 'ein', 'brett', 'mit', 'einem', 'tritt', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'girl', 'in', 'karate', 'uniform', 'breaking', 'a', 'stick', 'with', 'a', 'front', 'kick', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'girl', 'in', 'a', 'a', 'is', 'a', 'a', 'a', 'a', 'a', 'a', '<eos>’, ..]", "['<sos>', 'a', 'girl', 'in', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', '<eos>’,]", "['<sos>', 'a', 'girl', 'in', 'a', 'drill', 'is', 'putting', 'a', 'board', 'with', 'a', 'video', 'camera', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />

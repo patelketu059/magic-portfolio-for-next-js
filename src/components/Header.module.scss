@@ -359,8 +359,8 @@
     line-height: 1;
 }
 
-/* Hide the large role label on medium and smaller screens to save space */
-@include breakpoints.m {
+/* Hide the large role label on small screens to save space */
+@media (max-width: 640px) {
     .roleText {
         display: none;
     }
@@ -433,7 +433,7 @@
     color: var(--neutral-on-background-medium);
 }
 
-@include breakpoints.m {
+@media (max-width: 640px) {
     .mobileRole {
         display: inline-block;
     }
