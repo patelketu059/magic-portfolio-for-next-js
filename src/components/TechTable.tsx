@@ -80,10 +80,13 @@ export function TechTable({
   const isSimpleTwoColumn = !isExplicitMultiColumn && columnKeys.length === 0;
 
   return (
-    <div style={{ textAlign: "center", width: "100%" }}>
+    // Allow the table to scroll horizontally on small viewports and prevent it
+    // from forcing the page to a fixed wide layout.
+    <div style={{ textAlign: "center", width: "100%", overflowX: "auto" }}>
       <table
         className="w-full text-sm my-6"
         style={{
+          fontSize: "calc(1rem - 2pt)",
           border: `1px solid ${borderColor}`,
           borderRadius: "1rem",
           overflow: "hidden",
@@ -93,6 +96,8 @@ export function TechTable({
           margin: "0 auto",
           maxWidth: "clamp(720px, 70vw, 1000px)",
           width: "100%",
+          tableLayout: "auto",
+          wordBreak: "break-word",
         }}
       >
         {!hideHeader && (
@@ -104,22 +109,22 @@ export function TechTable({
                 borderBottom: `1px solid ${borderColor}`,
               }}
             >
-              {isExplicitMultiColumn ? (
+                {isExplicitMultiColumn ? (
                 // Explicit multi-column headers: use `columns` array as-is
                 columns!.map((col, idx) => (
                   <th
                     key={idx}
                     style={{
                       padding: "0.75rem 1.25rem",
-                      textAlign: idx === 0 ? "center" : "left",
+                        textAlign: idx === 0 ? "center" : "left",
                       fontWeight: 600,
                       textTransform: "none",
                       letterSpacing: "0.02em",
-                      borderRight:
-                        idx === columns!.length - 1
-                          ? "0"
-                          : `1px solid ${borderColor}`,
-                      whiteSpace: "nowrap",
+                        borderRight:
+                          idx === columns!.length - 1
+                            ? "0"
+                            : `1px solid ${borderColor}`,
+                        whiteSpace: "normal",
                     }}
                   >
                     {col}
@@ -136,6 +141,7 @@ export function TechTable({
                       textTransform: "none",
                       letterSpacing: "0.02em",
                       borderRight: `1px solid ${borderColor}`,
+                      whiteSpace: "normal",
                     }}
                   >
                     {leftHeader}
@@ -159,6 +165,7 @@ export function TechTable({
                               i === columnKeys.length - 1 && !hasDetailsColumn
                                 ? "0"
                                 : `1px solid ${borderColor}`,
+                            whiteSpace: "normal",
                           }}
                         >
                           {formatHeader(key)}

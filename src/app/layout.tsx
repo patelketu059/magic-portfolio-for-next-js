@@ -36,16 +36,20 @@ export default async function RootLayout({
     <html
       suppressHydrationWarning
       lang="en"
+      dir="ltr"
+      translate="no"
       style={{ scrollBehavior: "smooth" }}
       className={classNames(
         fonts.heading.variable,
         fonts.body.variable,
         fonts.label.variable,
         fonts.code.variable,
+        "notranslate",
       )}
     >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="google" content="notranslate" />
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{
@@ -102,6 +106,7 @@ export default async function RootLayout({
             `,
           }}
         />
+        
         {/* Remove common browser-extension attributes (e.g. Grammarly) before hydration to avoid SSR/CSR mismatches */}
         <script
           id="strip-extension-attrs"
@@ -220,6 +225,7 @@ export default async function RootLayout({
             </div>
           </div>
           <ScrollToTopButton />
+          <div className="bottom-spacer" aria-hidden="true" />
         </body>
       </Providers>
     </html>

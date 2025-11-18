@@ -68,7 +68,7 @@ This section breaks down the five major model architectures implemented — each
 - Each encoder step processes one token at a time and updates a hidden state, which serves as a running summary of all previous tokens. After reading the entire input sequence, the final hidden state of the encoder is passed to the decoder as a condensed vector representation of the source sentence. The decoder then generates each target token autoregressively.
   
   <Image src="/images/projects/NMT/RNN-unrolled.png" alt="RNN-unrolled" title="RNN-Unrolled" size="60" />
-  <Image src="/images/projects/NMT/LSTM3-SimpleRNN.png" alt="Simple-RNN" title="Simple-RNN" size="60" />
+  <Image src="/images/projects/NMT/LSTM3-SimpleRNN.png" alt="Simple-RNN" title="Simple-RNN" size="60" sizeMobile="100%" />
 
 
 
@@ -83,8 +83,8 @@ This section breaks down the five major model architectures implemented — each
 - The LSTM introduces three gating mechanisms — input, forget, and output gates — that regulate information flow and maintain a persistent cell state across time steps using forget gate, input gate,
 cell state update, cell state, output gate, and hidden state:
 
-<Image src="/images/projects/NMT/LSTM_Steps.png" alt="LSTM-operation" title="LSTM Operations" size="50" />
-<Image src="/images/projects/NMT/LSTM3-chain.png" alt="LSTM" title="LSTM" size="60" />
+<Image src="/images/projects/NMT/LSTM_Steps.png" alt="LSTM-operation" title="LSTM Operations" size="50" sizeMobile="100%" />
+<Image src="/images/projects/NMT/LSTM3-chain.png" alt="LSTM" title="LSTM" size="60" sizeMobile="100%" />
 
 
 - This gating mechanism acts like a controlled memory cell, preserving long-term dependencies and selectively forgetting irrelevant information. Unlike an RNN’s compressed hidden state, the LSTM’s dual-state structure allows gradient flow to remain nearly constant through time, dramatically improving convergence stability.
@@ -97,14 +97,14 @@ cell state update, cell state, output gate, and hidden state:
 - While LSTMs significantly improve memory retention, even they struggle to encode all sentence information into a single vector — a bottleneck known as the context vector limitation. To resolve this, an attention mechanism was introduced.
 - In this variant, the decoder no longer relies on a single fixed-length vector. Instead, at each decoding step, it computes a similarity score between the current decoder state and all encoder hidden states. These scores are converted into a softmax distribution, which acts as a set of attention weights, denoting how much the decoder should focus on each input token.
 
-<Image src="/images/projects/NMT/RNN_Attention.png" alt="RNN-Attention" title="RNN with Attention" size="60" />
+<Image src="/images/projects/NMT/RNN_Attention.png" alt="RNN-Attention" title="RNN with Attention" size="60" sizeMobile="100%" />
 
 
 - This dynamic alignment process enables the decoder to “look back” at relevant parts of the source sentence while generating each word. Conceptually, attention acts like a learned lookup table, assigning focus to semantically aligned words.
 - This architecture marks a major step toward human-like translation, where the model attends selectively rather than relying on pure memorization.
 ----
 
-<Image src="/images/projects/NMT/attention.drawio.png" alt="Attention" title="Attention-Mechanism" size="50" />
+<Image src="/images/projects/NMT/attention.drawio.png" alt="Attention" title="Attention-Mechanism" size="50" sizeMobile="100%" />
 
 ----
 ### **1.4 LSTM with Attention (Seq2Seq + Attention)**
@@ -127,8 +127,8 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
   - **Multi-Head Self-Attention:** Multiple attention heads operate in parallel, projecting input tokens into separate subspaces and attending to different contextual relationships simultaneously.
     - Queries, Keys, and Values for each token are computed via linear projections.
     - Attention weights are computed as:
-      <Image src="/images/projects/NMT/attn.png" alt="Attention" title="Query, Key, and Value Weight Attention" size="50" />
-      <Image src="/images/projects/NMT/mh_attn.png" alt="Multi-Head Attention" title="Multi-Head Attention" size="80" />
+      <Image src="/images/projects/NMT/attn.png" alt="Attention" title="Query, Key, and Value Weight Attention" size="50" sizeMobile="100%" />
+      <Image src="/images/projects/NMT/mh_attn.png" alt="Multi-Head Attention" title="Multi-Head Attention" size="80" sizeMobile="100%" />
 
 
     
@@ -136,7 +136,7 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
   - **Residual Connections + Layer Normalization:** Stabilize gradients, allowing for much deeper architectures without loss explosion or gradient drift.
   - **Cross-Attention (Decoder):** The decoder includes both masked self-attention (so the model can’t look ahead) and encoder–decoder attention to align output tokens with relevant source tokens.
 
-  <Image src="/images/projects/NMT/Transformer.png" alt="Transformer" title="Transformer Architecture" size="60" />
+  <Image src="/images/projects/NMT/Transformer.png" alt="Transformer" title="Transformer Architecture" size="60" sizeMobile="100%" />
 
 - Together, these innovations allow the Transformer to capture long-range dependencies globally rather than sequentially. Training becomes faster and more stable, while the model learns complex word alignments and syntactic structures naturally.
 
@@ -284,7 +284,7 @@ Here, both the encoder and decoder used LSTM units, and a cosine-similarity-base
 
 ### **4.3 Comparative Translation Outputs**
 
-<TechTable columns={["Sentence", "German Tokenized Input", "True Translation", "LSTM with Attention", "Transformer (Encoder Only)", "Full Transformer"]} style={{ maxWidth: "1800px", width: "100%", overflowX: "auto", margin: "0 auto" }}>
+<TechTable columns={["Sentence", "German Tokenized Input", "True Translation", "LSTM with Attention", "Transformer (Encoder Only)", "Full Transformer"]} style={{ maxWidth: "clamp(720px, 90vw, 1200px)", width: "100%", overflowX: "auto", margin: "0 auto" }}>
   <TechRow label="1" values={["['<sos>', 'ein', 'mann', 'mit', 'einem', 'orangefarbenen', 'hut', 'der', 'etwas', '<unk>', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'man', 'in', 'an', 'orange', 'hat', 'starring', 'at', 'something', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'man', 'wearing', 'a', 'orange', 'hat', 'is', 'to', 'something', '<eos>’, ..]", "['<sos>', 'a', 'man', 'in', 'an', 'hat', 'hat', 'hat', 'something', 'something', 'something', '<eos>’, ..]", "['<sos>', 'a', 'man', 'in', 'an', 'orange', 'hat', '<unk>', 'something', '<unk>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />
   <TechRow label="2" values={["['<sos>', 'ein', 'boston', 'terrier', 'läuft', 'über', '<unk>', 'grünes', 'gras', 'vor', 'einem', 'weißen', 'zaun', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'boston', 'terrier', 'is', 'running', 'on', 'lush', 'green', 'grass', 'in', 'front', 'of', 'a', 'white', 'fence', '<eos>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'white', 'team', 'is', 'running', 'through', 'the',  'white', 'grass', 'of', 'of', 'of', 'a', '<eos>’, ..]", "['<sos>', 'a', 'boston', 'vendor', 'runs', 'running', 'grass', 'green', 'the', 'grass', 'of', 'of', 'of', 'fence', 'fence', 'fence', '<eos>’, ..]", "['<sos>', 'a', 'boston', '<unk>', 'dog', 'is', 'running', 'across', 'a', 'white', 'fence', 'in', 'front', 'of', 'a', 'white', 'fence', '<eos>', 'grass', '<eos>']"]} />
   <TechRow label="3" values={["['<sos>', 'ein', 'mädchen', 'in', 'einem', 'karateanzug', 'bricht', 'ein', 'brett', 'mit', 'einem', 'tritt', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'girl', 'in', 'karate', 'uniform', 'breaking', 'a', 'stick', 'with', 'a', 'front', 'kick', '<eos>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>', '<pad>']", "['<sos>', 'a', 'girl', 'in', 'a', 'a', 'is', 'a', 'a', 'a', 'a', 'a', 'a', '<eos>’, ..]", "['<sos>', 'a', 'girl', 'in', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', '<eos>’,]", "['<sos>', 'a', 'girl', 'in', 'a', 'drill', 'is', 'putting', 'a', 'board', 'with', 'a', 'video', 'camera', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>', '<eos>']"]} />

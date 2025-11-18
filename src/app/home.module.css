@@ -609,6 +609,118 @@
   gap: 1.5rem;
 }
 
+/* Responsive carousel container used on the home projects section */
+.carouselContainer {
+  width: 100%;
+  /* keep carousel centered and constrained on wide screens */
+  max-width: clamp(720px, 85vw, 1200px);
+  margin: 0 auto;
+  /* control a CSS variable for inner slide height that ProjectCard respects */
+  --carousel-height: clamp(260px, 36vw, 520px);
+}
+
+/* Ensure the simple internal ProjectCard image carousel respects the container variable */
+.carouselContainer img {
+  max-height: var(--carousel-height) !important;
+}
+
+@media (min-width: 1200px) {
+  .carouselContainer {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carouselContainer {
+    max-width: 92%;
+    --carousel-height: clamp(200px, 40vw, 420px);
+  }
+}
+
+/* Project slider: single-slide view with nav and dots */
+.projectSliderInner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.projectTrack {
+  display: flex;
+  transition: transform 480ms cubic-bezier(.2,.9,.2,1);
+  will-change: transform;
+  width: 100%;
+}
+
+.projectSlide {
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.projectSlide > * {
+  width: 100%;
+}
+
+.sliderNav {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  transform: translateY(-50%);
+  padding: 0 8px;
+}
+
+.sliderButton {
+  pointer-events: auto;
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--neutral-on-background-strong);
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.sliderButton:focus {
+  outline: 2px solid rgba(0,0,0,0.12);
+}
+
+.sliderDots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sliderDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.25);
+  border: none;
+}
+
+.activeDot {
+  background: rgba(0,0,0,0.9);
+}
+
+@media (max-width: 640px) {
+  .sliderButton { width: 36px; height: 36px; }
+  .sliderDot { width: 0.44rem; height: 0.44rem; }
+}
+
 .projectLink {
   text-decoration: none;
   color: inherit;
@@ -645,18 +757,29 @@
 }
 
 /* Education / Studies styles */
+/* Constrain the Studies section to the same content width as the Experience page
+   so the horizontal extent matches the timeline area. */
+.experiencePage .educationSection .sectionContent {
+  max-width: clamp(720px, 64vw, 1120px);
+  margin: 0 auto;
+  padding: 0 0.75rem;
+}
+
 .educationList {
+  /* keep institution cards stacked in a single column, but fill the available content width */
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .institution {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 14px;
-  border-radius: 10px;
+  padding: 18px;
+  border-radius: 12px;
   /* subtle outline */
   border: 1px solid rgba(128,128,128,0.08);
   /* translucent background to give a soft card look */
@@ -664,7 +787,28 @@
   backdrop-filter: blur(6px) saturate(1.05);
   -webkit-backdrop-filter: blur(6px) saturate(1.05);
   transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
-  opacity: 0.96;
+  opacity: 0.98;
+  width: 100%;
+}
+
+/* Inline education block shown inside the Experience page's .sectionContent
+   Ensure it stretches to the full content width and left-aligns with the timeline. */
+.educationSectionInline {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.experiencePage .sectionContent > .educationSectionInline {
+  /* explicitly match the sectionContent inner width and left edge */
+  width: 100%;
+  padding: 0; /* let .sectionContent control the padding */
+}
+
+.experiencePage .sectionContent > .educationSectionInline .educationList {
+  max-width: none;
+  margin: 0;
 }
 
 .institutionTitle {
@@ -716,12 +860,64 @@
   letter-spacing: 0.12em;
 }
 
+/* Project MDX/article responsiveness: prevent horizontal overflow on small screens */
+.projectArticle {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden; /* default: no unexpected scroll */
+}
+
+.projectArticle img,
+.projectArticle picture,
+.projectArticle video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0.75rem 0;
+}
+
+/* Ensure tables and wide content scroll gracefully on small screens */
+.projectArticle table,
+.projectArticle pre,
+.projectArticle code,
+.projectArticle .tech-table {
+  width: 100%;
+  max-width: 100%;
+}
+
+.projectArticle table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0.75rem 0;
+}
+
+.projectArticle pre {
+  background: var(--surface-background);
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.projectArticle code {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Long inline tokens or long table cells */
+.projectArticle td, .projectArticle th {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
 /* Contact Section */
 /* Contact Section */
 #contact {
   min-height: 40vh; /* tighter vertical footprint */
   padding-top: 28px;
-  padding-bottom: 20px;
+  /* increase bottom padding so there's a little breathing room below contact */
+  padding-bottom: 2.5rem;
 }
 
 .contactHeading {

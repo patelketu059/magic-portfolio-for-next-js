@@ -375,6 +375,22 @@
     }
 }
 
+/* When the mobile nav opens, the nav becomes a sibling before the toggle wrapper.
+   Make the toggle wrapper get pushed down so the mobile role label moves below the open dropdown. */
+.navigation.open + .mobileToggleWrap {
+    /* keep the toggle button in-place; only move the role label beneath it */
+    margin-top: 0;
+}
+
+/* When nav is open, hide the mobile role label so it disappears cleanly */
+.navigation.open + .mobileToggleWrap .mobileRole {
+    transform: translateY(6px);
+    transition: transform 180ms cubic-bezier(.2,.9,.2,1), opacity 160ms ease, visibility 0s linear 160ms;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
 @media (max-width: 640px) {
     .navLink {
         font-size: 0.78rem;
@@ -396,5 +412,29 @@
     .mask {
         transform: rotate(180deg);
         bottom: 0;
+    }
+}
+
+/* Mobile-only role label shown beneath the hamburger icon */
+.mobileToggleWrap {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mobileRole {
+    display: none;
+    font-family: var(--font-label, inherit);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    color: var(--neutral-on-background-medium);
+}
+
+@include breakpoints.m {
+    .mobileRole {
+        display: inline-block;
     }
 }

@@ -175,6 +175,7 @@ const Header: React.FC = () => {
             showLabels={!isMobile}
           />
 
+          <div className={styles.mobileToggleWrap}>
           <button
             className={styles.mobileToggle}
             aria-controls="mobile-navigation"
@@ -200,6 +201,9 @@ const Header: React.FC = () => {
               )}
             </span>
           </button>
+            {/* mobile-only role label shown beneath the hamburger on small viewports */}
+            <div className={styles.mobileRole} aria-hidden={false}>{person.role}</div>
+            </div>
         </Row>
 
         <Row className={`${styles.side} ${styles.right}`} gap="12" vertical="center">

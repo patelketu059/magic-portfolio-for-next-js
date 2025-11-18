@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { about, person, social, hiddenProjects } from "@/resources";
 import { iconLibrary } from "@/resources/icons";
 import { TypingAnimation } from "@/components/TypingAnimation";
 import Image from "next/image";
 import styles from "./home.module.css";
-import { Carousel } from "@once-ui-system/core";
+// Removed Carousel from external library; using a local responsive slider instead
 import { ProjectCard } from "@/components";
 
 type PostMeta = {
@@ -146,7 +146,6 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
             <a href="#about" className={styles.heroNavLink}>About</a>
             <a href="#projects" className={styles.heroNavLink}>Projects</a>
             <a href="#skills" className={styles.heroNavLink}>Skills</a>
-            <a href="#education" className={styles.heroNavLink}>Studies</a>
             <a href="#contact" className={styles.heroNavLink}>Contact</a>
           </nav>
         </div>
@@ -186,23 +185,11 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
           <h2 className={styles.sectionTitle}>PROJECTS</h2>
           <div className={styles.projectsList}>
             {posts && posts.length > 0 ? (
-              <Carousel
-                items={posts.map((post: PostMeta) => ({
-                  slide: (
-                    <ProjectCard
-                      cardId={post.slug}
-                      href={`/work/${post.slug}`}
-                      images={post.metadata.images || []}
-                      title={post.metadata.title}
-                      description={post.metadata.summary || ""}
-                      content={post.content || ""}
-                      avatars={post.metadata.team?.filter((m) => !!m.avatar).map((m) => ({ src: m.avatar as string })) || []}
-                      link={post.metadata.link || ""}
-                    />
-                  ),
-                  alt: post.metadata.title,
-                }))}
-              />
+                  <div className={styles.carouselContainer}>
+                    <div className={styles.projectSlider}>
+                      <ProjectSlider posts={posts} />
+                    </div>
+                  </div>
             ) : null}
           </div>
         </div>
@@ -230,37 +217,7 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
         </div>
       </section>
 
-      {/* Education / Studies Section */}
-      {about.studies.display && (
-        <section id="education" className={`${styles.section} ${styles.educationSection}`}>
-          <div className={styles.sectionContent}>
-            <h2 className={styles.sectionTitle}>{about.studies.title || "Education"}</h2>
-            <div className={styles.educationList}>
-              {about.studies.institutions.map((inst) => (
-                <div key={inst.name} className={styles.institution}>
-                  <div className={styles.institutionHeader}>
-                    <div className={styles.institutionTitle}>{inst.name}</div>
-                    <div className={styles.institutionMeta}>
-                      {inst.degree ? <div className={styles.institutionDegree}>{inst.degree}</div> : null}
-                      {inst.specialization ? (
-                        <div className={styles.institutionSpecialization}>{inst.specialization}</div>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  {inst.description?.length ? (
-                    <div className={styles.institutionDesc}>
-                      {inst.description.map((d, idx) => (
-                        <div key={`${inst.name}-desc-${idx}`}>{d}</div>
-                      ))}
-                    </div>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* Studies have moved to the Experience page */}
 
       {/* Contact Section */}
       <section id="contact" className={`${styles.section} ${styles.contactSection}`}>
@@ -306,3 +263,89 @@ export default function HomeClient({ initialPosts }: { initialPosts?: PostMeta[]
     </div>
   );
 }
+
+// Local responsive slider component that shows one ProjectCard at a time.
+const ProjectSlider: React.FC<{ posts: PostMeta[] }> = ({ posts }) => {
+  const [index, setIndex] = useState(0);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const touchStartX = useRef<number | null>(null);
+  const touchDelta = useRef<number>(0);
+
+  // Reset to first slide when posts length changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    setIndex(0);
+  }, [posts.length]);
+
+  const prev = () => setIndex((i) => (posts.length ? (i - 1 + posts.length) % posts.length : 0));
+  const next = () => setIndex((i) => (posts.length ? (i + 1) % posts.length : 0));
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchDelta.current = 0;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current == null) return;
+    touchDelta.current = e.touches[0].clientX - touchStartX.current;
+  };
+
+  const onTouchEnd = () => {
+    const delta = touchDelta.current;
+    if (Math.abs(delta) > 50) {
+      if (delta < 0) next(); else prev();
+    }
+    touchStartX.current = null;
+    touchDelta.current = 0;
+  };
+
+  return (
+    <div className={styles.projectSliderInner}>
+      <div
+        className={styles.projectTrack}
+        ref={trackRef}
+        style={{ transform: `translateX(-${index * (100 / Math.max(1, posts.length))}%)`, width: `${posts.length * 100}%` }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {posts.map((post, i) => (
+          <div key={post.slug} className={styles.projectSlide} aria-hidden={i !== index} style={{ flex: `0 0 ${100 / Math.max(1, posts.length)}%`, width: `${100 / Math.max(1, posts.length)}%` }}>
+            <ProjectCard
+              cardId={post.slug}
+              href={`/work/${post.slug}`}
+              images={post.metadata.images || []}
+              title={post.metadata.title}
+              description={post.metadata.summary || ""}
+              content={post.content || ""}
+              avatars={post.metadata.team?.filter((m) => !!m.avatar).map((m) => ({ src: m.avatar as string })) || []}
+              link={post.metadata.link || ""}
+            />
+          </div>
+        ))}
+      </div>
+
+      {posts.length > 1 && (
+        <>
+          <div className={styles.sliderNav}>
+            <button type="button" className={styles.sliderButton} onClick={prev} aria-label="Previous project">‹</button>
+            <button type="button" className={styles.sliderButton} onClick={next} aria-label="Next project">›</button>
+          </div>
+
+          <div className={styles.sliderDots} aria-hidden={false}>
+            {posts.map((post, i) => (
+              <button
+                key={post.slug}
+                type="button"
+                className={`${styles.sliderDot} ${i === index ? styles.activeDot : ""}`}
+                onClick={() => setIndex(i)}
+                aria-label={`Show project ${i + 1}`}
+                aria-pressed={i === index}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};

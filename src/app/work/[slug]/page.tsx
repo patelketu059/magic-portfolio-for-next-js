@@ -75,17 +75,30 @@ export default async function Project({
     })) || [];
 
   return (
-    <Column as="section" maxWidth="m" horizontal="center" gap="l">
-      <ProjectCard
-        href={post.metadata.link || post.slug}
-        images={post.metadata.images || []}
-        title={post.metadata.title}
-        content={post.content}
-        description={post.metadata.summary || ""}
-        avatars={avatars}
-        link={post.metadata.link || ""}
-        isProjectPage={true}
-      />
+    <Column
+      as="section"
+      horizontal="center"
+      gap="l"
+      style={{
+        width: "100%",
+        maxWidth: "clamp(720px, 90vw, 1120px)",
+        margin: "0 auto",
+        padding: "0 16px",
+        boxSizing: "border-box",
+      }}
+    >
+      <div style={{ width: "100%" }}>
+        <ProjectCard
+          href={post.metadata.link || post.slug}
+          images={post.metadata.images || []}
+          title={post.metadata.title}
+          content={post.content}
+          description={post.metadata.summary || ""}
+          avatars={avatars}
+          link={post.metadata.link || ""}
+          isProjectPage={true}
+        />
+      </div>
       <Schema
         as="blogPosting"
         baseURL={baseURL}
@@ -104,10 +117,22 @@ export default async function Project({
         }}
       />
       {/* ProjectCard now handles the carousel and project info at the top */}
-      <Column fillWidth horizontal="center" as="article" style={{ width: "100%" }}>
+      <Column
+        fillWidth
+        horizontal="center"
+        as="article"
+        className={"projectArticle"}
+        style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box" }}
+      >
         <CustomMDX source={post.content} />
       </Column>
-      <Column fillWidth gap="40" horizontal="center" marginTop="40">
+      <Column
+        fillWidth
+        gap="40"
+        horizontal="center"
+        marginTop="40"
+        style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box" }}
+      >
         <Line maxWidth="40" />
         <Heading as="h2" variant="heading-strong-xl" marginBottom="24">
           Related projects
