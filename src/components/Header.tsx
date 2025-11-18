@@ -54,16 +54,30 @@ const Header: React.FC = () => {
 
   // Focus trap + ESC-to-close + body-scroll lock when mobile nav is open
   useEffect(() => {
+    const hasBody = typeof document !== "undefined" && !!document.body;
+
     if (!mobileOpen) {
-      document.body.style.overflow = "";
+      if (hasBody) {
+        try {
+          document.body.style.overflow = "";
+        } catch (e) {}
+      }
       return;
     }
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const previousOverflow = hasBody ? document.body.style.overflow : "";
+    if (hasBody) {
+      try {
+        document.body.style.overflow = "hidden";
+      } catch (e) {}
+    }
 
     const navEl = navRef.current;
-    if (!navEl) return () => { document.body.style.overflow = previousOverflow; };
+    if (!navEl) return () => {
+      if (hasBody) {
+        try { document.body.style.overflow = previousOverflow; } catch (e) {}
+      }
+    };
 
     const focusable = Array.from(
       navEl.querySelectorAll<HTMLElement>(
@@ -111,13 +125,19 @@ const Header: React.FC = () => {
       }
     };
 
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown as EventListener);
+    if (typeof document !== "undefined") {
+      document.addEventListener("keydown", onKeyDown);
+      document.addEventListener("pointerdown", onPointerDown as EventListener);
+    }
 
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown as EventListener);
-      document.body.style.overflow = previousOverflow;
+      if (typeof document !== "undefined") {
+        try { document.removeEventListener("keydown", onKeyDown); } catch (e) {}
+        try { document.removeEventListener("pointerdown", onPointerDown as EventListener); } catch (e) {}
+      }
+      if (hasBody) {
+        try { document.body.style.overflow = previousOverflow; } catch (e) {}
+      }
     };
   }, [mobileOpen]);
 

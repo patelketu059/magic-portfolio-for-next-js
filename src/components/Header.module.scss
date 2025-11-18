@@ -359,6 +359,13 @@
     line-height: 1;
 }
 
+/* Hide the large role label on medium and smaller screens to save space */
+@include breakpoints.m {
+    .roleText {
+        display: none;
+    }
+}
+
 @include breakpoints.m {
     .navigation {
         display: none;

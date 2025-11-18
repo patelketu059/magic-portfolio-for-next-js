@@ -242,6 +242,9 @@
   gap: 1.5rem;
   justify-content: center;
   align-items: center;
+  /* allow items to wrap onto multiple rows on narrow viewports */
+  flex-wrap: wrap;
+  row-gap: 0.6rem;
 }
 
 .heroNavLink {
@@ -259,6 +262,8 @@
   transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease, opacity 0.15s ease;
   background: transparent;
   font-family: inherit;
+  /* prevent links from growing to fill the row; allow shrinking/wrapping */
+  flex: 0 1 auto;
 }
 
 .heroNavLink:hover {
@@ -280,6 +285,34 @@
 @media (max-width: 1024px) {
   .sidebar {
     display: none;
+  }
+}
+
+/* Tweak hero nav spacing and sizing on smaller screens so it wraps nicely */
+@media (max-width: 640px) {
+  .heroNav {
+    gap: 0.9rem;
+    row-gap: 0.45rem;
+    justify-content: center;
+    padding: 0 8px;
+  }
+
+  .heroNavLink {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroNav {
+    gap: 0.6rem;
+    row-gap: 0.35rem;
+    justify-content: center;
+  }
+
+  .heroNavLink {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.68rem;
   }
 }
 
