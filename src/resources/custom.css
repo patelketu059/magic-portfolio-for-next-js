@@ -143,6 +143,8 @@ button,
   --bp-md: 768px;
   --bp-lg: 1024px;
   --bp-xl: 1280px;
+  /* Horizontal content gutter that's responsive to viewport width */
+  --gutter-horizontal: clamp(0.75rem, 3.5vw, 2rem);
   --fluid-type-min: 14px;
   --fluid-type-max: 18px;
   /* TechTable colors (light defaults). These are overridden when the
@@ -200,7 +202,7 @@ img, picture, svg, video {
 .site-container {
   width: 100%;
   margin: 0 auto;
-  padding: 0 4vw;
+  padding: 0 var(--gutter-horizontal);
   box-sizing: border-box;
   max-width: none; /* allow vw-based sizing on large screens */
 }
@@ -231,9 +233,9 @@ pre, code {
   word-break: break-word;
 }
 
-/* Reduce large paddings on very small devices */
+/* Reduce large paddings on very small devices (use same responsive gutter) */
 @media (max-width: 420px) {
-  .site-container { padding: 0 16px; }
+  .site-container { padding: 0 var(--gutter-horizontal); }
 }
 
 /* Safeguard for form elements on narrow devices */

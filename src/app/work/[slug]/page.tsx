@@ -74,8 +74,15 @@ export default async function Project({
       src: person.avatar,
     })) || [];
 
+  // For specific projects we want images to be centered relative to the full viewport
+  const wideImageSlugs = [
+    "AI-image-generation",
+    "Neural-Machine-Translation",
+  ];
+  const isWideImagePage = wideImageSlugs.includes(post.slug);
+
   return (
-    <Column
+      <Column
       as="section"
       horizontal="center"
       gap="l"
@@ -83,7 +90,8 @@ export default async function Project({
         width: "100%",
         maxWidth: "clamp(640px, 90vw, 950px)",
         margin: "0 auto",
-        padding: "0 16px",
+        /* Responsive vertical (top) and horizontal gutters: vertical uses clamp, horizontal uses global gutter */
+        padding: "clamp(1.5rem, 4vw, 3rem) var(--gutter-horizontal)",
         boxSizing: "border-box",
       }}
     >
@@ -117,11 +125,14 @@ export default async function Project({
         }}
       />
       {/* ProjectCard now handles the carousel and project info at the top */}
+      {
+        // If this project needs images centered across the full page, add a modifier class
+      }
       <Column
         fillWidth
         horizontal="center"
         as="article"
-        className={"projectArticle"}
+        className={`projectArticle${isWideImagePage ? ' page-wide-images' : ''}`}
         style={{ width: "100%", maxWidth: "100%", boxSizing: "border-box" }}
       >
         <CustomMDX source={post.content} />

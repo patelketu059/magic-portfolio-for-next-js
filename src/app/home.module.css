@@ -192,12 +192,12 @@
 @media (max-width: 640px) {
   .sectionContent {
     width: 100%;
-    padding: 0 16px;
+    padding: 0 var(--gutter-horizontal);
   }
 
   .heroInner {
     width: 100%;
-    padding: 0 12px;
+    padding: 0 var(--gutter-horizontal);
   }
 }
 
@@ -805,7 +805,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 18px;
+  padding: clamp(0.75rem, 2.5vw, 1.125rem);
   border-radius: 12px;
   /* subtle outline */
   border: 1px solid rgba(128,128,128,0.08);
@@ -894,13 +894,38 @@
   overflow-x: hidden; /* default: no unexpected scroll */
 }
 
+/* Allow specific project pages to let images span and center relative to the viewport
+   by making the article area span the full viewport width while retaining
+   horizontal gutters via `--gutter-horizontal`. This keeps text width constrained
+   but lets images break out and center on the page. */
+.projectArticle.page-wide-images {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding-left: var(--gutter-horizontal);
+  padding-right: var(--gutter-horizontal);
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .projectArticle.page-wide-images {
+    /* On narrow screens, keep the article within normal flow to avoid horizontal scrolling */
+    width: 100%;
+    margin-left: 0;
+    padding-left: var(--gutter-horizontal);
+    padding-right: var(--gutter-horizontal);
+  }
+}
+
 .projectArticle img,
 .projectArticle picture,
 .projectArticle video {
-  max-width: 100%;
-  height: auto;
   display: block;
-  margin: 0.75rem 0;
+  /* center images relative to the full article container and make them responsive */
+  margin: 0.75rem auto;
+  width: 100%;
+  max-width: clamp(420px, 75vw, 1200px);
+  height: auto;
+  object-fit: contain;
 }
 
 /* Ensure tables and wide content scroll gracefully on small screens */
@@ -942,7 +967,7 @@
 /* Contact Section */
 #contact {
   min-height: 40vh; /* tighter vertical footprint */
-  padding-top: 28px;
+  padding-top: clamp(1.75rem, 4vh, 3rem);
   /* increase bottom padding so there's a little breathing room below contact */
   padding-bottom: 2.5rem;
 }
