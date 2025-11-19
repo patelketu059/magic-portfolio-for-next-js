@@ -78,14 +78,18 @@ export default async function RootLayout({
                     root.setAttribute('data-' + key, value);
                   });
                   
-                  // Resolve theme
+                  // Resolve theme. Treat 'system' as the configured defaultTheme so the
+                  // site default overrides OS preference when desired.
                   const resolveTheme = (themeValue) => {
-                    if (!themeValue || themeValue === 'system') {
-                      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    if (!themeValue) {
+                      return defaultTheme;
+                    }
+                    if (themeValue === 'system') {
+                      return defaultTheme;
                     }
                     return themeValue;
                   };
-                  
+
                   // Apply saved theme (fall back to configured defaultTheme)
                   const savedTheme = localStorage.getItem('data-theme');
                   const resolvedTheme = resolveTheme(savedTheme || defaultTheme);

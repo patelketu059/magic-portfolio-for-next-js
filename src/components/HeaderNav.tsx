@@ -53,7 +53,8 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ pathname, className = "", 
         </Link>
       )}
 
-      {display.themeSwitcher && (
+      {/* Theme toggle hidden temporarily */}
+      {false && display.themeSwitcher && (
         <div className={styles.toggleBtn} aria-hidden title="Theme">
           <ThemeToggle />
           {showThemeLabel && <span className={styles.navLabel}>Theme</span>}
