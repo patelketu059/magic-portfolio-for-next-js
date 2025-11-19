@@ -172,6 +172,8 @@
     /* ensure header sits above decorative background */
     z-index: 20;
     position: relative;
+    /* header height used by the mobile dropdown */
+    --header-height: 80px;
 }
 
 /* make left/right sides equal width so center nav is visually centered */
@@ -299,7 +301,8 @@
     /* mobile dropdown appearance */
     display: block;
     position: fixed;
-    top: 80px;
+    /* sit flush under the header - subtract 1px to overlap header border if present */
+    top: calc(var(--header-height) - 8px);
     left: 0;
     right: 0;
     background: var(--page-background);
@@ -319,9 +322,9 @@
     flex-direction: row;
     gap: 12px;
     align-items: center;
-    /* make inline nav items appear as outlined, transparent buttons */
+    /* mobile dropdown: remove outline so labels sit flush */
     background: transparent !important;
-    border: 1px solid var(--neutral-outline, rgba(0,0,0,0.06));
+    border: none !important;
     padding: 8px 12px;
     border-radius: 8px;
 }
@@ -336,11 +339,13 @@
     visibility: visible !important;
     pointer-events: auto !important;
     margin-left: 8px;
-    /* show label text with transparent fill and visible outline on the parent */
+    /* show label text with transparent fill and remove any outline/decoration */
     background: transparent !important;
     color: var(--neutral-on-background-strong) !important;
     padding: 0 !important;
     font-weight: 600;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 /* Respect reduced motion preferences */
