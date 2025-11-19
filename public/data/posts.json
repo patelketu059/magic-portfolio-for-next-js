@@ -33,10 +33,7 @@
         "title": "Automating Design Handovers with a Figma to Code Pipeline",
         "publishedAt": "2024-04-01",
         "summary": "Explore the enduring debate between using spaces and tabs for code indentation, and why this choice matters more than you might think.",
-        "images": [
-          "/images/projects/project-01/cover-02.jpg",
-          "/images/projects/project-01/image-03.jpg"
-        ],
+        "images": [],
         "image": "",
         "tag": [],
         "team": [
@@ -57,10 +54,7 @@
         "title": "Autonomous Vehicle Mapping",
         "publishedAt": "2024-08-15",
         "summary": "High-precision mapping solutions for autonomous vehicles using aerial imagery and telemetry data.",
-        "images": [
-          "/images/projects/project-01/cover-02.jpg",
-          "/images/projects/project-01/cover-03.jpg"
-        ],
+        "images": [],
         "image": "",
         "tag": [],
         "team": [
@@ -112,9 +106,7 @@
         "title": "Portfolio Website",
         "publishedAt": "2025-11-15",
         "summary": "A modern, responsive portfolio website built with Next.js, TypeScript, and cutting-edge web technologies.",
-        "images": [
-          "/images/projects/project-01/cover-01.jpg"
-        ],
+        "images": [],
         "image": "",
         "tag": [],
         "team": [
