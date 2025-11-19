@@ -319,6 +319,11 @@
     flex-direction: row;
     gap: 12px;
     align-items: center;
+    /* make inline nav items appear as outlined, transparent buttons */
+    background: transparent !important;
+    border: 1px solid var(--neutral-outline, rgba(0,0,0,0.06));
+    padding: 8px 12px;
+    border-radius: 8px;
 }
 
 /* When the navigation is opened (mobile) show inline labels instead of tooltips */
@@ -331,6 +336,11 @@
     visibility: visible !important;
     pointer-events: auto !important;
     margin-left: 8px;
+    /* show label text with transparent fill and visible outline on the parent */
+    background: transparent !important;
+    color: var(--neutral-on-background-strong) !important;
+    padding: 0 !important;
+    font-weight: 600;
 }
 
 /* Respect reduced motion preferences */

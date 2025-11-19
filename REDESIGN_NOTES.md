@@ -113,3 +113,66 @@ Navigate to `http://localhost:3000` to see the redesigned portfolio.
 - Smooth scrolling creates a cohesive browsing experience
 - The typing animation adds personality to the hero section
 - Interactive elements (skills hover) increase engagement
+
+## Recent Changes (responsive layout & image handling)
+
+These notes summarize small but important updates made to improve responsiveness and how project images are displayed across pages.
+
+- Added a responsive horizontal gutter variable in `src/resources/custom.css`:
+  - `--gutter-horizontal: clamp(0.75rem, 3.5vw, 2rem);`
+  - This variable is used as the primary horizontal padding for `.site-container` and other containers so gutters scale with viewport size.
+
+- Updated `src/app/home.module.css`:
+  - Replaced fixed small-screen paddings (e.g. `0 16px`) with `padding: 0 var(--gutter-horizontal)` so section content and hero inner gutters are consistent across breakpoints.
+  - Made `#contact` top padding responsive (was `28px`, now `clamp(1.75rem, 4vh, 3rem)`).
+  - Converted card padding (e.g. `.institution`) to responsive `clamp()` values.
+  - `.projectArticle` media rules now center images by default and constrain them with a responsive `max-width`:
+    - images/videos/pictures use `margin: 0.75rem auto; width: 100%; max-width: clamp(420px, 75vw, 1200px); object-fit: contain;`.
+
+- Project pages (`src/app/work/[slug]/page.tsx`):
+  - Added responsive top padding to the project page container: `padding: clamp(1.5rem, 4vw, 3rem) var(--gutter-horizontal)` so pages have breathing room on load.
+  - Implemented an opt-in modifier class for pages that should let images span and center relative to the full viewport: `projectArticle page-wide-images`.
+    - The per-page slug list currently includes: `AI-image-generation` and `Neural-Machine-Translation`.
+    - The `.page-wide-images` style expands the article to `width: 100vw` and recenters it (`margin-left: calc(50% - 50vw)`), while maintaining `--gutter-horizontal` on both sides. On small screens the modifier falls back to normal flow to avoid horizontal scroll.
+
+- MDX image component (`src/components/mdx.tsx`):
+  - The MDX image renderer already supports responsive sizing via props (`size`, `sizeMobile`, `sizeTablet`, `sizeDesktop`, `widthPercent`) and a `fullPage` flag that renders an image using viewport width units (vw).
+  - If you want a particular MDX image to span the viewport and be centered, use the MDX image `fullPage` prop or leave the image in the page that has the `page-wide-images` modifier.
+
+## How to opt-in / add more pages
+
+- To make more project pages allow viewport-centered images, add the page slug to the `wideImageSlugs` array in `src/app/work/[slug]/page.tsx`:
+
+```ts
+const wideImageSlugs = [
+  "AI-image-generation",
+  "Neural-Machine-Translation",
+  // add other project slugs here
+];
+```
+
+- Or, in MDX you can make an image full-viewport by using the `fullPage` prop on the `Image` component used in MDX (the site maps `<img>`/`Image` tags to a helper that supports this prop).
+
+## Testing locally
+
+Run the dev server and review these pages at several breakpoints (desktop, tablet, mobile).
+
+Windows PowerShell commands:
+```powershell
+npm install; npm run dev
+```
+
+Visit the project pages (example):
+- `http://localhost:3000/work/AI-image-generation`
+- `http://localhost:3000/work/Neural-Machine-Translation`
+
+Check that:
+- Images are horizontally centered relative to the page when the slug is opted-in.
+- Images scale responsively and never cause horizontal overflow on small screens.
+- The page header spacing (top padding) matches expectations across breakpoints.
+
+## Notes for future work
+
+- Consider adding a frontmatter flag in MDX (e.g. `pageWideImages: true`) so authors can control image breakout on a per-file basis without changing code.
+- Optionally, automatically set `fullPage` in the MDX image helper when a file-level frontmatter flag exists.
+- Run `npm run biome-write` after edits to keep formatting consistent.

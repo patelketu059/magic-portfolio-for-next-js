@@ -17,10 +17,13 @@ type HeaderNavProps = {
 };
 
 export const HeaderNav: React.FC<HeaderNavProps> = ({ pathname, className = "", onLinkClick, navRef, ariaHidden, showLabels = true }) => {
+  const navIsOpen = (className || "").includes(styles.open);
+  const showThemeLabel = showLabels || navIsOpen;
+
   return (
     <nav ref={(el) => navRef?.(el as HTMLElement | null)} aria-hidden={ariaHidden ? true : undefined} className={`${styles.navigation} ${className}`}>
       {routes["/"] && (
-        <Link href="/" aria-label="Home" className={`${styles.toggleBtn} ${styles.navLink}`} data-active={pathname === "/"} onClick={() => onLinkClick?.()}>
+        <Link href="/" aria-label="Home" title="Home" className={`${styles.toggleBtn} ${styles.navLink}`} data-active={pathname === "/"} onClick={() => onLinkClick?.()}>
           {(() => {
             const Icon = iconLibrary.home as IconType | undefined;
             return Icon ? <Icon className={styles.navIcon} aria-hidden /> : null;
@@ -29,7 +32,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ pathname, className = "", 
         </Link>
       )}
 
-      <Link href="/experience" aria-label="Experience" className={`${styles.toggleBtn} ${styles.navLink}`} data-active={pathname.startsWith("/experience") || pathname === "/experience"} onClick={() => onLinkClick?.()}>
+      <Link href="/experience" aria-label="Experience" title="Experience" className={`${styles.toggleBtn} ${styles.navLink}`} data-active={pathname.startsWith("/experience") || pathname === "/experience"} onClick={() => onLinkClick?.()}>
         <span className={styles.navIcon} aria-hidden>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden>
             <title>Experience</title>
@@ -41,7 +44,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ pathname, className = "", 
       </Link>
 
       {routes["/work"] && (
-        <Link href="/work" aria-label="Projects" className={`${styles.toggleBtn} ${styles.navLink}`} data-active={pathname.startsWith("/work")} onClick={() => onLinkClick?.()}>
+        <Link href="/work" aria-label="Projects" title="Projects" className={`${styles.toggleBtn} ${styles.navLink}`} data-active={pathname.startsWith("/work")} onClick={() => onLinkClick?.()}>
           {(() => {
             const Icon = iconLibrary.grid as IconType | undefined;
             return Icon ? <Icon className={styles.navIcon} aria-hidden /> : null;
@@ -51,9 +54,9 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({ pathname, className = "", 
       )}
 
       {display.themeSwitcher && (
-        <div className={styles.toggleBtn} aria-hidden>
+        <div className={styles.toggleBtn} aria-hidden title="Theme">
           <ThemeToggle />
-          {showLabels && <span className={styles.navLabel}>Theme</span>}
+          {showThemeLabel && <span className={styles.navLabel}>Theme</span>}
         </div>
       )}
     </nav>

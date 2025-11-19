@@ -57,7 +57,7 @@ export default async function RootLayout({
               (function() {
                 try {
                   const root = document.documentElement;
-                  const defaultTheme = 'system';
+                  const defaultTheme = 'dark';
                   
                   // Set defaults from config
                   const config = ${JSON.stringify({
@@ -86,9 +86,9 @@ export default async function RootLayout({
                     return themeValue;
                   };
                   
-                  // Apply saved theme
+                  // Apply saved theme (fall back to configured defaultTheme)
                   const savedTheme = localStorage.getItem('data-theme');
-                  const resolvedTheme = resolveTheme(savedTheme);
+                  const resolvedTheme = resolveTheme(savedTheme || defaultTheme);
                   root.setAttribute('data-theme', resolvedTheme);
                   
                   // Apply any saved style overrides

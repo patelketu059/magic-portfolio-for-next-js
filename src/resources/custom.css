@@ -145,6 +145,9 @@ button,
   --bp-xl: 1280px;
   /* Horizontal content gutter that's responsive to viewport width */
   --gutter-horizontal: clamp(0.75rem, 3.5vw, 2rem);
+  /* Carousel/dots colors adapt to theme using CSS variables */
+  --carousel-dot-bg: rgba(0,0,0,0.25);
+  --carousel-dot-active-bg: rgba(0,0,0,0.9);
   --fluid-type-min: 14px;
   --fluid-type-max: 18px;
   /* TechTable colors (light defaults). These are overridden when the
@@ -168,6 +171,9 @@ html[data-theme="dark"] {
   --tech-table-cell-text: rgba(255,255,255,0.92);
   --tech-table-left-text: white;
   --tech-table-box-shadow: 0 0 25px rgba(255,255,255,0.08);
+  /* Carousel/dots dark theme overrides */
+  --carousel-dot-bg: rgba(255,255,255,0.18);
+  --carousel-dot-active-bg: rgba(255,255,255,0.95);
 }
 
 /* Base font sizing that scales down on small devices */

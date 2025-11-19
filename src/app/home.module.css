@@ -735,12 +735,12 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 999px;
-  background: rgba(0,0,0,0.25);
+  background: var(--carousel-dot-bg, rgba(0,0,0,0.25));
   border: none;
 }
 
 .activeDot {
-  background: rgba(0,0,0,0.9);
+  background: var(--carousel-dot-active-bg, rgba(0,0,0,0.9));
 }
 
 @media (max-width: 640px) {

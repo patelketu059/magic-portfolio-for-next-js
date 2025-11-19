@@ -172,7 +172,7 @@ const Header: React.FC = () => {
             className={mobileOpen ? styles.open : ""}
             onLinkClick={() => setMobileOpen(false)}
             ariaHidden={isMobile && !mobileOpen}
-            showLabels={!isMobile}
+            showLabels={!isMobile || mobileOpen}
           />
 
           <div className={styles.mobileToggleWrap}>
