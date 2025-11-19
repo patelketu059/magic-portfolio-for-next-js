@@ -64,6 +64,17 @@ export function TechTable({
     ? "0 0 25px rgba(255,255,255,0.08)"
     : "0 0 25px rgba(0,0,0,0.06)";
 
+  // Prefer CSS variables for initial render (server/first-paint safety).
+  // Fall back to the JS-computed values above when the variable isn't present.
+  const cssVar = (name: string, fallback: string) => `var(${name}, ${fallback})`;
+  const varTableBg = cssVar("--tech-table-bg", tableBg);
+  const varBorder = cssVar("--tech-table-border", borderColor);
+  const varHeaderBg = cssVar("--tech-table-header-bg", headerBg);
+  const varHeaderText = cssVar("--tech-table-header-text", headerText);
+  const varCellText = cssVar("--tech-table-cell-text", cellText);
+  const varLeftText = cssVar("--tech-table-left-text", leftTextColor);
+  const varBoxShadow = cssVar("--tech-table-box-shadow", boxShadow);
+
   // --- MODE DETECTION ---
   // Multi-column mode is active when `columns` prop is provided.
   const isExplicitMultiColumn = Array.isArray(columns) && columns.length > 0;
@@ -119,12 +130,12 @@ export function TechTable({
         className="w-full text-sm my-6"
         style={{
           fontSize: "calc(1rem - 2pt)",
-          border: `1px solid ${borderColor}`,
+          border: `1px solid ${varBorder}`,
           borderRadius: "1rem",
           overflow: "hidden",
           backdropFilter: "blur(6px)",
-          backgroundColor: tableBg,
-          boxShadow,
+          backgroundColor: varTableBg,
+          boxShadow: varBoxShadow,
           margin: "0 auto",
           maxWidth: "clamp(945px, 90vw, 1260px)",
           width: "100%",
@@ -208,10 +219,10 @@ export function TechTable({
           <thead>
             <tr
               style={{
-                background: headerBg,
-                color: headerText,
-                borderBottom: `1px solid ${borderColor}`,
-              }}
+                  background: varHeaderBg,
+                  color: varHeaderText,
+                  borderBottom: `1px solid ${varBorder}`,
+                }}
             >
                 {isExplicitMultiColumn ? (
                 // Explicit multi-column headers: use `cols` array as-is
@@ -227,7 +238,7 @@ export function TechTable({
                         borderRight:
                           idx === cols.length - 1
                             ? "0"
-                            : `1px solid ${borderColor}`,
+                            : `1px solid ${varBorder}`,
                         whiteSpace: "normal",
                     }}
                   >
@@ -238,13 +249,13 @@ export function TechTable({
                 <>
                   {/* Legacy first column header */}
                   <th
-                    style={{
+                      style={{
                       padding: "0.75rem 1.25rem",
                       textAlign: "center",
                       fontWeight: 600,
                       textTransform: "none",
                       letterSpacing: "0.02em",
-                      borderRight: `1px solid ${borderColor}`,
+                      borderRight: `1px solid ${varBorder}`,
                       whiteSpace: "normal",
                     }}
                   >
@@ -259,7 +270,7 @@ export function TechTable({
                       {columnKeys.map((key, i) => (
                         <th
                           key={key}
-                          style={{
+                            style={{
                             padding: "0.75rem 1.25rem",
                             textAlign: "left",
                             fontWeight: 600,
@@ -268,7 +279,7 @@ export function TechTable({
                             borderRight:
                               i === columnKeys.length - 1 && !hasDetailsColumn
                                 ? "0"
-                                : `1px solid ${borderColor}`,
+                                : `1px solid ${varBorder}`,
                             whiteSpace: "normal",
                           }}
                         >
@@ -301,7 +312,7 @@ export function TechTable({
                 key={`${leftText ? String(leftText) : 'row'}-${idx}`}
                 style={{
                   transition: "background-color 160ms ease",
-                  borderBottom: `1px solid ${borderColor}`,
+                  borderBottom: `1px solid ${varBorder}`,
                   outline: isDark
                     ? "1px solid rgba(255,255,255,0.03)"
                     : "1px solid rgba(0,0,0,0.02)",
@@ -312,13 +323,13 @@ export function TechTable({
                   <>
                     {/* First column: label */}
                     <td
-                      style={{
+                        style={{
                         padding: "0.75rem 1.25rem",
                         verticalAlign: "middle",
-                        color: leftTextColor,
+                        color: varLeftText,
                         fontWeight: 600,
                         textAlign: labelAlign,
-                        borderRight: `1px solid ${borderColor}`,
+                        borderRight: `1px solid ${varBorder}`,
                         whiteSpace: "normal",
                         overflowWrap: "anywhere",
                         wordBreak: "break-word",
@@ -332,14 +343,14 @@ export function TechTable({
                         key={cols[colIdx + 1] ?? `c-${colIdx + 1}`}
                         style={{
                           padding: "0.75rem 1.25rem",
-                          color: cellText,
+                          color: varCellText,
                           textAlign: "left",
                           overflowWrap: "anywhere",
                           wordBreak: "break-word",
                           borderRight:
                             colIdx === cols.length - 2
                               ? "0"
-                              : `1px solid ${borderColor}`,
+                              : `1px solid ${varBorder}`,
                         }}
                       >
                         {values[colIdx] ?? ""}
@@ -350,13 +361,13 @@ export function TechTable({
                   // --- LEGACY / AUTO-COLUMN MODE ---
                   <>
                     <td
-                      style={{
+                        style={{
                         padding: "0.75rem 1.25rem",
                         verticalAlign: "middle",
-                        color: leftTextColor,
+                        color: varLeftText,
                         fontWeight: 600,
                         textAlign: labelAlign,
-                        borderRight: `1px solid ${borderColor}`,
+                        borderRight: `1px solid ${varBorder}`,
                         whiteSpace: "normal",
                         overflowWrap: "anywhere",
                         wordBreak: "break-word",
@@ -366,13 +377,13 @@ export function TechTable({
                     </td>
                     {isSimpleTwoColumn ? (
                       <td
-                        style={{
-                          padding: "0.75rem 1.25rem",
-                          color: cellText,
-                          textAlign: detailsAlign,
-                          overflowWrap: "anywhere",
-                          wordBreak: "break-word",
-                        }}
+                          style={{
+                            padding: "0.75rem 1.25rem",
+                            color: varCellText,
+                            textAlign: detailsAlign,
+                            overflowWrap: "anywhere",
+                            wordBreak: "break-word",
+                          }}
                       >
                         {(p.children as React.ReactNode)}
                       </td>
@@ -384,10 +395,10 @@ export function TechTable({
                           return (
                             <td
                               key={key}
-                              style={{
+                                style={{
                                 padding: "0.75rem 1.25rem",
-                                color: cellText,
-                                  borderRight: `1px solid ${borderColor}`,
+                                color: varCellText,
+                                  borderRight: `1px solid ${varBorder}`,
                                   textAlign: alignKeyVal,
                                   overflowWrap: "anywhere",
                                   wordBreak: "break-word",
@@ -401,7 +412,7 @@ export function TechTable({
                           <td
                             style={{
                               padding: "0.75rem 1.25rem",
-                              color: cellText,
+                              color: varCellText,
                               textAlign: detailsAlign,
                               overflowWrap: "anywhere",
                               wordBreak: "break-word",

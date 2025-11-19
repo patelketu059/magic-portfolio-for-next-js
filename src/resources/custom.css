@@ -145,6 +145,27 @@ button,
   --bp-xl: 1280px;
   --fluid-type-min: 14px;
   --fluid-type-max: 18px;
+  /* TechTable colors (light defaults). These are overridden when the
+     page sets `data-theme="dark"` on the document element so the browser
+     can paint correct table colors before React hydration. */
+  --tech-table-bg: rgba(255,255,255,0.98);
+  --tech-table-border: rgba(0,0,0,0.10);
+  --tech-table-header-bg: linear-gradient(90deg, rgba(0,0,0,0.04), rgba(0,0,0,0.01));
+  --tech-table-header-text: #222;
+  --tech-table-cell-text: #222;
+  --tech-table-left-text: #111;
+  --tech-table-box-shadow: 0 0 25px rgba(0,0,0,0.06);
+}
+
+/* Dark theme overrides: applied when document element has `data-theme="dark"` */
+html[data-theme="dark"] {
+  --tech-table-bg: rgba(30,32,38,0.96);
+  --tech-table-border: rgba(255,255,255,0.02);
+  --tech-table-header-bg: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  --tech-table-header-text: white;
+  --tech-table-cell-text: rgba(255,255,255,0.92);
+  --tech-table-left-text: white;
+  --tech-table-box-shadow: 0 0 25px rgba(255,255,255,0.08);
 }
 
 /* Base font sizing that scales down on small devices */

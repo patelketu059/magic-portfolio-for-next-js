@@ -403,6 +403,23 @@
     }
 }
 
+/* Mobile: give the header a theme-matching background so the nav feels integrated
+   with the site's theme when viewed on small screens. Uses theme CSS variables
+   so it respects light/dark modes. */
+@media (max-width: 640px) {
+    .position {
+        background: var(--page-background);
+        backdrop-filter: blur(6px);
+        border-bottom: 1px solid var(--neutral-outline, rgba(0,0,0,0.06));
+        transition: background 160ms ease, border-color 160ms ease, backdrop-filter 160ms ease;
+    }
+
+    /* Ensure the sticky/fixed header restores its own stacking context */
+    .position[style] {
+        -webkit-backdrop-filter: blur(6px);
+    }
+}
+
 @include breakpoints.s {
     .position {
         top: auto;
