@@ -379,6 +379,11 @@
   box-sizing: border-box;
 }
 
+/* Double the top padding for the Experience page so it breathes more on load */
+.experiencePage {
+  padding-top: 5rem; /* was 2.5rem on .section; override top only */
+}
+
 /* Increase padding for About section by 20% (96px / 24px) */
 #about {
   padding: clamp(3rem, 6.5vw, 6rem) 1.5rem;
@@ -632,8 +637,30 @@
 
 @media (max-width: 768px) {
   .carouselContainer {
-    max-width: 92%;
+    /* On smaller viewports make the carousel span the available content
+       width and match the page's horizontal padding so slides appear
+       visually centered within the section. */
+    max-width: none;
+    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
     --carousel-height: clamp(200px, 40vw, 420px);
+    margin: 0 auto;
+  }
+
+  /* Ensure the Projects grid collapses to a single column on small screens
+     so featured carousel can span the full content width instead of being
+     constrained to the grid's min column width. */
+  .projectsList {
+    grid-template-columns: 1fr;
+  }
+
+  /* Make the carousel explicitly span the full row when present. */
+  .projectsList .carouselContainer {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 0; /* let .sectionContent supply horizontal padding */
+    box-sizing: border-box;
   }
 }
 

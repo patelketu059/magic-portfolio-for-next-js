@@ -14,7 +14,7 @@ export async function generateMetadata() {
 
 export default function Work() {
   return (
-    <Column paddingTop="24" style={{ width: "100%", maxWidth: "clamp(640px, 90vw, 900px)", margin: "0 auto", paddingLeft: "16px", paddingRight: "16px", boxSizing: "border-box" }}>
+    <Column paddingTop="48" style={{ width: "100%", maxWidth: "clamp(640px, 90vw, 900px)", margin: "0 auto", paddingLeft: "16px", paddingRight: "16px", boxSizing: "border-box" }}>
       <Schema
         as="webPage"
         baseURL={baseURL}
